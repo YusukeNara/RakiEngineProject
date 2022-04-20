@@ -87,7 +87,7 @@ float CalcAccelToFramePerVel(float onesecmove);
 /// <param name="time">ŠÔ</param>
 /// <param name="v1">‘¬“x‚ğŠi”[‚·‚é•Ï”</param>
 /// <returns></returns>
-float CalcGravity(float start, float end, float v0, int time, float& v1);
+float CalcGravity(float v0, int time, float& v1,float &now);
 
 float CalcGravity2(int time, float v0);
 

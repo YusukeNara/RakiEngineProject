@@ -92,29 +92,25 @@ void Title::Update() {
 
     //重力落下
     time++;
-    pos1.y = CalcGravity(200, 0, 10, time, vel.y);
-    
+    CalcGravity(4.0f, time, vel.y, pos1.y);
+    vel.z += CalcAccelToFramePerVel(time) * 0.75f; // 等加速度運動
+    CalcGravity(4.0f, time, vel2.y, pos2.y);
+    vel2.z += 0.75f; //等速運動
+
 
     if (Input::isKey(DIK_LEFT)) {
-        vel.x += CalcAccelToFramePerVel(-3.0f);
-        //等速直線運動
-        vel2.x = -1.0f;
-        //等加速度直線運動（押しっぱなしで速度上昇）
         //引数は1secの移動量、これをフレームレートで割って1Fの移動量を算出
         vel3.x += CalcAccelToFramePerVel(-3.0f);
     }
     if (Input::isKey(DIK_RIGHT)) {
-        vel.x += CalcAccelToFramePerVel(3.0f);
-        //等速直線運動
-        vel2.x = 1.0f;
         //等加速度直線運動
         vel3.x += CalcAccelToFramePerVel(3.0f);
     }
 
 
     if (Input::isKeyTrigger(DIK_ESCAPE)) {
-        pos1 = RVector3(-50, 200, 0);
-        pos2 = RVector3(0, 0, 0);
+        pos1 = RVector3(-50, 0, -250);
+        pos2 = RVector3(0, 0, -250);
         pos3 = RVector3(50, 0, 0);
         vel = RVector3(0, 0, 0);
         vel2 = RVector3(0, 0, 0);
@@ -133,14 +129,18 @@ void Title::Update() {
     //vel3.x += CalcAccelToFramePerVel(60.0f * Input::GetXpadLStickTilt().x_rate);
 
     //速度加算
-    //pos1 += vel;
+    pos1 += vel;
     pos2 += vel2;
     pos3 += vel3;
 
     //床にあたったら
-    if (pos1.y < 0.0f) {
+    if (pos1.y < 0.0f || pos1.z > 100.0f) {
         vel.zero();
         pos1.y = 0.0f;
+    }
+    if (pos2.y < 0.0f || pos2.z > 500.0f) {
+        vel2.zero();
+        pos2.y = 0.0f;
     }
 
     newObjectSystem->SetAffineParamTranslate(pos1);
@@ -205,19 +205,19 @@ void Title::Draw() {
     ImguiMgr::Get()->StartDrawImgui("positions", 300, 350);
     ImGui::Text("");
     ImGui::Text("Left Ship (Gravity)");
-    ImGui::Text("pos : x.%f y.%f", pos1.x, pos1.y);
-    ImGui::Text("vel : x.%f y.%f", vel.x, vel.y);
-    ImGui::Text("acc : x.%f y.%f", acc.x, acc.y);
+    ImGui::Text("pos : x.%f y.%f z.%f", pos1.x, pos1.y, pos1.z);
+    ImGui::Text("vel : x.%f y.%f z.%f", vel.x, vel.y, vel.z);
+    ImGui::Text("acc : x.%f y.%f z.%f", acc.x, acc.y, acc.z);
     ImGui::Text("");
     ImGui::Text("Push allow key to move LR");
     ImGui::Text("Center Ship");
-    ImGui::Text("pos : x.%f z.%f", pos2.x, pos2.z);
-    ImGui::Text("vel : x.%f z.%f", vel2.x, vel2.z);
-    ImGui::Text("acc : x.%f z.%f", acc2.x, acc2.z);
+    ImGui::Text("pos : x.%f y.%f z.%f", pos2.x, pos2.y, pos2.z);
+    ImGui::Text("vel : x.%f y.%f z.%f", vel2.x, vel2.y, vel2.z);
+    ImGui::Text("acc : x.%f y.%f z.%f", acc2.x, acc2.y, acc2.z);
     ImGui::Text("Right Ship");
-    ImGui::Text("pos : x.%f z.%f", pos3.x, pos3.z);
-    ImGui::Text("vel : x.%f z.%f", vel3.x, vel3.z);
-    ImGui::Text("acc : x.%f z.%f\n", acc3.x, acc3.z);
+    ImGui::Text("pos : x.%f y.%f z.%f", pos3.x, pos3.z, pos3.z);
+    ImGui::Text("vel : x.%f y.%f z.%f", vel3.x, vel3.z, vel3.z);
+    ImGui::Text("acc : x.%f y.%f z.%f", acc3.x, acc3.z, acc3.z);
     ImGui::Text("");
     ImGui::Text("esc to reset.");
 

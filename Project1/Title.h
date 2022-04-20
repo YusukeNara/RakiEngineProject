@@ -51,8 +51,8 @@ public:
     Object3d* ship2;
     Object3d* ship3;
     //è„ópïœä∑èÓïÒ
-    RVector3 scale1, rot1, pos1 = RVector3(-50, 250, 0);
-    RVector3 scale2, rot2, pos2;
+    RVector3 scale1, rot1, pos1 = RVector3(-50, 0, -250);
+    RVector3 scale2, rot2, pos2 = RVector3(0, 0, -250);
     RVector3 scale3, rot3, pos3;
     //ë¨ìxäiî[
     RVector3 vel = RVector3(0, 0, 0);
