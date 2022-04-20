@@ -78,9 +78,18 @@ float CalcAccelToForceAndMass(const float force, const float mass);
 
 float CalcAccelToFramePerVel(float onesecmove);
 
+/// <summary>
+/// 重力計算
+/// </summary>
+/// <param name="start">落下開始</param>
+/// <param name="end">終了</param>
+/// <param name="v0">初速度</param>
+/// <param name="time">時間</param>
+/// <param name="v1">速度を格納する変数</param>
+/// <returns></returns>
 float CalcGravity(float start, float end, float v0, int time, float& v1);
 
-
+float CalcGravity2(int time, float v0);
 
 //RVector3を使用した、3次元線形補間
 namespace Rv3Ease {

@@ -92,7 +92,7 @@ void Title::Update() {
 
     //d—Í—Ž‰º
     time++;
-    pos1.y = CalcGravity(200, 0, 1, time, vel.y);
+    pos1.y = CalcGravity(200, 0, 10, time, vel.y);
     
 
     if (Input::isKey(DIK_LEFT)) {
@@ -196,18 +196,20 @@ void Title::Draw() {
 
     SpriteManager::Get()->SetCommonBeginDraw();
 
-    testInstance.DrawExtendSprite(x1, y1, x2, y2);
-    testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
+    //testInstance.DrawExtendSprite(x1, y1, x2, y2);
+    //testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
 
-    //–{•`‰æiŽÀÛ‚É•`‰æ‚³‚ê‚éj
-    testInstance.Draw();
+    ////–{•`‰æiŽÀÛ‚É•`‰æ‚³‚ê‚éj
+    //testInstance.Draw();
 
-    ImguiMgr::Get()->StartDrawImgui("pos", 100, 300);
-
-    ImGui::Text("Left Ship");
+    ImguiMgr::Get()->StartDrawImgui("positions", 300, 350);
+    ImGui::Text("");
+    ImGui::Text("Left Ship (Gravity)");
     ImGui::Text("pos : x.%f y.%f", pos1.x, pos1.y);
     ImGui::Text("vel : x.%f y.%f", vel.x, vel.y);
     ImGui::Text("acc : x.%f y.%f", acc.x, acc.y);
+    ImGui::Text("");
+    ImGui::Text("Push allow key to move LR");
     ImGui::Text("Center Ship");
     ImGui::Text("pos : x.%f z.%f", pos2.x, pos2.z);
     ImGui::Text("vel : x.%f z.%f", vel2.x, vel2.z);
@@ -215,7 +217,9 @@ void Title::Draw() {
     ImGui::Text("Right Ship");
     ImGui::Text("pos : x.%f z.%f", pos3.x, pos3.z);
     ImGui::Text("vel : x.%f z.%f", vel3.x, vel3.z);
-    ImGui::Text("acc : x.%f z.%f", acc3.x, acc3.z);
+    ImGui::Text("acc : x.%f z.%f\n", acc3.x, acc3.z);
+    ImGui::Text("");
+    ImGui::Text("esc to reset.");
 
     ImguiMgr::Get()->EndDrawImgui();
 

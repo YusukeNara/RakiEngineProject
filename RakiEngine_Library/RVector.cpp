@@ -94,20 +94,33 @@ float CalcAccelToFramePerVel(float onesecmove)
 float CalcGravity(float start, float end, float v0, int time,float &v1)
 {
 	//現在の速度^2 = 初速度^2 + -2*重力加速度
-	float v = (v0 * v0) + (-2 * CalcAccelToFramePerVel(9.8f));
+	float v = CalcGravity2(time, v0);
+	float v2 = CalcGravity2(time + 1, v0);
 
 	float t1 = time / 60.0f;
 	float t2 = (time - 1) / 60.0f;
 
 	//現在座標 = 開始点 + 現在速度
-	float now = start + (sqrtf(v) * -t2);
+	float now = start + v;
+	float next = now + v2;
 
-	float next = now + (sqrtf(v) * -t1);
-
-	if (next < end) {//下降中、終了点より↓
-		now = end;//値を丸める
+	if (now < end) {//下降中、終了点より↓
+		next = end;//値を丸める
 	}
 
 	//結果
 	return next;
+}
+
+float CalcGravity2(int time, float v0)
+{
+	//速度^2 = 初速度^2 + -2*重力加速度
+	float v = (v0 * v0) + (-2 * 9.8f);
+
+	//速度 
+	float vel = sqrtf(v);
+	float result = vel * ((float)time / 60.0f);
+
+	return vel;
+
 }
