@@ -41,7 +41,7 @@ typedef struct SpriteData
 	//頂点座標（一点のみにして、ジオメトリで細かいコントロールをする）
 	SpriteVertex vertice;
 	//インスタンス行列コンテナ（差分データを格納：アフィン変換もあるし、ここに縦横幅のデータ入れてもいいかも）
-	std::vector<XMMATRIX> insWorldMatrixes;
+	std::vector<SpriteInstance> insWorldMatrixes;
 
 	ComPtr<ID3D12Resource> vertBuff;//モデル用頂点バッファ
 	D3D12_VERTEX_BUFFER_VIEW vbView;//モデル用頂点バッファビュー

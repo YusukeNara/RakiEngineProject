@@ -2,6 +2,7 @@
 #include "BaseScene.h"
 #include "ISceneChanger.h"
 #include "NY_Object3DMgr.h"
+//#include <FbxLoader.h>
 
 #include "Sprite.h"
 
@@ -28,7 +29,7 @@ public:
     void Draw() override;          //描画処理をオーバーライド。
 
     //シーンで使うインスタンス
-    XMFLOAT3 eye = { 0,30,-150 };
+    XMFLOAT3 eye = { 0,150,-400 };
     XMFLOAT3 target = { 0,0,0 };
     XMFLOAT3 up = { 0,1,0 };
 
@@ -47,17 +48,32 @@ public:
 
     //新型Object3d
     Object3d *newObjectSystem;
+    Object3d* ship2;
+    Object3d* ship3;
     //上用変換情報
-    RVector3 scale1, rot1, pos1;
+    RVector3 scale1, rot1, pos1 = RVector3(-50, 250, 0);
     RVector3 scale2, rot2, pos2;
+    RVector3 scale3, rot3, pos3;
+    //速度格納
+    RVector3 vel = RVector3(0, 0, 0);
+    RVector3 vel2 = RVector3(0, 0, 0);
+    RVector3 vel3 = RVector3(0, 0, 0);
+    RVector3 acc = RVector3(0, 0, 0);
+    RVector3 acc2 = RVector3(0, 0, 0);
+    RVector3 acc3 = RVector3(0, 0, 0);
+
+    //時間
+    int time = 0;
 
     Sprite testInstance;
+    float x1, x2, y1, y2;
 
     //床
     Object3d *tileObject;
     UINT tiletex;
 
     Object3d *animTestModel;
+    Object3d* testFbx;
 
     //マウス確認変数
     bool clicking = false;

@@ -49,6 +49,8 @@ void NY_Camera::SetProjecion()
 		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
 		0.1f, 1000.0f
 	);
+	_matProjection2D = XMMatrixOrthographicOffCenterLH(
+		0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
 }
 
 void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up)
@@ -103,6 +105,11 @@ XMMATRIX NY_Camera::GetMatrixBillBoardAll()
 XMMATRIX NY_Camera::GetMatrixProjection()
 {
 	return _matProjection;
+}
+
+XMMATRIX NY_Camera::GetMatrixProjection2D()
+{
+	return _matProjection2D;
 }
 
 //void NY_Camera::UpdateFollowing(XMMATRIX followTarget)//引数は追従したいオブジェクトのワールド変換行列

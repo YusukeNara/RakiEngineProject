@@ -14,25 +14,42 @@
 
 struct ParticleGrainState 
 {
+private:
+	using XMFLOAT4 = DirectX::XMFLOAT4;
+
+public:
+
 	//起点
 	RVector3 position;
 	//ランダムスポーンフラグ
 	bool isRandomSpawn;
 	//スポーン範囲
-	RVector3 spawnRange1;
-	RVector3 spawnRange2;
-	//ランダム速度
-	bool isRandomVelocity;
+	RVector3 position_spawnRange1;
+	RVector3 position_spawnRange2;
 	//速度
 	RVector3 vel;
-	RVector3 velRange1;
-	RVector3 velRange2;
-	//ランダム加速度
-	bool isRandomAccel;
+	//速度上限
+	RVector3 velMax;
+	//速度下限
+	RVector3 velMin;
+	//加速度
 	RVector3 acc;
-	RVector3 accRange1;
 
+	//色関連
+	//色
+	XMFLOAT4 color_start;
+	//色補完終了点
+	XMFLOAT4 color_end;
 
+	//アフィン変換
+	//スケーリング
+	float scale_start;
+	float scale_end;
+	//回転
+	float rot_start;
+	float rot_end;
+	//寿命
+	int aliveTime;
 
 };
 
@@ -86,7 +103,9 @@ class ParticlePrototype : public Particle
 {
 public:
 	ParticlePrototype() {};
-	~ParticlePrototype() {};
+	~ParticlePrototype() {
+		
+	};
 	//初期化
 	virtual void Init() = 0;
 	//更新
@@ -152,9 +171,10 @@ public:
 	/// <summary>
 	/// パーティクル追加
 	/// </summary>
-	void Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, float startScale, float endScale, XMFLOAT4 s_color, XMFLOAT4 e_color);
+	void Add(ParticleGrainState pgState);
 
 	/// ---------------------- 以下、Prototypeパターン採用パーティクルマネージャーの機能群 ------------------------------------//
+
 	void Prototype_Set(ParticlePrototype *proto);
 
 	void Prototype_Add(int addCount,RVector3 startPos);
@@ -190,7 +210,7 @@ private:
 
 
 	//パーティクルプロトタイプ
-	ParticlePrototype *prototype_;
+	std::unique_ptr<ParticlePrototype> prototype_;
 	//パーティクルプロトタイプコンテナ
 	std::forward_list<std::unique_ptr<ParticlePrototype>> pplist;
 

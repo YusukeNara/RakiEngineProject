@@ -156,35 +156,18 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
 
 }
 
-void Sprite::Create(UINT resourceID, float sizeX, float sizeY)
+void Sprite::Create(UINT resourceID)
 {
     HRESULT result;
 
-    if (animData != nullptr) {
-        //this->animData = animData;
-        ////頂点データ
-        //SpriteVertex vertices[] = {
-        //    {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetLT},
-        //    {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetRT},
-        //    {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetLB},
-        //    {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetRB},
-        //};
+    //引数がヌルならヌルを直接入れる
+    this->animData = nullptr;
+    //頂点データ
+    SpriteVertex vertices = {
+        {0.0f,0.0f,0.0f},{0.0f,0.0f},
+    };
 
-        //spdata.vertices[0] = vertices[0];
-        //spdata.vertices[1] = vertices[1];
-        //spdata.vertices[2] = vertices[2];
-        //spdata.vertices[3] = vertices[3];
-    }
-    else {
-        //引数がヌルならヌルを直接入れる
-        this->animData = nullptr;
-        //頂点データ
-        SpriteVertex vertices = {
-            {0.0f,0.0f,0.0f},{0.0f,0.0f},
-        };
-
-        spdata.vertice = vertices;
-    }
+    spdata.vertice = vertices;
 
     //テクスチャ設定
     spdata.texNumber = resourceID;
@@ -192,7 +175,7 @@ void Sprite::Create(UINT resourceID, float sizeX, float sizeY)
     //頂点データとインデックスデータを生成して更新
 
     //頂点データ全体のサイズ = 頂点データ一つ分のサイズ * 頂点データの要素数
-    UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 1);
+    UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 2);
     //頂点バッファ生成
     D3D12_HEAP_PROPERTIES heapprop{}; //ヒープ設定
     heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUへの転送用
@@ -224,8 +207,8 @@ void Sprite::Create(UINT resourceID, float sizeX, float sizeY)
     spdata.vbView.SizeInBytes = sizeof(spdata.vertice);
     spdata.vbView.StrideInBytes = sizeof(SpriteVertex);
 
-    //大きさ変更
-    ResizeSprite({ sizeX,sizeY });
+    ////大きさ変更
+    //ResizeSprite({ sizeX,sizeY });
 
     //インスタンシング用頂点バッファ生成
     //初期化用
@@ -279,6 +262,10 @@ void Sprite::Create(UINT resourceID, float sizeX, float sizeY)
     //平行投影行列
     constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
     spdata.constBuff->Unmap(0, nullptr);
+
+    //テクスチャのデフォルトサイズを取得
+    TEXTURE_DEFAULT_SIZE.x = TexManager::textureData[resourceID].metaData.width;
+    TEXTURE_DEFAULT_SIZE.y = TexManager::textureData[resourceID].metaData.height;
 
 }
 
@@ -356,7 +343,8 @@ void Sprite::InstanceUpdate()
     SpriteInstance *insmap = nullptr;
     auto result = spdata.vertInsBuff->Map(0, nullptr, (void **)&insmap);
     for (int i = 0; i < spdata.insWorldMatrixes.size(); i++) {
-        insmap[i].worldmat = spdata.insWorldMatrixes[i] * XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+        insmap[i].worldmat = spdata.insWorldMatrixes[i].worldmat * XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+        insmap[i].drawsize = spdata.insWorldMatrixes[i].drawsize;
     }
     spdata.vertInsBuff->Unmap(0, nullptr);
 }
@@ -378,7 +366,7 @@ void Sprite::Draw()
         CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap->GetGPUDescriptorHandleForHeapStart(),
         spdata.texNumber, SpriteManager::Get()->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
     //描画
-    SpriteManager::Get()->cmd->DrawInstanced(4, (UINT)spdata.insWorldMatrixes.size(), 0, 0);
+    SpriteManager::Get()->cmd->DrawInstanced(1, (UINT)spdata.insWorldMatrixes.size(), 0, 0);
 
     //インスタンスデータをクリアし、コンテナリセット
     spdata.insWorldMatrixes.clear();
@@ -392,11 +380,16 @@ void Sprite::DrawSprite(float posX, float posY)
     //回転、スケーリングはなし
     XMMATRIX norot = XMMatrixRotationZ(XMConvertToRadians(0.0f));
 
+    //
+
     //行列コンテナに格納
-    XMMATRIX world = XMMatrixIdentity();
-    world *= norot;
-    world *= trans;
-    spdata.insWorldMatrixes.push_back(world);
+    SpriteInstance ins = {};
+    ins.worldmat = XMMatrixIdentity();
+    ins.worldmat *= norot;
+    ins.worldmat *= trans;
+    //デフォルトサイズを格納
+    ins.drawsize = TEXTURE_DEFAULT_SIZE;
+    spdata.insWorldMatrixes.push_back(ins);
 }
 
 void Sprite::DrawExtendSprite(float x1, float y1, float x2, float y2)
@@ -408,12 +401,19 @@ void Sprite::DrawExtendSprite(float x1, float y1, float x2, float y2)
     XMMATRIX noScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 
     //サイズを変更
-    spdata.size.x = x2 - x1;
-    spdata.size.y = y2 - y1;
-    ResizeSprite(spdata.size);
+    //spdata.size.x = x2 - x1;
+    //spdata.size.y = y2 - y1;
+    //ResizeSprite(spdata.size);
 
     //行列コンテナに格納
-    spdata.insWorldMatrixes.push_back(noScale * norot * trans);
+    SpriteInstance ins = {};
+
+    ins.worldmat = XMMatrixIdentity();
+    ins.worldmat *= norot;
+    ins.worldmat *= trans;
+    ins.drawsize = { x2 - x1, y2 - y1 };
+    //行列コンテナに格納
+    spdata.insWorldMatrixes.push_back(ins);
 }
 
 void Sprite::DrawMPRender()

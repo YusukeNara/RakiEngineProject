@@ -137,6 +137,7 @@ void SpriteManager::CreateSpritePipeline()
     //頂点シェーダー、ピクセルシェーダーをパイプラインに設定
     gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
     gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+    gpipeline.GS = CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 
     //サンプルマスクとラスタライザステートの設定
     gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;//標準設定
@@ -207,8 +208,9 @@ void SpriteManager::CreateSpritePipeline()
 
     ComPtr<ID3DBlob> rootSigBlob = nullptr;
     result = D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+    if (result != S_OK) { cout << "ERROR : ENGINE : SPRITE : ROOTSIGNATURE" << endl; }
     result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
-
+    if (result != S_OK) { cout << "ERROR : ENGINE : SPRITE : ROOTSIGNATURE" << endl; }
     //パイプラインにルートシグネチャをセット
     gpipeline.pRootSignature = rootsignature.Get();
 
@@ -350,7 +352,7 @@ void SpriteManager::SetCommonBeginDraw()
     //ルートシグネチャをセット
     cmd->SetGraphicsRootSignature(rootsignature.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
     cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);

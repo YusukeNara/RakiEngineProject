@@ -9,10 +9,21 @@ int NY_random::intrand_nl()
 
 int NY_random::intrand_sl(int max, int min)
 {
+    int maxtmp, mintmp;
+    //逆の場合
+    if (max < min) {
+        maxtmp = min;
+        mintmp = max;
+    }
+    else {
+        maxtmp = max;
+        mintmp = min;
+    }
+
     //メルセンヌ・ツイスタ乱数生成器
     std::mt19937 mt(rnd());
     //引数指定範囲の一様乱数
-    std::uniform_int_distribution<> rand(min, max);
+    std::uniform_int_distribution<> rand(mintmp, maxtmp);
 
     return rand(mt);
 }

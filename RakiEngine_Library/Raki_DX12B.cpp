@@ -730,6 +730,7 @@ void Raki_DX12B::StartDrawBackbuffer()
 	//バックバッファをレンダーターゲットにセット
 	commandList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 
+	ClearDepthBuffer();
 	//クリア
 	ClearRenderTarget();
 }
@@ -751,7 +752,7 @@ void Raki_DX12B::StartDrawRenderTarget()
 	auto rtvH1 = mpRtvHeap->GetCPUDescriptorHandleForHeapStart();
 
 	// 深度バッファクリア
-	ClearDepthBuffer();
+	//ClearDepthBuffer();
 
 	//1パス目レンダーターゲットセット
 	commandList->OMSetRenderTargets(1, &rtvH1, false, &dsvH);

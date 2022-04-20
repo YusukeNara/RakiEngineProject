@@ -3,6 +3,7 @@
 #include <dinput.h>
 #include <xinput.h>
 #include <wrl.h>
+#include <utility>
 
 #include "RVector.h"
 
@@ -19,7 +20,58 @@
 #define MOUSE_R			0x01		//マウス右
 #define MOUSE_CENTER	0x02		//マウス中央
 
-//ゲームパッド
+//ゲームパッド識別コード
+enum XPAD_INPUT_CODE
+{
+	XPAD_BUTTON_A,
+	XPAD_BUTTON_B,
+	XPAD_BUTTON_X,
+	XPAD_BUTTON_Y,
+
+	XPAD_BUTTON_CROSS_UP,
+	XPAD_BUTTON_CROSS_DOWN,
+	XPAD_BUTTON_CROSS_LEFT,
+	XPAD_BUTTON_CROSS_RIGHT,
+
+	XPAD_TRIGGER_LB,
+	XPAD_TRIGGER_LT,
+	XPAD_TRIGGER_RB,
+	XPAD_TRIGGER_RT,
+
+	XPAD_BUTTON_LSTICK,
+	XPAD_BUTTON_RSTICK,
+
+	XPAD_BUTTON_OPTION_R,
+	XPAD_BUTTON_OPTION_L,
+};
+//xInputスティック傾き方向
+enum XPAD_STICK_DIRECTION_CODE
+{
+	///4方向入力
+	XPAD_LSTICK_DIR_UP,
+	XPAD_LSTICK_DIR_DOWN,
+	XPAD_LSTICK_DIR_LEFT,
+	XPAD_LSTICK_DIR_RIGHT,
+
+	///斜め入力
+	XPAD_LSTICK_DIR_UR,
+	XPAD_LSTICK_DIR_UL,
+	XPAD_LSTICK_DIR_DR,
+	XPAD_LSTICK_DIR_DL,
+
+	///4方向入力
+	XPAD_RSTICK_DIR_UP,
+	XPAD_RSTICK_DIR_DOWN,
+	XPAD_RSTICK_DIR_LEFT,
+	XPAD_RSTICK_DIR_RIGHT,
+
+	///斜め入力
+	XPAD_RSTICK_DIR_UR,
+	XPAD_RSTICK_DIR_UL,
+	XPAD_RSTICK_DIR_DR,
+	XPAD_RSTICK_DIR_DL,
+};
+
 
 #pragma endregion InputKeyCode
 
@@ -51,10 +103,14 @@ private:
 	static POINT		pos;			//マウス座標
 	//xinput
 	static XINPUT_STATE xInputState;	//xinputの入力状態
+	static XINPUT_STATE oldxInputState;	//1F前
+	static SHORT XPAD_RS_DEADZONE, XPAD_LS_DEADZONE;
 
 	//コンストラクタ、デストラクタを隠蔽
 	Input() {}
 	~Input() {}
+
+	
 
 public:
 
@@ -92,7 +148,29 @@ public:
 
 	//----------- xinputコントローラー入力 ----------//
 
-	
+	static bool isXpadButtonPushing(XPAD_INPUT_CODE code);
+
+	static bool isXpadButtonPushTrigger(XPAD_INPUT_CODE code);
+
+	static bool isXpadButtonPushed(XPAD_INPUT_CODE code);
+
+	static int GetXpadRTStrength();
+
+	static int GetXpadLTStrength();
+
+	static bool isXpadStickTilt(XPAD_STICK_DIRECTION_CODE dircode);
+
+	struct StickTiltParam
+	{
+		int x = 0;
+		int y = 0;
+		float x_rate = 0.0f;
+		float y_rate = 0.0f;
+	};
+
+	static StickTiltParam GetXpadRStickTilt();
+
+	static StickTiltParam GetXpadLStickTilt();
 
 	//インスタンス取得
 	static Input *Get();
@@ -100,6 +178,23 @@ public:
 	//コピーコンストラクタ、代入演算子無効化
 	Input(const Input &obj) = delete;
 	Input &operator=(const Input &obj) = delete;
+
+private:
+	//1F前の入力を確認
+	static bool isOldXpadPushing(XPAD_INPUT_CODE code);
+
+	//スティックの傾きをデッドゾーン範囲にまとめる
+	static void XpadStickTiltRoundOffToDeadzone();
+
+	//スティックの傾き方向を確認
+	static bool isRSTiltRight();
+	static bool isRSTiltLeft();
+	static bool isRSTiltUp();
+	static bool isRSTiltDown();
+	static bool isLSTiltRight();
+	static bool isLSTiltLeft();
+	static bool isLSTiltUp();
+	static bool isLSTiltDown();
 };
 
 //マウス入力（ラップ関数）

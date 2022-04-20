@@ -25,5 +25,6 @@ struct GSOutput
 {
     float4 pos : SV_POSITION;	//出力頂点座標
     float2 uv  : TEXCOORD;		//出力UV値
-	
+    matrix ins_matrix : INSTANCE_WORLD_MAT;
+    float2 size       : INSTANCE_DRAWSIZE;
 };

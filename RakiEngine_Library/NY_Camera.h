@@ -18,6 +18,8 @@ private:
 	XMMATRIX _matView;
 	//射影変換行列
 	XMMATRIX _matProjection;
+	//2D射影変換
+	XMMATRIX _matProjection2D;
 	//ビュープロジェクション
 	XMMATRIX _matViewProj;
 	//ビルボード行列
@@ -96,6 +98,8 @@ public:
 	/// </summary>
 	/// <returns>射影変換（プロジェクション）行列</returns>
 	XMMATRIX GetMatrixProjection();
+
+	XMMATRIX GetMatrixProjection2D();
 
 	/// <summary>
 	/// ビルボード行列取得

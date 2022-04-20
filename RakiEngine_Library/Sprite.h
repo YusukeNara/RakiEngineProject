@@ -28,10 +28,7 @@ public:
 	/// 描画のもとになるスプライトデータ生成
 	/// </summary>
 	/// <param name="resourceID">テクスチャハンドル</param>
-	/// <param name="sizeX">描画サイズ</param>
-	/// <param name="sizeY">描画サイズ</param>
-	/// <param name="reserveDrawCount">描画する数</param>
-	void Create(UINT resourceID, float sizeX, float sizeY);
+	void Create(UINT resourceID);
 
 	//サイズ変更
 	void ResizeSprite(XMFLOAT2 newsize);
@@ -57,6 +54,9 @@ private:
 	UINT sizeInsVB;
 
 	UINT instanceDrawCount;
+
+	//テクスチャのもとのサイズ
+	XMFLOAT2 TEXTURE_DEFAULT_SIZE;
 
 	bool isVertexBufferNeedResize();
 
