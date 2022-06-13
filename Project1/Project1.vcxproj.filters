@@ -119,6 +119,9 @@
     <FxCompile Include="Resources\Shaders\SpriteGS.hlsl">
       <Filter>リソース ファイル\hlsl\Sprite</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteSepiaPS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic.hlsli">

@@ -2,6 +2,7 @@
 #include "FPS.h"
 #include "Audio.h"
 #include "TexManager.h"
+#include <RenderTargetManager.h>
 
 #include "NY_Object3DMgr.h"
 #include "SpriteManager.h"
@@ -60,7 +61,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         smgr->Update();
 
+        RenderTargetManager::GetInstance()->CrearAndStartDraw();
+
         smgr->Draw();
+
+        RenderTargetManager::GetInstance()->SwapChainBufferFlip();
 
         FPS::Get()->run();
     }

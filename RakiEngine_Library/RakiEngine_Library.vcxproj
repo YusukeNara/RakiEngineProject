@@ -69,6 +69,8 @@
   <ItemGroup>
     <ClCompile Include="AbstructSceneFactory.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="FbxLoader.cpp" />
+    <ClCompile Include="fbxModel.cpp" />
     <ClCompile Include="FPS.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -83,10 +85,13 @@
     <ClCompile Include="NY_Object3DMgr.cpp" />
     <ClCompile Include="NY_random.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="ParticleManager2D.cpp" />
     <ClCompile Include="Raki_DX12B.cpp" />
     <ClCompile Include="Raki_imguiMgr.cpp" />
     <ClCompile Include="Raki_Input.cpp" />
     <ClCompile Include="Raki_WinAPI.cpp" />
+    <ClCompile Include="RenderTargetManager.cpp" />
+    <ClCompile Include="RTex.cpp" />
     <ClCompile Include="RVector.cpp" />
     <ClCompile Include="SceneFactory.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -96,6 +101,8 @@
   <ItemGroup>
     <ClInclude Include="AbstructSceneFactory.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="FbxLoader.h" />
+    <ClInclude Include="fbxModel.h" />
     <ClInclude Include="FPS.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -111,10 +118,13 @@
     <ClInclude Include="NY_Object3DMgr.h" />
     <ClInclude Include="NY_random.h" />
     <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="ParticleManager2D.h" />
     <ClInclude Include="Raki_DX12B.h" />
     <ClInclude Include="Raki_imguiMgr.h" />
     <ClInclude Include="Raki_Input.h" />
     <ClInclude Include="Raki_WinAPI.h" />
+    <ClInclude Include="RenderTargetManager.h" />
+    <ClInclude Include="RTex.h" />
     <ClInclude Include="RVector.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneFactory.h" />
@@ -401,12 +411,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)lib/fbx_sdk/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)/lib/fbx_sdk/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)lib/fbx_sdk/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)/lib/fbx_sdk/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -637,7 +651,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(SolutionDir)DirectXTex</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -652,6 +666,9 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>libfbxsdk-md.lib;libxml2-md.lib;zlib-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -693,6 +710,9 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
+    <Lib>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

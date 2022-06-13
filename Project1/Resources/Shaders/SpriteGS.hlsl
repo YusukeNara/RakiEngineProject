@@ -17,14 +17,14 @@ void main(
         { input[0].size.x, input[0].size.y },					//右下
         { input[0].size.x, 0 },	//右上
     };
-	//uvはアニメーション実装までの仮としてオフセット定義
+	//uvオフセットを格納
 	float2 uvOffset[4] =
 	{
-		{0,1},
-		{0,0},
-		{1,1},
-		{1,0},
-	};
+        { input[0].uvOffset.x, input[0].uvOffset.w },
+        { input[0].uvOffset.x, input[0].uvOffset.y },
+        { input[0].uvOffset.z, input[0].uvOffset.w },
+        { input[0].uvOffset.z, input[0].uvOffset.y },
+    };
 	
 	//点の入力から四角形を出力
 	for (uint i = 0; i < 4; i++)
@@ -39,6 +39,9 @@ void main(
 		//ほかは使わんのでそのまま
         element.ins_matrix = input[0].ins_matrix;
         element.size = input[0].size;
+        element.uvOffset = input[0].uvOffset;
+        element.color = input[0].color;
+        element.freedata = input[0].freedata;
 		//出力
 		output.Append(element);
 	}

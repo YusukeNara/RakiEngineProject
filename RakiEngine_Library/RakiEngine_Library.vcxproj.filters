@@ -70,6 +70,12 @@
     <Filter Include="Scene\SceneFactory">
       <UniqueIdentifier>{34f70541-4181-43c6-8ae0-b6ee3ee72892}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphic\3D\modelData">
+      <UniqueIdentifier>{19e92a90-86ce-40df-a0e4-3fc583776fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphic\3D\modelData\FBX">
+      <UniqueIdentifier>{8ee7fdb3-0112-4869-833d-0991e5925eee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -146,6 +152,21 @@
     </ClCompile>
     <ClCompile Include="SceneFactory.cpp">
       <Filter>Scene\SceneFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager2D.cpp">
+      <Filter>Graphic\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetManager.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="RTex.cpp">
+      <Filter>Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxLoader.cpp">
+      <Filter>Graphic\3D\modelData\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="fbxModel.cpp">
+      <Filter>Graphic\3D\modelData\FBX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +253,21 @@
     </ClInclude>
     <ClInclude Include="SceneFactory.h">
       <Filter>Scene\SceneFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager2D.h">
+      <Filter>Graphic\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetManager.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="RTex.h">
+      <Filter>Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxLoader.h">
+      <Filter>Graphic\3D\modelData\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="fbxModel.h">
+      <Filter>Graphic\3D\modelData\FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

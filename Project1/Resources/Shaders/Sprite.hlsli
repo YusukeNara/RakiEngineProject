@@ -18,6 +18,9 @@ struct VSOutput
 	//インスタンス情報
     matrix ins_matrix : INSTANCE_WORLD_MAT;	//インスタンシング用変換行列
     float2 size       : INSTANCE_DRAWSIZE;
+    float4 uvOffset   : INSTANCE_UVOFFSET;
+    float4 color      : INSTANCE_COLOR;
+    float4 freedata   : INSTANCE_FREEDATA;
 };
 
 //ジオメトリ出力構造体
@@ -27,4 +30,7 @@ struct GSOutput
     float2 uv  : TEXCOORD;		//出力UV値
     matrix ins_matrix : INSTANCE_WORLD_MAT;
     float2 size       : INSTANCE_DRAWSIZE;
+    float4 uvOffset : INSTANCE_UVOFFSET;
+    float4 color : INSTANCE_COLOR;
+    float4 freedata : INSTANCE_FREEDATA;
 };

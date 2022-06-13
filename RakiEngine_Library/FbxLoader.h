@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "fbxsdk.h"
+#include "lib/fbx_sdk/include/fbxsdk.h"
 
 #include "Raki_DX12B.h"
 #include "fbxModel.h"
