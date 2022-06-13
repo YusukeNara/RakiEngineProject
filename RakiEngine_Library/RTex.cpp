@@ -138,7 +138,7 @@ RTex::RTex()
 
 RTex::~RTex()
 {
-	return DSVdescheap.Get();
+
 }
 
 void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor)
@@ -161,10 +161,5 @@ void RTex::InitViewAndRect(int width, int height)
 
 	//シザー矩形は画面左上
 	rect = CD3DX12_RECT(0, 0, width, height);
-
-}
-
-void RTex::CreateDSV()
-{
 
 }
