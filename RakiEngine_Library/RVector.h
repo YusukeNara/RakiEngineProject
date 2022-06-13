@@ -275,3 +275,82 @@ namespace RV3Colider {
 	};
 
 };
+
+
+#pragma region XMFLOAT_OPERATOR
+
+inline const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x + rhs.x;
+	result.y = lhs.y + rhs.y;
+	result.z = lhs.z + rhs.z;
+	result.w = lhs.w + rhs.w;
+	return result;
+}
+
+inline void operator+=(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	lhs.z += rhs.z;
+	lhs.w += rhs.w;
+}
+
+inline const DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x - rhs.x;
+	result.y = lhs.y - rhs.y;
+	result.z = lhs.z - rhs.z;
+	result.w = lhs.w - rhs.w;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const float a) {
+	XMFLOAT4 result;
+	result.x = lhs.x / a;
+	result.y = lhs.y / a;
+	result.z = lhs.z / a;
+	result.w = lhs.w / a;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const float a) {
+	XMFLOAT4 result;
+	result.x = lhs.x * a;
+	result.y = lhs.y * a;
+	result.z = lhs.z * a;
+	result.w = lhs.w * a;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x - b.x;
+	result.y = a.y - b.y;
+	result.z = a.z - b.z;
+	result.w = a.w - b.w;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x * b.x;
+	result.y = a.y * b.y;
+	result.z = a.z * b.z;
+	result.w = a.w * b.w;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x / b.x;
+	result.y = a.y / b.y;
+	result.z = a.z / b.z;
+	result.w = a.w / b.w;
+	return result;
+}
+
+
+#pragma endregion

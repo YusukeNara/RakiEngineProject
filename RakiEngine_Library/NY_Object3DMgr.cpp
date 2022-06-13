@@ -1,21 +1,35 @@
 #include "NY_Object3DMgr.h"
 
+#include "FbxLoader.h"
 #include "Raki_WinAPI.h"
 #include "Raki_DX12B.h"
 #include "TexManager.h"
+#include "RenderTargetManager.h"
 #include "NY_Model.h"
 
 ID3D12Device *NY_Object3DManager::dev = nullptr;
+
+NY_Object3DManager::~NY_Object3DManager()
+{
+}
 
 bool NY_Object3DManager::CreateObject3DManager()
 {
     //Object3D用パイプライン生成
     object3dPipelineSet = Create3DPipelineState(RAKI_DX12B_DEV);
 
+    //FBX関連
+    FbxLoader::GetInstance()->Initialize();
+
     //デバイスのポインタを格納
     this->dev = RAKI_DX12B_DEV;
 
     return true;
+}
+
+void NY_Object3DManager::FinalizeObject3DManager()
+{
+    FbxLoader::GetInstance()->Finalize();
 }
 
 
@@ -245,14 +259,58 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
     result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelineset.pipelinestate));
 #pragma endregion GraphicsPipeline
 
-    //デスクリプタヒープ生成
-    //D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc{};
-    //descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    //descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    //descHeapDesc.NumDescriptors = 256;
-    //result = dev->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&descheap));
+    gpipelineStateDesc = gpipeline;
+
+    //マルチパス用
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC mpGP{};
+    mpGP = gpipelineStateDesc;
+
+    //ブレンド設定のみ書き換える
+    D3D12_RENDER_TARGET_BLEND_DESC& mpblenddesc = mpGP.BlendState.RenderTarget[0];//blenddescを書き換えるとRenderTarget[0]が書き換わる
+    //ブレンドステートの共通設定
+    mpblenddesc.BlendEnable = true;//ブレンド有効
+    mpblenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;//加算合成
+    mpblenddesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;//ソースの値を100%使用
+    mpblenddesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;//デストの値を0%使用
+
+    //合成設定(各項目を書き換えることで設定可能)
+    mpblenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算
+    mpblenddesc.SrcBlend = D3D12_BLEND_ONE;//ソースの値を100%使用
+    mpblenddesc.DestBlend = D3D12_BLEND_ZERO;//デストの値を100%使用
+
+
+    mpGP.pRootSignature = pipelineset.rootsignature.Get();
+    result = dev->CreateGraphicsPipelineState(&mpGP, IID_PPV_ARGS(&mpTexPipelineSet.pipelinestate));
+    mpTexPipelineSet.rootsignature = pipelineset.rootsignature.Get();
 
     return pipelineset;
+}
+
+Pipeline3D NY_Object3DManager::CreateMPPipelineState(Pipeline3D defaultPP)
+{
+    Pipeline3D resultP;
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC mpGP{};
+    mpGP = gpipelineStateDesc;
+
+    //ブレンド設定のみ書き換える
+    D3D12_RENDER_TARGET_BLEND_DESC& mpblenddesc = mpGP.BlendState.RenderTarget[0];//blenddescを書き換えるとRenderTarget[0]が書き換わる
+    //ブレンドステートの共通設定
+    mpblenddesc.BlendEnable = true;//ブレンド有効
+    mpblenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;//加算合成
+    mpblenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;//ソースの値を100%使用
+    mpblenddesc.DestBlendAlpha = D3D12_BLEND_ONE;//デストの値を0%使用
+
+    //合成設定(各項目を書き換えることで設定可能)
+    mpblenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算
+    mpblenddesc.SrcBlend = D3D12_BLEND_ONE;//ソースの値を100%使用
+    mpblenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;//デストの値を100%使用
+
+    mpGP.pRootSignature = defaultPP.rootsignature.Get();
+    resultP.rootsignature = defaultPP.rootsignature;
+    auto result = RAKI_DX12B_DEV->CreateGraphicsPipelineState(&mpGP, IID_PPV_ARGS(&resultP.pipelinestate));
+
+    return resultP;
 }
 
 
@@ -316,6 +374,12 @@ void NY_Object3DManager::UpdateAllObjects()
     }
 }
 
+void NY_Object3DManager::ClearObjects()
+{
+    
+
+}
+
 
 void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
@@ -327,6 +391,19 @@ void NY_Object3DManager::SetCommonBeginDrawObject3D()
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
+    Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void NY_Object3DManager::SetCommonBeginDrawObject3DFeatRTex(int rtHandle)
+{
+    //パイプラインステートをセット
+    Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(mpTexPipelineSet.pipelinestate.Get());
+    //ルートシグネチャをセット
+    Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(mpTexPipelineSet.rootsignature.Get());
+    //プリミティブ形状設定
+    Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //デスクリプタヒープ設定
+    ID3D12DescriptorHeap* ppHeaps[] = { RenderTargetManager::GetInstance()->renderTextures[rtHandle]->GetDescriptorHeapSRV() };
     Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
@@ -366,6 +443,21 @@ Object3d *LoadModel_ObjFile(string modelname)
 
     //生成したオブジェクトのモデルデータをロードする
     object->LoadAndSetModelData(modelname);
+
+    //返却
+    return object;
+}
+
+Object3d* LoadModel_FBXFile(string modelname)
+{
+    //オブジェクトデータを新規作成
+    Object3d* object = new Object3d;
+
+    //オブジェクト初期化
+    object->InitObject3D(RAKI_DX12B_DEV);
+
+    //生成したオブジェクトのモデルデータをロードする
+    object->LoadAndSetModelData_Fbx(modelname);
 
     //返却
     return object;

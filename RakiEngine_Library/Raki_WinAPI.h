@@ -15,8 +15,6 @@ public:
 	static int window_width; //縦幅
 	static int window_height;//横幅
 	static wchar_t window_name[];//ウィンドウの名前
-	//コンソールハンドル
-	static int hConsole;
 
 public:
 	//---------------------メンバ関数--------------------//

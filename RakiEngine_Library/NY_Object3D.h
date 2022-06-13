@@ -11,6 +11,7 @@
 #include <vector>
 //myEngine
 #include "NY_Model.h"
+#include "fbxModel.h"
 #include "RVector.h"
 
 using namespace std;
@@ -67,6 +68,7 @@ public:
 		isDirty = true;
 		//モデルデータ（空）を作成
 		model = make_shared<Model3D>();
+		fbxmodel = make_shared<fbxModel>();
 	};
 
 	//オブジェクトの初期化
@@ -86,30 +88,27 @@ public:
 
 	//オブジェクト更新
 	void UpdateObject3D();
-
 	//ビルボード更新（カメラオブジェクトをそのまま取り込んで、ビルボード用の更新処理を行う）
 	void UpdateBillBoard3D();
 
-	//モデルデータを使用したオブジェクト描画
-	//static void DrawModel3D(Object3d *obj, ID3D12GraphicsCommandList *cmd,ID3D12Device *dev);
-	//void DrawModel3D(ID3D12GraphicsCommandList *cmd, ID3D12Device *dev);
-	//void DrawModel3DSelectTexture(UINT useTexNum);
-
+	//オブジェクト描画
 	void DrawObject();
 
-	//マルチパスレンダリングを使用した描画（マルチパスで作ったリソースを使って描画）
-	void DrawMultiPassResource();
+	//レンダーテクスチャを使用した描画
+	void DrawRTexObject(int rtHandle);
 
 	//モデルデータをロード
 	void LoadAndSetModelData(string modelname);
+	void LoadAndSetModelData_Fbx(string filename);
 	//モデルデータを別オブジェクトから設定する
 	void SetAnotherObjectModelData(Object3d *anotherObj);
 
 	void CreateModel_Tile(float x_size, float y_size, float x_uv, float y_uv, UINT useTexNum);
 
 private:
-	// モデルデータ（ほかのオブジェクトでモデルデータは同一のものを使う場合に備えて、weak_ptrを使用）
+	// モデルデータ（ほかのオブジェクトでモデルデータは同一のものを使う場合に備えて、shared_ptrを使用）
 	shared_ptr<Model3D> model;
+	shared_ptr<fbxModel> fbxmodel;
 
 	//アフィン変換情報
 	RVector3 scale = { 1,1,1 };
@@ -132,6 +131,17 @@ private:
 
 	//適用するリソースの番号
 	UINT resourceNumber;
+
+	//マルチパスレンダリングを使用した描画（マルチパスで作ったリソースを使って描画）
+	void DrawMultiPassResource();
+
+	enum isWhichModel {
+		MODEL_DATA_OBJ,
+		MODEL_DATA_FBX,
+	};
+
+	//どのモデルデータか？
+	isWhichModel isThisModel;
 };
 
 

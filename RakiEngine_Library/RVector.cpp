@@ -93,6 +93,8 @@ float CalcAccelToFramePerVel(float onesecmove)
 
 float CalcGravity(float start, float end, float v0, int time,float &v1)
 {
+
+
 	//現在の速度^2 = 初速度^2 + -2*重力加速度
 	float v = (v0 * v0) + (-2 * CalcAccelToFramePerVel(9.8f));
 

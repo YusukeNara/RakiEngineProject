@@ -1,13 +1,13 @@
 #pragma once
 
-
-
 #include <Windows.h>
 #include <d3d12.h>
 #include <d3dx12.h>
 #include <wrl.h>
 #include <dxgi1_6.h>
+#include <dxgidebug.h>
 #include <cstdlib>
+#include <iostream>
 
 #include "Raki_WinAPI.h"
 #include "Raki_Input.h"
@@ -18,6 +18,12 @@ struct mpVertex {
 	DirectX::XMFLOAT2 uv;
 };
 
+//hresult出力
+inline void ExportHRESULTmessage(HRESULT resultCode){ 
+	if(FAILED(resultCode)){ std::cout << std::system_category().message(resultCode) << std::endl; }
+}
+
+
 class Raki_DX12B
 {
 private: // エイリアス
@@ -25,9 +31,7 @@ private: // エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	Raki_DX12B() {};
-	~Raki_DX12B() {
-	
-	};
+	~Raki_DX12B();
 
 public:
 	//--------------------メンバ関数--------------------//
@@ -68,7 +72,7 @@ public:
 	void StartDrawRenderTarget();
 
 	//描画処理終了
-	void CloseDraw();
+	void CloseDraw(IDXGISwapChain4 *sc);
 
 	/// <summary>
 	/// 従来の描画終了
@@ -97,6 +101,10 @@ public:
 	/// <returns></returns>
 	ID3D12Device *GetDevice() { return device.Get(); }
 
+	IDXGIFactory6* GetDXGIFactory() { return dxgiFactory.Get(); }
+
+	ID3D12CommandQueue* GetCmdQueue() { return commandQueue.Get(); }
+
 	/// <summary>
 	/// imgui用デスクリプタヒープのゲッタ
 	/// </summary>
@@ -109,6 +117,8 @@ public:
 	/// <returns></returns>
 	ID3D12DescriptorHeap *GetMuliPassSrvDescHeap() { return mpSrvHeap.Get(); }
 
+	IDXGISwapChain4* GetSwapChain() { return swapchain.Get(); }
+
 
 	void ManualRelease() {
 		dxgiFactory.ReleaseAndGetAddressOf();
@@ -116,7 +126,6 @@ public:
 		commandAllocator.ReleaseAndGetAddressOf();
 		commandList.ReleaseAndGetAddressOf();
 		commandQueue.ReleaseAndGetAddressOf();
-		swapchain.ReleaseAndGetAddressOf();
 		depthBuffer.ReleaseAndGetAddressOf();
 		rtvHeaps.ReleaseAndGetAddressOf();
 		dsvHeap.ReleaseAndGetAddressOf();
@@ -132,6 +141,7 @@ private:
 	// Direct3D関連
 	ComPtr<IDXGIFactory6>				dxgiFactory;
 	ComPtr<ID3D12Device>				device;
+	ComPtr<ID3D12Debug>					debugController;
 	ComPtr<ID3D12GraphicsCommandList>	commandList;
 	ComPtr<ID3D12CommandAllocator>		commandAllocator;
 	ComPtr<ID3D12CommandQueue>			commandQueue;

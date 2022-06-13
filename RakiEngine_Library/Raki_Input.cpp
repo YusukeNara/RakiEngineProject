@@ -10,6 +10,8 @@ DIMOUSESTATE Input::oldMouseState;
 POINT        Input::pos;
 XINPUT_STATE Input::xInputState;
 XINPUT_STATE Input::oldxInputState;
+XPAD_STICKTILT_FLAG Input::xpadTiltFlags;
+XPAD_STICKTILT_FLAG Input::oldTiltFlags;
 //デッドゾーン定数（初期値はXINPUTライブラリ提供の定数を使用）
 SHORT Input::XPAD_RS_DEADZONE = XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
 SHORT Input::XPAD_LS_DEADZONE = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
@@ -17,6 +19,28 @@ SHORT Input::XPAD_LS_DEADZONE = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
 IDirectInput8       *Input::dinput      = nullptr;
 IDirectInputDevice8 *Input::devkeyBoard = nullptr;
 IDirectInputDevice8 *Input::devMouse	= nullptr;
+
+void XPAD_STICKTILT_FLAG::Reset()
+{
+	isRStickTiltUp		=false;
+	isRStickTiltDown	=false;
+	isRStickTiltRight	=false;
+	isRStickTiltLeft	=false;
+	isRStickTiltLeftUp			=false;
+	isRStickTiltRightUp			=false;
+	isRStickTiltLeftDown		=false;
+	isRStickTiltRightDown		=false;
+
+	isLStickTiltUp		=false;
+	isLStickTiltDown	=false;
+	isLStickTiltRight	=false;
+	isLStickTiltLeft	=false;
+	isLStickTiltLeftUp			=false;
+	isLStickTiltRightUp			=false;
+	isLStickTiltLeftDown		=false;
+	isLStickTiltRightDown		=false;
+
+}
 
 bool Input::Init(WNDCLASSEX w, HWND hwnd)
 {
@@ -65,6 +89,9 @@ void Input::StartGetInputState()
 	for (int i = 0; i < 256; i++) {
 		oldkeys[i] = keys[i];
 	}
+	oldTiltFlags = xpadTiltFlags;
+	xpadTiltFlags.Reset();
+
 	//キー入力状態取得開始
 	devkeyBoard->Acquire();
 	//全キーの入力状態を取得
@@ -225,52 +252,175 @@ bool Input::isXpadStickTilt(XPAD_STICK_DIRECTION_CODE dircode)
 	switch (dircode)
 	{
 	case XPAD_LSTICK_DIR_UP:
-		return isLSTiltUp();
+		return isLeftStickTiltUp();
 		break;
 	case XPAD_LSTICK_DIR_DOWN:
-		return isLSTiltDown();
+		return isLeftStickTiltDown();
 		break;
 	case XPAD_LSTICK_DIR_LEFT:
-		return isLSTiltLeft();
+		return isLeftStickTiltLeft();
 		break;
 	case XPAD_LSTICK_DIR_RIGHT:
-		return isLSTiltRight();
+		return isLeftStickTiltRight();
 		break;
 	case XPAD_LSTICK_DIR_UR:
-		return isLSTiltUp() && isLSTiltRight();
+		return isLeftStickTiltRightUp();
 		break;
 	case XPAD_LSTICK_DIR_UL:
-		return isLSTiltUp() && isLSTiltLeft();
+		return isLeftStickTiltLeftUp();
 		break;
 	case XPAD_LSTICK_DIR_DR:
-		return isLSTiltDown() && isLSTiltRight();
+		return isLeftStickTiltRightDown();
 		break;
 	case XPAD_LSTICK_DIR_DL:
-		return isLSTiltDown() && isLSTiltLeft();
+		return isLeftStickTiltLeftDown();
 		break;
+
+
+
 	case XPAD_RSTICK_DIR_UP:
-		return isRSTiltUp();
+		return isRightStickTiltUp();
 		break;
 	case XPAD_RSTICK_DIR_DOWN:
-		return isRSTiltDown();
+		return isRightStickTiltDown();
 		break;
 	case XPAD_RSTICK_DIR_LEFT:
-		return isRSTiltLeft();
+		return isRightStickTiltLeft();
 		break;
 	case XPAD_RSTICK_DIR_RIGHT:
-		return isRSTiltRight();
+		return isRightStickTiltRight();
 		break;
 	case XPAD_RSTICK_DIR_UR:
-		return isRSTiltUp() && isRSTiltRight();
+		return isRightStickTiltRightUp();
 		break;
 	case XPAD_RSTICK_DIR_UL:
-		return isRSTiltUp() && isRSTiltRight();
+		return isRightStickTiltLeftUp();
 		break;
 	case XPAD_RSTICK_DIR_DR:
-		return isRSTiltUp() && isRSTiltRight();
+		return isRightStickTiltRightDown();
 		break;
 	case XPAD_RSTICK_DIR_DL:
-		return isRSTiltUp() && isRSTiltRight();
+		return isRightStickTiltLeftDown();
+		break;
+	default:
+		break;
+	}
+}
+
+bool Input::isXpadStickTiltTrigger(XPAD_STICK_DIRECTION_CODE dircode)
+{
+	switch (dircode)
+	{
+	case XPAD_LSTICK_DIR_UP:
+		return isLeftStickTiltUp()			&&	!oldTiltFlags.isLStickTiltUp;
+		break;
+	case XPAD_LSTICK_DIR_DOWN:
+		return isLeftStickTiltDown()		&&	!oldTiltFlags.isLStickTiltDown;
+		break;
+	case XPAD_LSTICK_DIR_LEFT:
+		return isLeftStickTiltLeft()		&&	!oldTiltFlags.isLStickTiltLeft;
+		break;
+	case XPAD_LSTICK_DIR_RIGHT:
+		return isLeftStickTiltRight()		&&	!oldTiltFlags.isLStickTiltRight;
+		break;
+	case XPAD_LSTICK_DIR_UR:
+		return isLeftStickTiltRightUp()		&&	!oldTiltFlags.isLStickTiltRightUp;
+		break;
+	case XPAD_LSTICK_DIR_UL:
+		return isLeftStickTiltLeftUp()		&&	!oldTiltFlags.isLStickTiltLeftUp;
+		break;
+	case XPAD_LSTICK_DIR_DR:
+		return isLeftStickTiltRightDown()	&&	!oldTiltFlags.isLStickTiltRightDown;
+		break;
+	case XPAD_LSTICK_DIR_DL:
+		return isLeftStickTiltLeftDown()	&&	!oldTiltFlags.isLStickTiltLeftDown;
+		break;
+
+
+
+	case XPAD_RSTICK_DIR_UP:
+		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltUp;
+		break;
+	case XPAD_RSTICK_DIR_DOWN:
+		return isRightStickTiltDown()		&&	!oldTiltFlags.isRStickTiltDown;
+		break;
+	case XPAD_RSTICK_DIR_LEFT:
+		return isRightStickTiltLeft()		&&	!oldTiltFlags.isRStickTiltLeft;
+		break;
+	case XPAD_RSTICK_DIR_RIGHT:
+		return isRightStickTiltRight()		&&	!oldTiltFlags.isRStickTiltRight;
+		break;
+	case XPAD_RSTICK_DIR_UR:
+		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltRightUp;
+		break;
+	case XPAD_RSTICK_DIR_UL:
+		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltLeftUp;
+		break;
+	case XPAD_RSTICK_DIR_DR:
+		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltRightDown;
+		break;
+	case XPAD_RSTICK_DIR_DL:
+		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltLeftDown;
+		break;
+	default:
+		break;
+	}
+}
+
+bool Input::isXpadStickTiltReleased(XPAD_STICK_DIRECTION_CODE dircode)
+{
+	switch (dircode)
+	{
+	case XPAD_LSTICK_DIR_UP:
+		return !isLeftStickTiltUp() && oldTiltFlags.isLStickTiltUp;
+		break;
+	case XPAD_LSTICK_DIR_DOWN:
+		return !isLeftStickTiltDown() && oldTiltFlags.isLStickTiltDown;
+		break;
+	case XPAD_LSTICK_DIR_LEFT:
+		return !isLeftStickTiltLeft() && oldTiltFlags.isLStickTiltLeft;
+		break;
+	case XPAD_LSTICK_DIR_RIGHT:
+		return !isLeftStickTiltRight() && oldTiltFlags.isLStickTiltRight;
+		break;
+	case XPAD_LSTICK_DIR_UR:
+		return !isLeftStickTiltRightUp() && oldTiltFlags.isLStickTiltRightUp;
+		break;
+	case XPAD_LSTICK_DIR_UL:
+		return !isLeftStickTiltLeftUp() && oldTiltFlags.isLStickTiltLeftUp;
+		break;
+	case XPAD_LSTICK_DIR_DR:
+		return !isLeftStickTiltRightDown() && oldTiltFlags.isLStickTiltRightDown;
+		break;
+	case XPAD_LSTICK_DIR_DL:
+		return !isLeftStickTiltLeftDown() && oldTiltFlags.isLStickTiltLeftDown;
+		break;
+
+
+
+	case XPAD_RSTICK_DIR_UP:
+		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltUp;
+		break;
+	case XPAD_RSTICK_DIR_DOWN:
+		return !isRightStickTiltDown() && oldTiltFlags.isRStickTiltDown;
+		break;
+	case XPAD_RSTICK_DIR_LEFT:
+		return !isRightStickTiltLeft() && oldTiltFlags.isRStickTiltLeft;
+		break;
+	case XPAD_RSTICK_DIR_RIGHT:
+		return !isRightStickTiltRight() && oldTiltFlags.isRStickTiltRight;
+		break;
+	case XPAD_RSTICK_DIR_UR:
+		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltRightUp;
+		break;
+	case XPAD_RSTICK_DIR_UL:
+		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltLeftUp;
+		break;
+	case XPAD_RSTICK_DIR_DR:
+		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltRightDown;
+		break;
+	case XPAD_RSTICK_DIR_DL:
+		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltLeftDown;
 		break;
 	default:
 		break;
@@ -348,27 +498,105 @@ void Input::XpadStickTiltRoundOffToDeadzone()
 	//傾き方向を判別する関数で、どっちの方向にも傾いていない場合
 	//スティックの傾きはデッドゾーンの範囲内と判断できるので、その場合は傾きを0にする
 
-	if (!isRSTiltUp() && !isRSTiltDown()) { xInputState.Gamepad.sThumbRY = (SHORT)0; }
-	if (!isRSTiltRight() && !isRSTiltLeft()) { xInputState.Gamepad.sThumbRX = (SHORT)0; }
-	if (!isLSTiltUp() && !isLSTiltDown()) { xInputState.Gamepad.sThumbLY = (SHORT)0; }
-	if (!isLSTiltRight() && !isLSTiltLeft()) { xInputState.Gamepad.sThumbLX = (SHORT)0; }
+	if (!isRightStickTiltUp() && !isRightStickTiltDown()) { xInputState.Gamepad.sThumbRY = (SHORT)0; }
+	if (!isRightStickTiltRight() && !isRightStickTiltLeft()) { xInputState.Gamepad.sThumbRX = (SHORT)0; }
+	if (!isLeftStickTiltUp() && !isLeftStickTiltDown()) { xInputState.Gamepad.sThumbLY = (SHORT)0; }
+	if (!isLeftStickTiltRight() && !isLeftStickTiltLeft()) { xInputState.Gamepad.sThumbLX = (SHORT)0; }
 }
 
-bool Input::isRSTiltRight() { return xInputState.Gamepad.sThumbRX > XPAD_RS_DEADZONE; }
 
-bool Input::isRSTiltLeft() { return xInputState.Gamepad.sThumbRX < -XPAD_RS_DEADZONE; }
 
-bool Input::isRSTiltUp() { return xInputState.Gamepad.sThumbRY > XPAD_RS_DEADZONE; }
 
-bool Input::isRSTiltDown() { return xInputState.Gamepad.sThumbRY < -XPAD_RS_DEADZONE; }
 
-bool Input::isLSTiltRight() { return xInputState.Gamepad.sThumbLX > XPAD_LS_DEADZONE; }
 
-bool Input::isLSTiltLeft() { return xInputState.Gamepad.sThumbLX < -XPAD_LS_DEADZONE; }
+bool Input::isRightStickTiltRight() {
+	xpadTiltFlags.isRStickTiltRight = xInputState.Gamepad.sThumbRX > XPAD_RS_DEADZONE;
+	return xpadTiltFlags.isRStickTiltRight;
+}
 
-bool Input::isLSTiltUp() { return xInputState.Gamepad.sThumbLY > XPAD_LS_DEADZONE; }
+bool Input::isRightStickTiltLeft() {
+	xpadTiltFlags.isRStickTiltLeft = xInputState.Gamepad.sThumbRX < -XPAD_RS_DEADZONE;
+	return xpadTiltFlags.isRStickTiltLeft; 
+}
 
-bool Input::isLSTiltDown() { return xInputState.Gamepad.sThumbLY < -XPAD_LS_DEADZONE; }
+bool Input::isRightStickTiltUp() {
+	xpadTiltFlags.isRStickTiltUp = xInputState.Gamepad.sThumbRY > XPAD_RS_DEADZONE;
+	return xpadTiltFlags.isRStickTiltUp; 
+}
+
+bool Input::isRightStickTiltDown() {
+	xpadTiltFlags.isRStickTiltDown = xInputState.Gamepad.sThumbRY < -XPAD_RS_DEADZONE;
+	return xpadTiltFlags.isRStickTiltDown; 
+}
+
+bool Input::isRightStickTiltRightUp()
+{
+	xpadTiltFlags.isRStickTiltRightUp = isRightStickTiltRight() == true && isRightStickTiltUp() == true;
+	return xpadTiltFlags.isRStickTiltRightUp;
+}
+
+bool Input::isRightStickTiltLeftUp()
+{
+	xpadTiltFlags.isRStickTiltLeftUp = isRightStickTiltLeft() == true && isRightStickTiltUp() == true;
+	return xpadTiltFlags.isRStickTiltLeftUp;
+}
+
+bool Input::isRightStickTiltRightDown()
+{
+	xpadTiltFlags.isRStickTiltRightDown = isRightStickTiltRight() == true && isRightStickTiltDown() == true;
+	return xpadTiltFlags.isRStickTiltRightDown;
+}
+
+bool Input::isRightStickTiltLeftDown()
+{
+	xpadTiltFlags.isRStickTiltLeftDown = isRightStickTiltLeft() == true && isRightStickTiltDown() == true;
+	return xpadTiltFlags.isRStickTiltLeftDown;
+}
+
+
+bool Input::isLeftStickTiltRight() {
+	xpadTiltFlags.isLStickTiltRight = xInputState.Gamepad.sThumbLX > XPAD_LS_DEADZONE;
+	return xpadTiltFlags.isLStickTiltRight; 
+}
+
+bool Input::isLeftStickTiltLeft() {
+	xpadTiltFlags.isLStickTiltLeft = xInputState.Gamepad.sThumbLX < -XPAD_LS_DEADZONE;
+	return xpadTiltFlags.isLStickTiltLeft; 
+}
+
+bool Input::isLeftStickTiltUp() {
+	xpadTiltFlags.isLStickTiltUp = xInputState.Gamepad.sThumbLY > XPAD_LS_DEADZONE;
+	return xpadTiltFlags.isLStickTiltUp; 
+}
+
+bool Input::isLeftStickTiltDown() {
+	xpadTiltFlags.isLStickTiltDown = xInputState.Gamepad.sThumbLY < -XPAD_LS_DEADZONE;
+	return xpadTiltFlags.isLStickTiltDown;
+}
+
+bool Input::isLeftStickTiltLeftUp()
+{
+	xpadTiltFlags.isLStickTiltLeftUp = isLeftStickTiltLeft() == true && isLeftStickTiltUp() == true;
+	return xpadTiltFlags.isLStickTiltLeftUp;
+}
+
+bool Input::isLeftStickTiltLeftDown()
+{
+	xpadTiltFlags.isLStickTiltLeftDown = isLeftStickTiltLeft() == true && isLeftStickTiltDown() == true;
+	return xpadTiltFlags.isLStickTiltLeftDown;
+}
+
+bool Input::isLeftStickTiltRightUp()
+{
+	xpadTiltFlags.isLStickTiltRightUp = isLeftStickTiltRight() == true && isLeftStickTiltUp() == true;
+	return xpadTiltFlags.isLStickTiltRightUp;
+}
+
+bool Input::isLeftStickTiltRightDown()
+{
+	xpadTiltFlags.isLStickTiltRightDown = isLeftStickTiltRight() == true && isLeftStickTiltDown() == true;
+	return xpadTiltFlags.isLStickTiltRightDown;
+}
 
 Input::StickTiltParam Input::GetXpadRStickTilt()
 {

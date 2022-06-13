@@ -64,6 +64,8 @@ private:
 	Pipeline3D object3dPipelineSet;
 	//即時描画用パイプライン
 	Pipeline3D quickDrawPipelineSet;
+	//マルチパステクスチャ用
+	Pipeline3D mpTexPipelineSet;
 
 	//----------パイプラインステート構造体--------------//
 
@@ -71,6 +73,7 @@ private:
 
 	//モデル用グラフィックスパイプラインステート構造体
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipelineStateDesc;
+	
 
 	//----------シェーダーオブジェクト----------//
 
@@ -92,7 +95,7 @@ private:
 
 	//コンストラクタ、デストラクタ
 	NY_Object3DManager() {};
-	~NY_Object3DManager() {};
+	~NY_Object3DManager();
 
 public:
 	//コピーコンストラクタ無効化
@@ -105,24 +108,17 @@ public:
 		static NY_Object3DManager obj;
 		return &obj;
 	}
-
-	////共通射影行列
-	//XMMATRIX matProjection{};
 	
 	//共通ビューポート行列
 	XMMATRIX matViewport{};
-	////テクスチャ用デスクリプタヒープ
-	//ComPtr<ID3D12DescriptorHeap> descheap;
-	////テクスチャリソース配列
-	//ComPtr<ID3D12Resource> texbuff[256];
-	////ウィンドウサイズ
-	//int window_width, window_height;
 
 	/// <summary>
 	/// <para>NY_Object3DManagerの生成</para>
 	/// </summary>
 	/// <returns>成否</returns>
 	bool CreateObject3DManager();
+
+	void FinalizeObject3DManager();
 
 	/// <summary>
 	/// object3dの作成、コンテナに格納
@@ -142,11 +138,15 @@ public:
 	/// </summary>
 	void UpdateAllObjects();
 
+	void ClearObjects();
+
 	/// <summary>
 	/// 3Dオブジェクトの描画を実行するための前準備を行う
 	/// </summary>
 	/// <param name="cmd">ID3D12GraphicsCommandListのポインタ</param>
 	void SetCommonBeginDrawObject3D();
+
+	void SetCommonBeginDrawObject3DFeatRTex(int rtHandle);
 
 	void SetCommonBeginDrawObject3D2MultiPassRenderResource();
 
@@ -174,6 +174,8 @@ private:
 	/// <param name="dev">ID3D12Deviceのポインタ</param>
 	/// <returns>作成したPipeline3D構造体</returns>
 	Pipeline3D Create3DPipelineState(ID3D12Device *dev);
+
+	Pipeline3D CreateMPPipelineState(Pipeline3D defaultPP);
 
 };
 
@@ -205,6 +207,8 @@ inline void InitializeObject3DManager() {
 /// <param name="modelname">ロードする.objのファイル名</param>
 /// <returns>生成したobject3dのポインタ</returns>
 Object3d *LoadModel_ObjFile(string modelname);
+
+Object3d* LoadModel_FBXFile(string modelname);
 
 /// <summary>
 /// Object3dデータの削除

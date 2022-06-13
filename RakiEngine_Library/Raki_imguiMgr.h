@@ -1,5 +1,6 @@
 #pragma once
 #include <wrl.h>
+#include <array>
 
 #include "imgui/imgui_impl_win32.h"
 #include "imgui/imgui_impl_dx12.h"
@@ -10,6 +11,9 @@ class ImguiMgr final
 private:
 	//imgui用デスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeapForImgui;
+
+	//描画回数カウント
+	int drawCount = 0;
 
 	//コンストラクタ、デストラクタを無効
 	ImguiMgr() {};
@@ -29,11 +33,16 @@ public:
 	/// <returns>bool型で成否</returns>
 	bool InitImgui(ID3D12Device *dev, HWND hwnd);
 
-	void StartDrawImgui(const char *windowTitle, float posX, float posY);
+	void NewFrame();
+
+	void StartDrawImgui(const char *windowTitle, float width, float height);
 
 	void EndDrawImgui();
 
+	void SendImguiDrawCommand();
+
 	void FinalizeImgui();
+
 };
 
 namespace myImgui {

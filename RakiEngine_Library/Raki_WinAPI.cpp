@@ -6,8 +6,6 @@ int Raki_WinAPI::window_width = 1280;
 int Raki_WinAPI::window_height = 720;
 wchar_t Raki_WinAPI::window_name[] = L"RakiEngine_Project";
 
-int Raki_WinAPI::hConsole = 0;
-
 HWND Raki_WinAPI::hwnd;
 WNDCLASSEX Raki_WinAPI::wndClass;
 
@@ -64,13 +62,7 @@ void Raki_WinAPI::CreateGameWindow()
 
 void Raki_WinAPI::CreateConsoleWindow()
 {
-	//コンソールウィンドウ表示
-	AllocConsole();
-	//ハンドルにコンソールウィンドウを紐付け
-	hConsole = _open_osfhandle((long)GetStdHandle(STD_OUTPUT_HANDLE), _O_TEXT);
-	*stdout = *_fdopen(hConsole, "w");
-	//書き込み先バッファ設定
-	setvbuf(stdout, NULL, _IONBF, 0);
+
 }
 
 void Raki_WinAPI::DeleteGameWindow()
@@ -84,8 +76,7 @@ void Raki_WinAPI::DeleteGameWindow()
 
 void Raki_WinAPI::CloseConsoleWindow()
 {
-	//コンソールウィンドウを閉じる
-	_close(hConsole);
+
 }
 
 bool Raki_WinAPI::ProcessMessage()

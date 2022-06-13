@@ -72,7 +72,7 @@ public:
 	//ループの設定(0~254でループ回数を指定。255の場合無限ループ。それ以外は無効)
 	static void SetPlayRoopmode(SoundData &soundData,int roopCount);
 	//再生
-	static void PlayLoadedSound(const SoundData &soundData);
+	static void PlayLoadedSound(const SoundData &soundData,bool isSerialPlay = false);
 	//一時停止
 	static void PauseLoadedSound(const SoundData &soundData);
 	//停止

@@ -2,6 +2,7 @@
 #include "Raki_imguiMgr.h"
 #include "Raki_DX12B.h"
 #include "Raki_WinAPI.h"
+#include "RenderTargetManager.h"
 
 bool ImguiMgr::InitImgui(ID3D12Device *dev, HWND hwnd)
 {
@@ -50,13 +51,15 @@ bool ImguiMgr::InitImgui(ID3D12Device *dev, HWND hwnd)
 	return true;
 }
 
-void ImguiMgr::StartDrawImgui(const char *windowTitle, float posX, float posY)
+void ImguiMgr::NewFrame()
 {
-	//imgui描画開始
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+}
 
+void ImguiMgr::StartDrawImgui(const char *windowTitle, float posX, float posY)
+{
 	//ウィンドウ表示
 	ImGui::Begin(windowTitle);
 	ImGui::SetWindowSize(ImVec2(posX, posY), ImGuiCond_::ImGuiCond_FirstUseEver);
@@ -66,6 +69,13 @@ void ImguiMgr::EndDrawImgui()
 {
 	//表示終了、描画
 	ImGui::End();
+}
+
+void ImguiMgr::SendImguiDrawCommand()
+{
+	//RenderTargetManagerにバックバッファへの描画を伝える
+	RenderTargetManager::GetInstance()->SetDrawBackBuffer();
+
 	ImGui::Render();
 
 	//デスクリプタヒープをセット

@@ -63,7 +63,7 @@ public:
 		std::vector<DirectX::XMFLOAT2>			uv_offsets;	//uv値オフセット配列
 	};
 	//テクスチャデータ配列
-	static texture textureData[1024];
+	static texture textureData[2048];
 	//デスクリプタヒープ
 	static ComPtr<ID3D12DescriptorHeap> texDsvHeap;
 	//テクスチャ最大数
@@ -84,6 +84,8 @@ public:
 	static UINT LoadTexture(const char *filename);
 
 	static UINT LoadTexture(std::string filename);
+
+	static texture GetTextureState(UINT bufferRocate);
 
 	/// <summary>
 	/// テクスチャの分割読み込み

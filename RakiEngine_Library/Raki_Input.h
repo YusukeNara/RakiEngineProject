@@ -75,6 +75,31 @@ enum XPAD_STICK_DIRECTION_CODE
 
 #pragma endregion InputKeyCode
 
+struct XPAD_STICKTILT_FLAG
+{
+	bool isRStickTiltUp;
+	bool isRStickTiltDown;
+	bool isRStickTiltRight;
+	bool isRStickTiltLeft;
+
+	bool isRStickTiltLeftUp;
+	bool isRStickTiltRightUp;
+	bool isRStickTiltLeftDown;
+	bool isRStickTiltRightDown;
+
+	bool isLStickTiltUp;
+	bool isLStickTiltDown;
+	bool isLStickTiltRight;
+	bool isLStickTiltLeft;
+
+	bool isLStickTiltLeftUp;
+	bool isLStickTiltRightUp;
+	bool isLStickTiltLeftDown;
+	bool isLStickTiltRightDown;
+
+	void Reset();
+};
+
 using namespace Microsoft::WRL;
 /// <summary>
 /// シングルトンパターン採用、キー入力クラス
@@ -105,6 +130,8 @@ private:
 	static XINPUT_STATE xInputState;	//xinputの入力状態
 	static XINPUT_STATE oldxInputState;	//1F前
 	static SHORT XPAD_RS_DEADZONE, XPAD_LS_DEADZONE;
+	static XPAD_STICKTILT_FLAG xpadTiltFlags;
+	static XPAD_STICKTILT_FLAG oldTiltFlags;
 
 	//コンストラクタ、デストラクタを隠蔽
 	Input() {}
@@ -160,6 +187,10 @@ public:
 
 	static bool isXpadStickTilt(XPAD_STICK_DIRECTION_CODE dircode);
 
+	static bool isXpadStickTiltTrigger(XPAD_STICK_DIRECTION_CODE dircode);
+
+	static bool isXpadStickTiltReleased(XPAD_STICK_DIRECTION_CODE dircode);
+
 	struct StickTiltParam
 	{
 		int x = 0;
@@ -187,14 +218,24 @@ private:
 	static void XpadStickTiltRoundOffToDeadzone();
 
 	//スティックの傾き方向を確認
-	static bool isRSTiltRight();
-	static bool isRSTiltLeft();
-	static bool isRSTiltUp();
-	static bool isRSTiltDown();
-	static bool isLSTiltRight();
-	static bool isLSTiltLeft();
-	static bool isLSTiltUp();
-	static bool isLSTiltDown();
+
+	static bool isRightStickTiltRight();
+	static bool isRightStickTiltLeft();
+	static bool isRightStickTiltUp();
+	static bool isRightStickTiltDown();
+	static bool isRightStickTiltRightUp();
+	static bool isRightStickTiltRightDown();
+	static bool isRightStickTiltLeftUp();
+	static bool isRightStickTiltLeftDown();
+
+	static bool isLeftStickTiltRight();
+	static bool isLeftStickTiltLeft();
+	static bool isLeftStickTiltUp();
+	static bool isLeftStickTiltDown();
+	static bool isLeftStickTiltLeftUp();
+	static bool isLeftStickTiltLeftDown();
+	static bool isLeftStickTiltRightUp();
+	static bool isLeftStickTiltRightDown();
 };
 
 //マウス入力（ラップ関数）
