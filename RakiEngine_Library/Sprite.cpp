@@ -154,7 +154,7 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
     result = spdata->constBuff->Map(0, nullptr, (void **)&constMap);
     constMap->color = XMFLOAT4(1, 1, 1, 1);//�F�w��
     //���s���e�s��
-    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
     spdata->constBuff->Unmap(0, nullptr);
 
     //���\�[�X�ɍ��킹�Ē�������ꍇ
@@ -284,12 +284,12 @@ void Sprite::Create(UINT resourceID)
     constMap->color = XMFLOAT4(1, 1, 1, 1);//�F�w��
 
     //���s���e�s��
-    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
     spdata->constBuff->Unmap(0, nullptr);
 
     //�e�N�X�`���̃f�t�H���g�T�C�Y���擾
-    TEXTURE_DEFAULT_SIZE.x = TexManager::textureData[resourceID].metaData.width;
-    TEXTURE_DEFAULT_SIZE.y = TexManager::textureData[resourceID].metaData.height;
+    TEXTURE_DEFAULT_SIZE.x = float(TexManager::textureData[resourceID].metaData.width);
+    TEXTURE_DEFAULT_SIZE.y = float(TexManager::textureData[resourceID].metaData.height);
 
     //デフォルトのuvを格納
     spdata->uvOffsets.push_back(XMFLOAT4(0.0, 0.0, 1.0, 1.0));
@@ -409,12 +409,12 @@ void Sprite::CreateRtexSprite(int handle)
     constMap->color = XMFLOAT4(1, 1, 1, 1);//�F�w��
 
     //���s���e�s��
-    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+    constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
     spdata->constBuff->Unmap(0, nullptr);
 
     //�e�N�X�`���̃f�t�H���g�T�C�Y���擾
-    TEXTURE_DEFAULT_SIZE.x = RenderTargetManager::GetInstance()->renderTextures[handle]->GetTextureBuffer()->GetDesc().Width;
-    TEXTURE_DEFAULT_SIZE.y = RenderTargetManager::GetInstance()->renderTextures[handle]->GetTextureBuffer()->GetDesc().Height;
+    TEXTURE_DEFAULT_SIZE.x = float(RenderTargetManager::GetInstance()->renderTextures[handle]->GetTextureBuffer()->GetDesc().Width);
+    TEXTURE_DEFAULT_SIZE.y = float(RenderTargetManager::GetInstance()->renderTextures[handle]->GetTextureBuffer()->GetDesc().Height);
 
     //デフォルトのuvを格納
     spdata->uvOffsets.push_back(XMFLOAT4(0.0, 0.0, 1.0, 1.0));
@@ -439,8 +439,8 @@ void Sprite::CreateAndSetDivisionUVOffsets(int divAllnum, int divX, int divY, in
     //スプライトデータ作成
     Create(resourceID);
     //デフォルトサイズを変更
-    TEXTURE_DEFAULT_SIZE.x = sizeX;
-    TEXTURE_DEFAULT_SIZE.y = sizeY;
+    TEXTURE_DEFAULT_SIZE.x = float(sizeX);
+    TEXTURE_DEFAULT_SIZE.y = float(sizeY);
 
     //初期化したコンテナを一旦クリア
     spdata->uvOffsets.clear();
@@ -497,12 +497,12 @@ void Sprite::UpdateSprite()
 void Sprite::InstanceUpdate()
 {
     //�`�搔�ɍ��킹�ĉς�����
-    spdata->vibView.SizeInBytes = spdata->insWorldMatrixes.size() * sizeof(SpriteInstance);
+    spdata->vibView.SizeInBytes = UINT(spdata->insWorldMatrixes.size() * sizeof(SpriteInstance));
     
     //�C���X�^���V���O���_�o�b�t�@�̃T�C�Y��ύX����K�v������ꍇ
     if (isVertexBufferNeedResize()) {
 
-        ResizeVertexInstanceBuffer(spdata->insWorldMatrixes.size() * sizeof(SpriteInstance));
+        ResizeVertexInstanceBuffer(UINT(spdata->insWorldMatrixes.size() * sizeof(SpriteInstance)));
     }
 
     //�o�b�t�@�f�[�^�]��

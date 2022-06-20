@@ -25,9 +25,9 @@ void RenderTargetManager::InitRenderTargetManager(ID3D12Device* device, ID3D12Gr
 	CreateBackBuffers();
 
 	//ビューポートとシザー矩形設定
-	auto temp = CD3DX12_VIEWPORT(0.0f, 0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height);
+	auto temp = CD3DX12_VIEWPORT(0.0f, 0.0f, FLOAT(Raki_WinAPI::window_width), FLOAT(Raki_WinAPI::window_height));
 	default_viewport = temp;
-	default_rect = CD3DX12_RECT(0, 0, Raki_WinAPI::window_width, Raki_WinAPI::window_height);
+	default_rect = CD3DX12_RECT(0, 0, LONG(Raki_WinAPI::window_width), LONG(Raki_WinAPI::window_height));
 }
 
 void RenderTargetManager::FinalizeRenderTargetManager()
@@ -188,7 +188,7 @@ void RenderTargetManager::SetRenderTargetClipingArea(int handle, int x1, int y1,
 
 
 
-	renderTextures[handle]->viewport = CD3DX12_VIEWPORT(x1, y1, x2, y2);
+	renderTextures[handle]->viewport = CD3DX12_VIEWPORT(FLOAT(x1), FLOAT(y1), FLOAT(x2), FLOAT(y2));
 }
 
 void RenderTargetManager::SetClearColor(float red, float green, float blue)

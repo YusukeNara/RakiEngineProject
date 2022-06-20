@@ -1,8 +1,13 @@
 #pragma once
 
+#pragma warning (push)
+#pragma warning (disable:6001)
+#pragma warning (disable:26812)
+#pragma warning (disable:26451)
+#pragma warning (disable:26495)
+
 #include "Raki_DX12B.h"
 #include "TexManager.h"
-#include "FbxLoader.h"
 
 #include <Windows.h>
 #include <wrl.h>
@@ -97,3 +102,4 @@ private:
 	fbxMaterial material;
 };
 
+#pragma warning (pop)

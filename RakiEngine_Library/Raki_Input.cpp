@@ -223,6 +223,7 @@ bool Input::isXpadButtonPushing(XPAD_INPUT_CODE code)
 		return xInputState.Gamepad.wButtons & XINPUT_GAMEPAD_START;
 		break;
 	default:
+		return false;
 		break;
 	}
 }
@@ -303,6 +304,7 @@ bool Input::isXpadStickTilt(XPAD_STICK_DIRECTION_CODE dircode)
 		return isRightStickTiltLeftDown();
 		break;
 	default:
+		return false;
 		break;
 	}
 }
@@ -363,6 +365,7 @@ bool Input::isXpadStickTiltTrigger(XPAD_STICK_DIRECTION_CODE dircode)
 		return isRightStickTiltUp()			&&	!oldTiltFlags.isRStickTiltLeftDown;
 		break;
 	default:
+		return false;
 		break;
 	}
 }
@@ -423,6 +426,7 @@ bool Input::isXpadStickTiltReleased(XPAD_STICK_DIRECTION_CODE dircode)
 		return !isRightStickTiltUp() && oldTiltFlags.isRStickTiltLeftDown;
 		break;
 	default:
+		return false;
 		break;
 	}
 }

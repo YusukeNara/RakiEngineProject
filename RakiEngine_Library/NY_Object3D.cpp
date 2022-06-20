@@ -1,5 +1,5 @@
 #include "NY_Object3D.h"
-
+#include "FbxLoader.h"
 #include "NY_Camera.h"
 #include "TexManager.h"
 #include "Raki_DX12B.h"
@@ -261,7 +261,7 @@ void Object3d::DrawObject()
 				model->material.texNumber, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 		//•`‰æ
-		RAKI_DX12B_CMD->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+		RAKI_DX12B_CMD->DrawIndexedInstanced(UINT(model->indices.size()), 1, 0, 0, 0);
 	}
 
 }
@@ -292,7 +292,7 @@ void Object3d::DrawRTexObject(int rtHandle)
 			0, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
 	//•`‰æ
-	RAKI_DX12B_CMD->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
+	RAKI_DX12B_CMD->DrawIndexedInstanced(UINT(model->indices.size()), 1, 0, 0, 0);
 }
 
 void Object3d::DrawMultiPassResource()

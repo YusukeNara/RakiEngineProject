@@ -156,7 +156,7 @@ void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor)
 void RTex::InitViewAndRect(int width, int height)
 {
 	//ビューポートはウィンドウサイズに合わせる
-	auto temp = CD3DX12_VIEWPORT(0.0f, 0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height);
+	auto temp = CD3DX12_VIEWPORT(0.0f, 0.0f, FLOAT(Raki_WinAPI::window_width), FLOAT(Raki_WinAPI::window_height));
 	viewport = temp;
 
 	//シザー矩形は画面左上

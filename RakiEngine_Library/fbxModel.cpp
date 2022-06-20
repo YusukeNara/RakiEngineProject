@@ -73,6 +73,6 @@ void fbxModel::Draw()
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
 			material.texNumber, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	RAKI_DX12B_CMD->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+	RAKI_DX12B_CMD->DrawIndexedInstanced(UINT(indices.size()), 1, 0, 0, 0);
 
 }

@@ -22,7 +22,7 @@ typedef struct SpriteVertex
 }SPVertex;
 
 //スプライト用インスタンス構造体描画するものそれぞれの差分データ
-typedef struct SpriteInstance
+struct SpriteInstance
 {
 	XMMATRIX worldmat;	//ワールド変換行列
 	XMFLOAT2 drawsize;	//縦横幅
@@ -97,10 +97,10 @@ private:
 
 	SpriteManager(int window_width, int window_height) {
 		//ビューポート行列初期化
-		matViewport.r[0].m128_f32[0] = window_width / 2;
-		matViewport.r[1].m128_f32[1] = -window_height / 2;
-		matViewport.r[3].m128_f32[0] = window_width / 2;
-		matViewport.r[3].m128_f32[1] = window_height / 2;
+		matViewport.r[0].m128_f32[0] = float(window_width / 2);
+		matViewport.r[1].m128_f32[1] = float(-window_height / 2);
+		matViewport.r[3].m128_f32[0] = float(window_width / 2);
+		matViewport.r[3].m128_f32[1] = float(window_height / 2);
 		//パイプライン生成
 		CreateSpritePipeline();
 	};

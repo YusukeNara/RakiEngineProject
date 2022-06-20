@@ -32,7 +32,7 @@ void ParticleManager2D::Update()
 		e->vel += e->acc;
 
 		//補完レート
-		float rate = e->nowFrame / e->endFrame;
+		float rate = float(e->nowFrame / e->endFrame);
 
 		//色線形補間
 		e->color = e->s_color + (e->e_color - e->s_color) * rate;

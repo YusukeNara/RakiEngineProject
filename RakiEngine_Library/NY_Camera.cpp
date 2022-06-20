@@ -50,7 +50,7 @@ void NY_Camera::SetProjecion()
 		0.1f, 1000.0f
 	);
 	_matProjection2D = XMMatrixOrthographicOffCenterLH(
-		0.0f, Raki_WinAPI::window_width, Raki_WinAPI::window_height, 0.0f, 0.0f, 1.0f);
+		0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
 }
 
 void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up)
