@@ -4,6 +4,8 @@
 
 #include "NY_random.h"
 
+#include <AI_BehaviorBaseNode.h>
+
 using namespace myImgui;
 
 Title::Title(ISceneChanger *changer) : BaseScene(changer) {
@@ -52,7 +54,36 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     //パーティクルのテクスチャ
     ptex = TexManager::LoadTexture("Resources/effect1.png");
 
+    //プレイヤー
     pl.Init();
+    //敵
+    enemy.Init(newObjectSystem);
+    //各種行動オブジェクト生成
+
+    //移動の判定ノード
+    firstNode = new BehaviorBaseNode;
+    //判定スクリプト付きオブジェクト
+    MoveJudgeNode* moveJudgeObject = new MoveJudgeNode(&enemy, &pl.pos);
+
+    //行動オブジェクト
+    approachNode      = new BehaviorBaseNode;
+    approachObject    = new ApproachingMoveAct(&enemy, &pl.pos);
+    approachNode->CreateActionNode("approachAction", approachObject, moveJudgeObject);
+    retreatNode       = new BehaviorBaseNode;
+    retreatObject     = new RetreatMoveAct(&enemy, &pl.pos);
+    retreatNode->CreateActionNode("retreatAction", retreatObject, moveJudgeObject);
+    waitNode          = new BehaviorBaseNode;
+    waitObject        = new WaitAct(&enemy, &pl.pos);
+    waitNode->CreateActionNode("WaitAction", waitObject, moveJudgeObject);
+
+    //ノード生成
+    firstNode->CreateJudgeNode("moveJudgeNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
+    firstNode->AddjudgeNodeChild(approachNode);
+    firstNode->AddjudgeNodeChild(retreatNode);
+    firstNode->AddjudgeNodeChild(waitNode);
+
+    //ビヘイビア初期化
+    enemyBehaviorTree.Init(firstNode);
 
 }
 
@@ -69,6 +100,14 @@ void Title::Finalize()
     DeleteObject(tileObject);
 
     pl.Finalize();
+
+    delete firstNode;
+    delete approachNode;
+    delete approachObject;
+    delete retreatNode;
+    delete retreatObject;
+    delete waitObject;
+    delete waitNode;
 }
 
 //更新
@@ -97,6 +136,8 @@ void Title::Update() {
     particle1->Prototype_Update();
 
     pl.Update();
+
+    enemyBehaviorTree.Run();
 }
 
 //描画
@@ -121,21 +162,10 @@ void Title::Draw() {
     //本描画（実際に描画される）
     testInstance.Draw();
 
-    ImguiMgr::Get()->StartDrawImgui("pos", 100, 300);
+    approachNode->DrawNodeInfo();
+    retreatNode->DrawNodeInfo();
+    waitNode->DrawNodeInfo();
 
-    ImGui::Text("Left Ship");
-    ImGui::Text("pos : x.%f y.%f", pos1.x, pos1.y);
-    ImGui::Text("vel : x.%f y.%f", vel.x, vel.y);
-    ImGui::Text("acc : x.%f y.%f", acc.x, acc.y);
-    ImGui::Text("Center Ship");
-    ImGui::Text("pos : x.%f z.%f", pos2.x, pos2.z);
-    ImGui::Text("vel : x.%f z.%f", vel2.x, vel2.z);
-    ImGui::Text("acc : x.%f z.%f", acc2.x, acc2.z);
-    ImGui::Text("Right Ship");
-    ImGui::Text("pos : x.%f z.%f", pos3.x, pos3.z);
-    ImGui::Text("vel : x.%f z.%f", vel3.x, vel3.z);
-    ImGui::Text("acc : x.%f z.%f", acc3.x, acc3.z);
-
-    ImguiMgr::Get()->EndDrawImgui();
+    firstNode->DrawNodeInfo();
 
 }

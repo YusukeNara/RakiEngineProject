@@ -12,6 +12,8 @@
 
 #include "testParticle.h"
 #include "Player.h"
+#include "Enemy.h"
+#include <BehaviorTree.h>
 
 enum NowState {
     title,
@@ -105,5 +107,21 @@ public:
     int isControlColor1 = 0;
 
     Player pl;
+
+    Enemy enemy;
+    AI_BehaviorTree enemyBehaviorTree;
+
+    BehaviorBaseNode* firstNode;
+
+    BehaviorBaseNode* approachNode;
+    ApproachingMoveAct* approachObject;
+    BehaviorBaseNode* retreatNode;
+    RetreatMoveAct* retreatObject;
+    BehaviorBaseNode* waitNode;
+    WaitAct* waitObject;
+
+
+
+    
 };
 

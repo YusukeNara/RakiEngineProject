@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	/// <param name="nodeName">ノードの名前</param>
 	/// <param name="actObject">実行する派生クラスオブジェクト</param>
-	void CreateActionNode(std::string nodeName, BehaviorActionBase* actObject);
+	void CreateActionNode(std::string nodeName, BehaviorActionBase* actObject, BehaviorJudgeBase* judgeObject);
 
 	/// <summary>
 	/// ノード推論

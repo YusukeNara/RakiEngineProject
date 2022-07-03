@@ -8,12 +8,13 @@
 
 void BehaviorBaseNode::CreateJudgeNode(std::string nodeName, SELECT_RULE rule, BehaviorJudgeBase* judgeObject)
 {
+    //ノードの名前
     this->nodeName = nodeName;
-
+    //ルール
     this->rule = rule;
-
+    //判定オブジェクト
     this->judgeObject = judgeObject;
-
+    //ノードの種類
     type = NODE_TYPE::TYPE_SELECTER;
 }
 
@@ -23,13 +24,17 @@ void BehaviorBaseNode::AddjudgeNodeChild(BehaviorBaseNode* child)
     childs.push_back(child);
 }
 
-void BehaviorBaseNode::CreateActionNode(std::string nodeName, BehaviorActionBase* actObject)
+void BehaviorBaseNode::CreateActionNode(std::string nodeName, BehaviorActionBase* actObject,BehaviorJudgeBase *judgeObject)
 {
     if (actObject == nullptr) { return; }
 
     this->nodeName = nodeName;
 
     this->actObject = actObject;
+
+    this->judgeObject = judgeObject;
+
+    type = NODE_TYPE::TYPE_EXECUTE;
 }
 
 BehaviorBaseNode* BehaviorBaseNode::Inference()
@@ -40,10 +45,19 @@ BehaviorBaseNode* BehaviorBaseNode::Inference()
     BehaviorBaseNode* result = nullptr;
 
     //子ノードが選択可能かを確認
-    for (auto& n : childs)
+    for (auto &n : childs)
     {
         //子ノードの判定クラスがtrueのとき
         if (n->judgeObject->Judge()){
+            //候補リストに格納
+            list.push_back(n);
+        }
+    }
+
+    if (list.size() == size_t(0) ) {
+        //一つも当てはまらない場合、すべてのノードを入れる
+        for (auto& n : childs)
+        {
             //候補リストに格納
             list.push_back(n);
         }
@@ -54,26 +68,37 @@ BehaviorBaseNode* BehaviorBaseNode::Inference()
     {
     case BehaviorBaseNode::RULE_RANDOM:
         //ランダムにノードを決定
-        return Select_Random(&list);
+        result = Select_Random(&list);
+        return result;
         break;
 
     case BehaviorBaseNode::RULE_PRIORITY:
-        return Select_Random(&list);
+        //優先度でノード決定
+        result = Select_Priority(&list);
+        return result;
         break;
 
     case BehaviorBaseNode::RULE_ONOFF:
-        return Select_Random(&list);
+        //ランダムにノードを決定
+        result = Select_Random(&list);
+        return result;
         break;
 
     case BehaviorBaseNode::RULE_SEAQUENCE:
-        return Select_Random(&list);
+        //ランダムにノードを決定
+        result = Select_Random(&list);
+        return result;
         break;
     default:
-        return Select_Random(&list);
+        //ランダムにノードを決定
+        result = Select_Random(&list);
+        return result;
         break;
     }
 
-    return Select_Random(&list);
+    //ランダムにノードを決定
+    result = Select_Random(&list);
+    return result;
 }
 
 BehaviorActionBase::ACTION_STATE BehaviorBaseNode::Run()

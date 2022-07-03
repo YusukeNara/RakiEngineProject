@@ -20,6 +20,10 @@ int NY_random::intrand_sl(int max, int min)
         mintmp = min;
     }
 
+    if (min == max) {
+        return min;
+    }
+
     //メルセンヌ・ツイスタ乱数生成器
     std::mt19937 mt(rnd());
     //引数指定範囲の一様乱数

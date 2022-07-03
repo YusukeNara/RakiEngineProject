@@ -20,4 +20,6 @@ public:
 
 	//é¿çsä÷êî
 	virtual ACTION_STATE Run() = 0;
+
+	virtual void Init() = 0;
 };
