@@ -76,9 +76,6 @@ public:
 
 	//----------モデルデータを1から作成する関数群----------//
 
-	//xy平面を作成。テクスチャのロードが必須なため使いにくいかも
-	//void CreatePlaneModelXY(float x_size, float y_size, string useTexFileName, ID3D12Device *dev, NY_Object3DManager *mgr);
-
 	//xy平面を作成。ロード済テクスチャを使用。テクスチャバッファの番号を指定すること（空のバッファを指定するとあとで死ぬ）
 	void CreatePlaneModelXY(float x_size, float y_size, float uv_x, float uv_y, UINT useTexNum, uvAnimData *uvanimdata);
 	//xz平面

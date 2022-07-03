@@ -11,6 +11,7 @@
 #include <ParticleManager.h>
 
 #include "testParticle.h"
+#include "Player.h"
 
 enum NowState {
     title,
@@ -102,5 +103,7 @@ public:
     int adrate = 0;
 
     int isControlColor1 = 0;
+
+    Player pl;
 };
 

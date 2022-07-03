@@ -127,6 +127,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <EnableModules>false</EnableModules>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,6 +148,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <EnableModules>false</EnableModules>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +161,7 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -276,6 +279,7 @@
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ISceneChanger.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Raki_Camera.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Task.h" />

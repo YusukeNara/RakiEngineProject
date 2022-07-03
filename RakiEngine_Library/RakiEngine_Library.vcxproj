@@ -68,7 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstructSceneFactory.cpp" />
+    <ClCompile Include="AI_BehaviorBaseNode.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="fbxModel.cpp" />
     <ClCompile Include="FPS.cpp" />
@@ -86,6 +88,7 @@
     <ClCompile Include="NY_random.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="ParticleManager2D.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Raki_DX12B.cpp" />
     <ClCompile Include="Raki_imguiMgr.cpp" />
     <ClCompile Include="Raki_Input.cpp" />
@@ -100,7 +103,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstructSceneFactory.h" />
+    <ClInclude Include="AI_BehaviorBaseNode.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="BehaviorData.h" />
+    <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="Behavior_ActionBase.h" />
+    <ClInclude Include="Behavior_JudgeBase.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="fbxModel.h" />
     <ClInclude Include="FPS.h" />
@@ -119,6 +127,7 @@
     <ClInclude Include="NY_random.h" />
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="ParticleManager2D.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="Raki_DX12B.h" />
     <ClInclude Include="Raki_imguiMgr.h" />
     <ClInclude Include="Raki_Input.h" />
@@ -656,6 +665,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -702,6 +712,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>

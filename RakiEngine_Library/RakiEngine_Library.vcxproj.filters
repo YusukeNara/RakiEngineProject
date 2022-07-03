@@ -76,6 +76,9 @@
     <Filter Include="Graphic\3D\modelData\FBX">
       <UniqueIdentifier>{8ee7fdb3-0112-4869-833d-0991e5925eee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Behavior">
+      <UniqueIdentifier>{c177c3b1-5c29-4bac-983e-c6cd638e1841}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -167,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="fbxModel.cpp">
       <Filter>Graphic\3D\modelData\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="AI_BehaviorBaseNode.cpp">
+      <Filter>Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>Behavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +280,24 @@
     </ClInclude>
     <ClInclude Include="fbxModel.h">
       <Filter>Graphic\3D\modelData\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
+      <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="AI_BehaviorBaseNode.h">
+      <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior_ActionBase.h">
+      <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior_JudgeBase.h">
+      <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorData.h">
+      <Filter>Behavior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

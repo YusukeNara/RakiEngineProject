@@ -10,21 +10,21 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     
     camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-    newObjectSystem = LoadModel_FBXFile("cube");
+    newObjectSystem = LoadModel_ObjFile("player");
     ship2 = LoadModel_ObjFile("player");
     ship3 = LoadModel_ObjFile("player");
 
-    scale1 = { 1.0,1.0,1.0 };
+    scale1 = { 10.0,10.0,10.0 };
     rot1 = { 0,0,0 };
     pos1 = { -100,0,0 };
 
     scale2 = { 10.0,10.0,10.0 };
     rot2 = { 0,0,0 };
-    pos2 = { 0,0,0 };
+    pos2 = { 0,0,100 };
 
     scale3 = { 10.0,10.0,10.0 };
     rot3 = { 0,0,0 };
-    pos3 = { 50,0,0 };
+    pos3 = { 100,0,0 };
 
     newObjectSystem->SetAffineParam(scale1, rot1, pos1);
     ship2->SetAffineParam(scale2, rot2, pos2);
@@ -52,6 +52,8 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     //パーティクルのテクスチャ
     ptex = TexManager::LoadTexture("Resources/effect1.png");
 
+    pl.Init();
+
 }
 
 //初期化
@@ -65,6 +67,8 @@ void Title::Finalize()
     DeleteObject(ship3);
     DeleteObject(newObjectSystem);
     DeleteObject(tileObject);
+
+    pl.Finalize();
 }
 
 //更新
@@ -92,6 +96,7 @@ void Title::Update() {
 
     particle1->Prototype_Update();
 
+    pl.Update();
 }
 
 //描画
@@ -101,11 +106,12 @@ void Title::Draw() {
     particle1->Prototype_Draw(ptex);
 
     //描画1回目
-    //testFbx->DrawObject();
     newObjectSystem->DrawObject();
     ship2->DrawObject();
     ship3->DrawObject();
     tileObject->DrawObject();
+
+    pl.Draw();
 
     SpriteManager::Get()->SetCommonBeginDraw();
 
