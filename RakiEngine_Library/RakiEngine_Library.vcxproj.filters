@@ -180,6 +180,9 @@
     <ClCompile Include="BehaviorTree.cpp">
       <Filter>Behavior</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorEditor.cpp">
+      <Filter>Behavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -297,6 +300,9 @@
       <Filter>Behavior</Filter>
     </ClInclude>
     <ClInclude Include="BehaviorData.h">
+      <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorEditor.h">
       <Filter>Behavior</Filter>
     </ClInclude>
   </ItemGroup>

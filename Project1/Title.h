@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <BehaviorTree.h>
+#include <BehaviorEditor.h>
 
 enum NowState {
     title,
@@ -120,7 +121,7 @@ public:
     BehaviorBaseNode* waitNode;
     WaitAct* waitObject;
 
-
+    BehaviorEditor editor;
 
     
 };

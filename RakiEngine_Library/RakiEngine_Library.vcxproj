@@ -70,6 +70,7 @@
     <ClCompile Include="AbstructSceneFactory.cpp" />
     <ClCompile Include="AI_BehaviorBaseNode.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BehaviorEditor.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="fbxModel.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="AI_BehaviorBaseNode.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="BehaviorData.h" />
+    <ClInclude Include="BehaviorEditor.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />

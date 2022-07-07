@@ -27,11 +27,11 @@ public:
 //以下、ビヘイビアツリー派生クラス
 
 //移動するかどうか判定するオブジェクト
-class MoveJudgeNode : public BehaviorJudgeBase
+class MoveJudgeObject : public BehaviorJudgeBase
 {
 public:
 	//コンストラクタ
-	MoveJudgeNode(Enemy* enemy,RVector3 *playerPos);
+	MoveJudgeObject(Enemy* enemy,RVector3 *playerPos);
 
 	//判定クラス
 	virtual bool Judge() override;

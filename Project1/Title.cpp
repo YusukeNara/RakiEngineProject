@@ -63,21 +63,24 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     //移動の判定ノード
     firstNode = new BehaviorBaseNode;
     //判定スクリプト付きオブジェクト
-    MoveJudgeNode* moveJudgeObject = new MoveJudgeNode(&enemy, &pl.pos);
+    MoveJudgeObject* moveJudgeObject = new MoveJudgeObject(&enemy, &pl.pos);
 
     //行動オブジェクト
     approachNode      = new BehaviorBaseNode;
     approachObject    = new ApproachingMoveAct(&enemy, &pl.pos);
+    approachObject->actScriptName = std::string("approach");
     approachNode->CreateActionNode("approachAction", approachObject, moveJudgeObject);
     retreatNode       = new BehaviorBaseNode;
     retreatObject     = new RetreatMoveAct(&enemy, &pl.pos);
+    retreatObject->actScriptName = std::string("retreat");
     retreatNode->CreateActionNode("retreatAction", retreatObject, moveJudgeObject);
     waitNode          = new BehaviorBaseNode;
     waitObject        = new WaitAct(&enemy, &pl.pos);
+    waitObject->actScriptName = std::string("wait");
     waitNode->CreateActionNode("WaitAction", waitObject, moveJudgeObject);
 
     //ノード生成
-    firstNode->CreateJudgeNode("moveJudgeNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
+    firstNode->CreateJudgeNode("firstNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
     firstNode->AddjudgeNodeChild(approachNode);
     firstNode->AddjudgeNodeChild(retreatNode);
     firstNode->AddjudgeNodeChild(waitNode);
@@ -85,6 +88,10 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     //ビヘイビア初期化
     enemyBehaviorTree.Init(firstNode);
 
+    editor.Init(&enemyBehaviorTree);
+    editor.AddEditData_Node(approachNode);
+    editor.AddEditData_Node(retreatNode);
+    editor.AddEditData_Node(waitNode);
 }
 
 //初期化
@@ -122,7 +129,7 @@ void Title::Update() {
 
     //速度計算
 
-    newObjectSystem->SetAffineParamTranslate(pos1);
+    //newObjectSystem->SetAffineParamTranslate(pos1);
     ship2->SetAffineParamTranslate(pos2);
     ship3->SetAffineParamTranslate(pos3);
 
@@ -147,12 +154,14 @@ void Title::Draw() {
     particle1->Prototype_Draw(ptex);
 
     //描画1回目
-    newObjectSystem->DrawObject();
+    //newObjectSystem->DrawObject();
     ship2->DrawObject();
     ship3->DrawObject();
     tileObject->DrawObject();
 
     pl.Draw();
+
+    enemy.Draw();
 
     SpriteManager::Get()->SetCommonBeginDraw();
 
@@ -162,10 +171,8 @@ void Title::Draw() {
     //本描画（実際に描画される）
     testInstance.Draw();
 
-    approachNode->DrawNodeInfo();
-    retreatNode->DrawNodeInfo();
-    waitNode->DrawNodeInfo();
-
-    firstNode->DrawNodeInfo();
+    editor.EditorDraw();
+    editor.ObjectDataDraw();
+    editor.NodeDataDraw();
 
 }

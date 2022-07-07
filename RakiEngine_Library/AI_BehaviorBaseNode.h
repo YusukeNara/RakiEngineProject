@@ -80,6 +80,7 @@ public:
 	//デバッグ用
 	void DrawNodeInfo();
 
+	void DrawNodeInfo_withEditor();
 
 public:
 	//ノードの名前
@@ -88,7 +89,7 @@ public:
 	NODE_TYPE		type;
 	//ノード選択ルール
 	SELECT_RULE		rule;
-	//親ノード（これはツリーで実行時に自動で代入される）
+	//親ノード
 	BehaviorBaseNode*				parent		= nullptr;
 	//子ノード配列
 	std::vector<BehaviorBaseNode*>	childs;
@@ -99,4 +100,12 @@ public:
 
 	//ノード優先度
 	unsigned int	priority;
+
+private:
+	//エディター専用
+	bool isDisplay = false;
+
+
+
+	friend class BehaviorEditor;
 };

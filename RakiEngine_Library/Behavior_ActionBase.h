@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 //アクション基底クラス
 
 //実際どんな動きをするかを派生クラスで定義するべきだが
@@ -22,4 +24,6 @@ public:
 	virtual ACTION_STATE Run() = 0;
 
 	virtual void Init() = 0;
+
+	std::string actScriptName;
 };

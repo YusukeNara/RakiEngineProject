@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-MoveJudgeNode::MoveJudgeNode(Enemy* enemy, RVector3* playerPos)
+MoveJudgeObject::MoveJudgeObject(Enemy* enemy, RVector3* playerPos)
 {
 	//‘€ì‚·‚é“G
 	this->enemy = enemy;
@@ -8,7 +8,7 @@ MoveJudgeNode::MoveJudgeNode(Enemy* enemy, RVector3* playerPos)
 	this->playerPos = playerPos;
 }
 
-bool MoveJudgeNode::Judge()
+bool MoveJudgeObject::Judge()
 {
 	return true;
 }
@@ -16,6 +16,8 @@ bool MoveJudgeNode::Judge()
 void Enemy::Init(Object3d* enemyObject)
 {
 	pos = RVector3(0, 0, 100);
+	object = enemyObject;
+	object->SetAffineParamTranslate(pos);
 }
 
 void Enemy::Draw()
@@ -47,6 +49,8 @@ BehaviorActionBase::ACTION_STATE ApproachingMoveAct::Run()
 		return ACTION_STATE::SUCCESS;
 	}
 
+	enemy->pos += RVector3(0.5, 0, 0);
+
 	actFrame--;
 
 	return ACTION_STATE::RUNNING;
@@ -69,6 +73,8 @@ BehaviorActionBase::ACTION_STATE RetreatMoveAct::Run()
 	if (actFrame < 0) {
 		return ACTION_STATE::SUCCESS;
 	}
+
+	enemy->pos -= RVector3(0.5, 0, 0);
 
 	actFrame--;
 

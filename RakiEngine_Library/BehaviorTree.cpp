@@ -15,7 +15,7 @@ void AI_BehaviorTree::Init(BehaviorBaseNode* firstNode)
 
 void AI_BehaviorTree::Inference()
 {
-	//ルートノード設定
+	//先頭ノード設定
 	rootNode = firstNode;
 
 	//ルートノードに行動が割り当てられていて、それが実行中の場合はルートノードはそのまま
@@ -25,18 +25,25 @@ void AI_BehaviorTree::Inference()
 		}
 	}
 
-	//再帰処理によってノード末端まで移動
-	while (rootNode->type == BehaviorBaseNode::NODE_TYPE::TYPE_SELECTER)
+	BehaviorBaseNode* rootNodeResult = rootNode;
+	//ノード末端まで移動
+	//子ノードがない = ノードの終端
+	while (!rootNodeResult->childs.empty())
 	{
-		rootNode = rootNode->Inference();
+		rootNodeResult = rootNode->Inference();
 	}
 
-	rootNode->actObject->Init();
+	//行動オブジェクト初期化
+	if(rootNodeResult->actObject != nullptr){ rootNodeResult->actObject->Init(); }
+	rootNode = rootNodeResult;
 }
 
 void AI_BehaviorTree::Run()
 {
 	//毎フレーム呼び出すことで勝手にやってくれるようにする
+
+	//ルートノードの実行オブジェクトが空のときはすぐにノードの推論をする
+	if (rootNode->actObject == nullptr) { Inference(); }
 
 	//ルートノード実行
 	BehaviorActionBase::ACTION_STATE state = rootNode->actObject->Run();

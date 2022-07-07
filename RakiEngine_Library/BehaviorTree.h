@@ -21,4 +21,7 @@ public:
 	//先頭ノード
 	BehaviorBaseNode *firstNode;
 
+	//ツリー名
+	std::string treeName;
+
 };

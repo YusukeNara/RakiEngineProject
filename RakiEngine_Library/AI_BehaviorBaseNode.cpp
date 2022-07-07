@@ -20,6 +20,8 @@ void BehaviorBaseNode::CreateJudgeNode(std::string nodeName, SELECT_RULE rule, B
 
 void BehaviorBaseNode::AddjudgeNodeChild(BehaviorBaseNode* child)
 {
+    //子ノードに自身を親として登録
+    child->parent = this;
     //子ノード追加
     childs.push_back(child);
 }
@@ -41,14 +43,20 @@ BehaviorBaseNode* BehaviorBaseNode::Inference()
 {
     //子ノードリスト
     std::vector<BehaviorBaseNode*> list;
+    //配列サイズ確保
+    list.reserve(childs.size());
     //返却用変数 
     BehaviorBaseNode* result = nullptr;
 
     //子ノードが選択可能かを確認
     for (auto &n : childs)
     {
+        //判定スクリプトがnullの場合は無条件で格納
+        if (n->judgeObject == nullptr) {
+            list.push_back(n);
+        }
         //子ノードの判定クラスがtrueのとき
-        if (n->judgeObject->Judge()){
+        else if (n->judgeObject->Judge()){
             //候補リストに格納
             list.push_back(n);
         }
@@ -56,6 +64,7 @@ BehaviorBaseNode* BehaviorBaseNode::Inference()
 
     if (list.size() == size_t(0) ) {
         //一つも当てはまらない場合、すべてのノードを入れる
+        //ただし意図しない場合もあるので、オプションで設定可能にする
         for (auto& n : childs)
         {
             //候補リストに格納
@@ -109,7 +118,7 @@ BehaviorActionBase::ACTION_STATE BehaviorBaseNode::Run()
 
 BehaviorBaseNode *BehaviorBaseNode::Select_Random(std::vector<BehaviorBaseNode*> *lists)
 {
-    int selectNumber = NY_random::intrand_sl(static_cast<int>(lists->size()), 0);
+    int selectNumber = NY_random::intrand_sl(static_cast<int>(lists->size() - 1), 0);
 
     return (*lists)[selectNumber];
 }
@@ -133,17 +142,29 @@ BehaviorBaseNode* BehaviorBaseNode::Select_Priority(std::vector<BehaviorBaseNode
 void BehaviorBaseNode::DrawNodeInfo()
 {
     //デバッグ用、簡易的だが編集も可能に
+
+    //表示フラグが立ってない
+    if (!isDisplay) { return; }
     
 
     //編集用変数
     int nowSelectRule = static_cast<int>(rule);
+    std::string parentName;
+    if (parent != nullptr) {
+        parentName = parent->nodeName;
+    }
+
 
     ImguiMgr::Get()->StartDrawImgui(nodeName.c_str(), 100, 300);
+
+    if (ImGui::Button("Close Node Info")) { isDisplay = false; }
 
     switch (type)
     {
     case BehaviorBaseNode::TYPE_EXECUTE:
-        ImGui::Text("Node Type : EXECUTE");
+        ImGui::Text("Node Type : EXECUTE\n");
+
+        ImGui::Text("Node Status\n");
 
         switch (actObject->actionState)
         {
@@ -167,6 +188,9 @@ void BehaviorBaseNode::DrawNodeInfo()
             break;
         }
 
+        ImGui::Text(parentName.c_str());
+
+
         break;
     case BehaviorBaseNode::TYPE_SELECTER:
         ImGui::Text("Node Type : SELECTER");
@@ -187,4 +211,61 @@ void BehaviorBaseNode::DrawNodeInfo()
 
     //設定適用
     rule = static_cast<SELECT_RULE>(nowSelectRule);
+}
+
+void BehaviorBaseNode::DrawNodeInfo_withEditor()
+{
+    //編集用変数
+    int nowSelectRule = static_cast<int>(rule);
+    std::string parentName;
+    if (parent != nullptr) {
+        parentName = parent->nodeName;
+    }
+
+    switch (type)
+    {
+    case BehaviorBaseNode::TYPE_EXECUTE:
+        ImGui::Text("Node Type : EXECUTE\n");
+
+        ImGui::Text("Node Status\n");
+
+        switch (actObject->actionState)
+        {
+        case BehaviorActionBase::ACTION_STATE::STANDBY:
+            ImGui::Text("Process is standby.");
+            break;
+
+        case BehaviorActionBase::ACTION_STATE::RUNNING:
+            ImGui::Text("Process is running.");
+            break;
+
+        case BehaviorActionBase::ACTION_STATE::SUCCESS:
+            ImGui::Text("Process is successed.");
+            break;
+
+        case BehaviorActionBase::ACTION_STATE::FAILED:
+            ImGui::Text("Process is failed.");
+            break;
+
+        default:
+            break;
+        }
+
+        ImGui::Text(parentName.c_str());
+
+        break;
+    case BehaviorBaseNode::TYPE_SELECTER:
+        ImGui::Text("Node Type : SELECTER");
+
+        ImGui::Text("Select rules");
+
+        ImGui::RadioButton("Random", &nowSelectRule, static_cast<int>(RULE_RANDOM));
+        ImGui::SameLine();
+        ImGui::RadioButton("Priority", &nowSelectRule, static_cast<int>(RULE_PRIORITY));
+        ImGui::SameLine();
+
+        break;
+    default:
+        break;
+    }
 }
