@@ -18,25 +18,25 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     scale1 = { 10.0,10.0,10.0 };
     rot1 = { 0,0,0 };
-    pos1 = { -100,0,0 };
+    pos1 = { -100,5,0 };
 
     scale2 = { 10.0,10.0,10.0 };
     rot2 = { 0,0,0 };
-    pos2 = { 0,0,100 };
+    pos2 = { 0,5,100 };
 
     scale3 = { 10.0,10.0,10.0 };
     rot3 = { 0,0,0 };
-    pos3 = { 100,0,0 };
+    pos3 = { 100,5,0 };
 
     newObjectSystem->SetAffineParam(scale1, rot1, pos1);
     ship2->SetAffineParam(scale2, rot2, pos2);
     ship3->SetAffineParam(scale3, rot3, pos3);
 
     //画像の読み込み
-    tiletex = TexManager::LoadTexture("Resources/grif.png");
+    tiletex = TexManager::LoadTexture("Resources/white.png");
 
     tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 50, 50, tiletex);
-    tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 0.5);
+    tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
     tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(90, 0, 0), RVector3(0, 0, 0));
 
     //スプライトに画像を割り当てる（画像のハンドル、縦幅、横幅）

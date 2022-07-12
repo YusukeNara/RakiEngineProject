@@ -17,6 +17,7 @@ void Player::Init()
 
 	//ƒpƒ‰ƒ[ƒ^‰Šú‰»
 	pos.zero();
+	pos.y = 5.0f;
 	rot.zero();
 	speedVec.zero();
 

@@ -33,7 +33,7 @@ public:
     void Draw() override;          //描画処理をオーバーライド。
 
     //シーンで使うインスタンス
-    XMFLOAT3 eye = { 0,150,-400 };
+    XMFLOAT3 eye = { 0,150,-200 };
     XMFLOAT3 target = { 0,0,0 };
     XMFLOAT3 up = { 0,1,0 };
 
