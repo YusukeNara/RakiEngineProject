@@ -139,12 +139,13 @@ BehaviorBaseNode* BehaviorBaseNode::Select_Priority(std::vector<BehaviorBaseNode
     return result;
 }
 
-void BehaviorBaseNode::DrawNodeInfo()
+void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, 
+    std::vector<BehaviorJudgeBase*> judgeObjects, bool checkIsDisplay)
 {
     //デバッグ用、簡易的だが編集も可能に
 
     //表示フラグが立ってない
-    if (!isDisplay) { return; }
+    if (checkIsDisplay && !isDisplay) { return; }
     
 
     //編集用変数
@@ -163,6 +164,8 @@ void BehaviorBaseNode::DrawNodeInfo()
     {
     case BehaviorBaseNode::TYPE_EXECUTE:
         ImGui::Text("Node Type : EXECUTE\n");
+
+        ImGui::Text("Act script name : %s", actObject->actScriptName.c_str());
 
         ImGui::Text("Node Status\n");
 
@@ -200,12 +203,39 @@ void BehaviorBaseNode::DrawNodeInfo()
         ImGui::RadioButton("Random", &nowSelectRule, static_cast<int>(RULE_RANDOM));
         ImGui::SameLine();
         ImGui::RadioButton("Priority", &nowSelectRule, static_cast<int>(RULE_PRIORITY));
-        ImGui::SameLine();
 
         break;
     default:
         break;
     }
+
+
+    ImGui::Checkbox("Edit Scripts Pointer", &isChangeScripts);
+    if (isChangeScripts) {
+        BehaviorActionBase* acttemp = nullptr;
+        ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
+        for (auto& acts : actObjects) {
+            if (ImGui::Button(acts->actScriptName.c_str())) {
+                acttemp = acts;
+            }
+        }
+        ImGui::EndChild();
+
+        if (acttemp != nullptr) { this->actObject = acttemp; }
+
+        BehaviorJudgeBase* judgetemp = nullptr;
+        ImGui::BeginChild(ImGui::GetID((void*)1), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
+        for (auto& judges : judgeObjects) {
+            if (ImGui::Button(judges->judgeScriptName.c_str())) {
+                judgetemp = judges;
+            }
+        }
+        ImGui::EndChild();
+
+        if (judgetemp != nullptr) { this->judgeObject = judgetemp; }
+    }
+
+    //DrawNodeInfo_Child(editNodes, actObjects, judgeObjects);
 
     ImguiMgr::Get()->EndDrawImgui();
 
@@ -213,7 +243,18 @@ void BehaviorBaseNode::DrawNodeInfo()
     rule = static_cast<SELECT_RULE>(nowSelectRule);
 }
 
-void BehaviorBaseNode::DrawNodeInfo_withEditor()
+void BehaviorBaseNode::DrawNodeInfo_Child(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects)
+{
+    if (this->isDisplay) {
+        for (auto& child : childs) {
+            ImGui::BeginChild(ImGui::GetID((void*)2), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
+            child->DrawNodeInfo_withEditor(editNodes, actObjects, judgeObjects);
+            ImGui::EndChild();
+        }
+    }
+}
+
+void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects)
 {
     //編集用変数
     int nowSelectRule = static_cast<int>(rule);

@@ -78,9 +78,12 @@ public:
 
 
 	//デバッグ用
-	void DrawNodeInfo();
+	void DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, 
+		std::vector<BehaviorJudgeBase*> judgeObjects, bool checkIsDisplay = true);
 
-	void DrawNodeInfo_withEditor();
+	void DrawNodeInfo_Child(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects);
+
+	void DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects);
 
 public:
 	//ノードの名前
@@ -104,7 +107,8 @@ public:
 private:
 	//エディター専用
 	bool isDisplay = false;
-
+	bool isChangeChilds = false;
+	bool isChangeScripts = false;
 
 
 	friend class BehaviorEditor;

@@ -13,6 +13,7 @@ BehaviorEditor::~BehaviorEditor()
 void BehaviorEditor::Init(AI_BehaviorTree* treePointer)
 {
 	this->treePointer = treePointer;
+	nodes.push_back(treePointer->firstNode);
 }
 
 void BehaviorEditor::AddEditData_ActScript(BehaviorActionBase* actObject)
@@ -81,7 +82,7 @@ void BehaviorEditor::EditorDraw()
 
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
 
-	treePointer->firstNode->DrawNodeInfo_withEditor();
+	treePointer->firstNode->DrawNodeInfo_withEditor(nodes, actScripts, judgeScripts);
 
 	ImGui::EndChild();
 
@@ -98,13 +99,13 @@ void BehaviorEditor::EditorDraw()
 
 void BehaviorEditor::NodeDataDraw()
 {
-	//表示フラグが立ってるノードを表示
+	//表示フラグが立ってるノードを表示、編集
 	for (auto& list : nodes) {
 		if (list->isDisplay) { 
-			list->DrawNodeInfo(); 
+			//ノード
+			list->DrawNodeInfo(nodes, actScripts, judgeScripts);
+			//子ノード
+			list->DrawNodeInfo_Child(nodes, actScripts, judgeScripts);
 		}
 	}
-
-
-
 }

@@ -92,6 +92,10 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     editor.AddEditData_Node(approachNode);
     editor.AddEditData_Node(retreatNode);
     editor.AddEditData_Node(waitNode);
+
+    editor.AddEditData_ActScript(approachObject);
+    editor.AddEditData_ActScript(retreatObject);
+    editor.AddEditData_ActScript(waitObject);
 }
 
 //èâä˙âª
