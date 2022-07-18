@@ -15,16 +15,17 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     newObjectSystem = LoadModel_ObjFile("player");
     ship2 = LoadModel_ObjFile("player");
     ship3 = LoadModel_ObjFile("player");
+    rtDrawer = NY_Object3DManager::Get()->CreateModel_Tile(32, 18, 1, 1, tiletex);
 
-    scale1 = { 10.0,10.0,10.0 };
+    scale1 = { 15.0,15.0,15.0 };
     rot1 = { 0,0,0 };
     pos1 = { -100,5,0 };
 
-    scale2 = { 10.0,10.0,10.0 };
+    scale2 = { 30.0,30.0,30.0 };
     rot2 = { 0,0,0 };
     pos2 = { 0,5,100 };
 
-    scale3 = { 10.0,10.0,10.0 };
+    scale3 = { 30.0,30.0,30.0 };
     rot3 = { 0,0,0 };
     pos3 = { 100,5,0 };
 
@@ -34,7 +35,6 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     //画像の読み込み
     tiletex = TexManager::LoadTexture("Resources/white.png");
-
     tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 50, 50, tiletex);
     tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
     tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(90, 0, 0), RVector3(0, 0, 0));
@@ -96,6 +96,9 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     editor.AddEditData_ActScript(approachObject);
     editor.AddEditData_ActScript(retreatObject);
     editor.AddEditData_ActScript(waitObject);
+
+    //マルチパス描画出力
+    rtDrawer->SetAffineParam(scale, RVector3(0, 0, 0), RVector3(0, 0, 0));
 }
 
 //初期化
@@ -125,13 +128,7 @@ void Title::Finalize()
 void Title::Update() {
     camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-    NY_Object3DManager::Get()->UpdateAllObjects();
-
     if(Input::isKey(DIK_SPACE)){ particle1->Prototype_Add(3, RVector3(0, 10, 0)); }
-
-    //Object3dのテスト
-
-    //速度計算
 
     //newObjectSystem->SetAffineParamTranslate(pos1);
     ship2->SetAffineParamTranslate(pos2);
@@ -155,23 +152,31 @@ void Title::Update() {
 void Title::Draw() {
 
     //パーティクル描画
-    particle1->Prototype_Draw(ptex);
+    //particle1->Prototype_Draw(ptex);
 
     //描画1回目
     //newObjectSystem->DrawObject();
-    ship2->DrawObject();
+
+    NY_Camera::Get()->SetViewStatusEyeTargetUp(eye, target, up);
+
+    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
+
+
     ship3->DrawObject();
     tileObject->DrawObject();
+    //pl.Draw();
+    //enemy.Draw();
 
-    pl.Draw();
+    NY_Object3DManager::Get()->CloseDrawObject3D();
 
-    enemy.Draw();
+    NY_Camera::Get()->SetViewStatusEyeTargetUp(eye2, target2, up2);
+
+    rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
+    ship2->DrawObject();
 
     SpriteManager::Get()->SetCommonBeginDraw();
-
     testInstance.DrawExtendSprite(x1, y1, x2, y2);
     testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
-
     //本描画（実際に描画される）
     testInstance.Draw();
 

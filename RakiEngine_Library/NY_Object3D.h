@@ -13,6 +13,7 @@
 #include "NY_Model.h"
 #include "fbxModel.h"
 #include "RVector.h"
+#include "RTex.h"
 
 using namespace std;
 using namespace DirectX;
@@ -96,6 +97,7 @@ public:
 
 	//レンダーテクスチャを使用した描画
 	void DrawRTexObject(int rtHandle);
+	void DrawRTexObject(RTex* rt);
 
 	//モデルデータをロード
 	void LoadAndSetModelData(string modelname);

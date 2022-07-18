@@ -73,6 +73,19 @@ public:
 	/// <param name="handle">レンダーテクスチャのハンドル</param>
 	void SetRenderTarget(int handle);
 
+	/// <summary>
+	/// レンダーターゲット複数設定（現状ディファードレンダリング用）
+	/// </summary>
+	/// <param name="renderTargets">レンダーテクスチャの配列</param>
+	void SetMultiRenderTargets(const RTex* renderTargets,int size);
+
+	/// <summary>
+	/// ディファードレンダリングで設定したレンダーターゲットをクローズ
+	/// </summary>
+	/// <param name="renderTargets">レンダーターゲット配列</param>
+	/// <param name="size">レンダーターゲットの枚数</param>
+	void CloseMultiRenderTargets(const RTex *renderTargets, int size);
+
 
 	/// <summary>
 	/// レンダーテクスチャのシザー矩形を設定する

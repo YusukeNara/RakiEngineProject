@@ -1,17 +1,17 @@
 #include "RTex.h"
 #include "Raki_DX12B.h"
 
-void RenderTextureData::Init(int texwidth, int texheight,float *clearColor)
+void RenderTextureData::Init(int texwidth, int texheight,float *clearColor,int addBufferNums)
 {
 	//各種リソース生成
-	CreateTextureBuffer(texwidth, texheight,clearColor);
-	CreateSRVDescriptorHeap();
-	CreateRTVDescriptorHeap();
+	CreateTextureBuffer(texwidth, texheight, clearColor, addBufferNums);
+	CreateSRVDescriptorHeap(addBufferNums);
+	CreateRTVDescriptorHeap(addBufferNums);
 	CreateDepthBuffer(texwidth, texheight);
-	CreateDSVDescriptorHeap();
+	CreateDSVDescriptorHeap(addBufferNums);
 }
 
-void RenderTextureData::CreateTextureBuffer(int texture_width, int texture_height,float *clearColor)
+void RenderTextureData::CreateTextureBuffer(int texture_width, int texture_height,float *clearColor, int addBufferNums)
 {
 	auto hp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 	auto resdesc = CD3DX12_RESOURCE_DESC::Tex2D(
@@ -22,21 +22,25 @@ void RenderTextureData::CreateTextureBuffer(int texture_width, int texture_heigh
 	);
 	auto clearvalue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clearColor);
 
-	HRESULT RenderTexture_Create_Result = 
-		RAKI_DX12B_DEV->CreateCommittedResource(
-		&hp,
-		D3D12_HEAP_FLAG_NONE,
-		&resdesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		&clearvalue,
-		IID_PPV_ARGS(&rtexBuff)
-	);
+	//バッファ生成数分ループ
+	for (int i = 0; i < addBufferNums; i++) {
+		rtexBuff.push_back(nullptr);
+		HRESULT RenderTexture_Create_Result =
+			RAKI_DX12B_DEV->CreateCommittedResource(
+				&hp,
+				D3D12_HEAP_FLAG_NONE,
+				&resdesc,
+				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+				&clearvalue,
+				IID_PPV_ARGS(&rtexBuff[i])
+			);
 
-	//生成失敗時は終了
-	assert(SUCCEEDED(RenderTexture_Create_Result));
+		//生成失敗時は終了
+		assert(SUCCEEDED(RenderTexture_Create_Result));
+	}
 }
 
-void RenderTextureData::CreateSRVDescriptorHeap()
+void RenderTextureData::CreateSRVDescriptorHeap(int bufferCount)
 {
 	HRESULT result;
 
@@ -44,7 +48,8 @@ void RenderTextureData::CreateSRVDescriptorHeap()
 	D3D12_DESCRIPTOR_HEAP_DESC texdhd = {};
 	texdhd.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	texdhd.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	texdhd.NumDescriptors = 1;
+	//バッファ生成数分デスクリプタは生成
+	texdhd.NumDescriptors = bufferCount;
 
 	//テクスチャ用デスクリプタヒープ
 	result = RAKI_DX12B_DEV->CreateDescriptorHeap(&texdhd, IID_PPV_ARGS(&srvHeap));
@@ -56,27 +61,52 @@ void RenderTextureData::CreateSRVDescriptorHeap()
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	//デスクリプタヒープにSRV作成
-	RAKI_DX12B_DEV->CreateShaderResourceView(rtexBuff.Get(),
-		&srvDesc,
-		srvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
+	//デスクリプタヒープにSRV作成（バッファ数ループ）
+	//auto handle = srvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+	//for (auto& rt : rtexBuff) {
+	//	RAKI_DX12B_DEV->CreateShaderResourceView(rt.Get(),
+	//		&srvDesc,
+	//		handle
+	//	);
+	//	handle.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//}
+
+	for (int i = 0; i < bufferCount; i++) {
+		RAKI_DX12B_DEV->CreateShaderResourceView(rtexBuff[i].Get(),
+			&srvDesc,
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(srvHeap.Get()->GetCPUDescriptorHandleForHeapStart(), i,
+				RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
+		);
+	}
 }
 
-void RenderTextureData::CreateRTVDescriptorHeap()
+void RenderTextureData::CreateRTVDescriptorHeap(int bufferCount)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC rtvdhd = {};
 	rtvdhd.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvdhd.NumDescriptors = 1;
+	//バッファ生成数分デスクリプタ生成
+	rtvdhd.NumDescriptors = bufferCount;
 
 	HRESULT result = RAKI_DX12B_DEV->CreateDescriptorHeap(
 		&rtvdhd, IID_PPV_ARGS(&rtvHeap)
 	);
 
-	RAKI_DX12B_DEV->CreateRenderTargetView(rtexBuff.Get(),
-		nullptr,
-		rtvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
+	//デスクリプタヒープにRTV生成（バッファ数ぶん）
+	//auto handle = rtvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+	//for (auto& rt : rtexBuff) {
+	//	RAKI_DX12B_DEV->CreateRenderTargetView(rt.Get(),
+	//		nullptr,
+	//		CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeap->GetCPUDescriptorHandleForHeapStart(),)
+	//	);
+	//	handle.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	//}
+
+	for (int i = 0; i < bufferCount; i++) {
+		RAKI_DX12B_DEV->CreateRenderTargetView(rtexBuff[i].Get(),
+			nullptr,
+			CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
+				i, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)));
+	}
 }
 
 void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
@@ -108,7 +138,7 @@ void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
 	assert(SUCCEEDED(rtex_depthbuff_create_result));
 }
 
-void RenderTextureData::CreateDSVDescriptorHeap()
+void RenderTextureData::CreateDSVDescriptorHeap(int bufferCount)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC depthheapdesc{};
 	depthheapdesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
@@ -141,13 +171,17 @@ RTex::~RTex()
 
 }
 
-void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor)
+void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount)
 {
 	//レンダーテクスチャデータ初期化
-	rtdata->Init(texture_width, texture_height, clearColor);
+	rtdata->Init(texture_width, texture_height, clearColor, bufferCount);
 
 	//ビューポート、シザー矩形初期化
 	InitViewAndRect(texture_width, texture_height);
+
+	for (int i = 0; i < 4; i++) {
+		clearColors[i] = clearColor[i];
+	}
 
 	graph_size.first = texture_width;
 	graph_size.second = texture_height;

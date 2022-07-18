@@ -131,7 +131,7 @@ void RenderTargetManager::SetRenderTarget(int handle)
 
 	//テクスチャのリソースステートをレンダーターゲットに変更
 	auto barrierState = CD3DX12_RESOURCE_BARRIER::Transition(
-		renderTextures[handle]->rtdata->rtexBuff.Get(),
+		renderTextures[handle]->rtdata->rtexBuff[0].Get(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_RENDER_TARGET
 	);
@@ -150,6 +150,69 @@ void RenderTargetManager::SetRenderTarget(int handle)
 
 	isDrawing = USING_RENDERTEXTURE;
 	nowRenderTargetHandle = handle;
+}
+
+void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int size)
+{
+	//RTV用デスクリプタハンドルは複数
+	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> rtvhs;
+	//デプスハンドルは一つだけ
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvh = renderTargets->rtdata->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+
+	//リソースバリア変更
+	for (auto &rt : renderTargets->rtdata->rtexBuff) {
+		//テクスチャのリソースステートをレンダーターゲットに変更
+		auto barrierState = CD3DX12_RESOURCE_BARRIER::Transition(
+			rt.Get(),
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET
+		);
+		cmdlist->ResourceBarrier(1, &barrierState);
+	}
+
+	auto rtvHandle = renderTargets->rtdata->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < renderTargets->rtdata->rtexBuff.size(); i++) {
+		rtvhs.push_back(rtvHandle);
+		rtvHandle.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	}
+
+	//レンダーターゲット設定
+	cmdlist->OMSetRenderTargets(UINT(rtvhs.size()), rtvhs.data(), true, &dsvh);
+
+	//レンダーターゲットクリア
+	for (auto& r : rtvhs) {
+		cmdlist->ClearRenderTargetView(r, renderTargets->clearColors.data(), 0, nullptr);
+	}
+
+	//ビューとシザーの設定
+	std::vector<CD3DX12_VIEWPORT> viewports;
+	std::vector<CD3DX12_RECT> rects;
+
+	for (int i = 0; i < int(rtvhs.size()); i++) {
+		viewports.push_back(renderTargets->viewport);
+		rects.push_back(renderTargets->rect);
+	}
+
+	cmdlist->RSSetViewports(UINT(rtvhs.size()), viewports.data());
+	cmdlist->RSSetScissorRects(UINT(rtvhs.size()), rects.data());
+
+	isDrawing = USING_RENDERTEXTURE;
+}
+
+void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int size)
+{
+	//レンダーターゲットをクローズ、バックバッファに切り替え
+	for (auto& rt : renderTargets->rtdata->rtexBuff) {
+		//テクスチャのリソースステートをレンダーターゲットに変更
+		auto barrierState = CD3DX12_RESOURCE_BARRIER::Transition(
+			rt.Get(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+		);
+		cmdlist->ResourceBarrier(1, &barrierState);
+	}
+	
+	SetDrawBackBuffer();
 }
 
 void RenderTargetManager::SetRenderTargetDrawArea(int handle, int x1, int y1, int x2, int y2)
@@ -186,8 +249,6 @@ void RenderTargetManager::SetRenderTargetClipingArea(int handle, int x1, int y1,
 		return;
 	}
 
-
-
 	renderTextures[handle]->viewport = CD3DX12_VIEWPORT(FLOAT(x1), FLOAT(y1), FLOAT(x2), FLOAT(y2));
 }
 
@@ -222,7 +283,7 @@ void RenderTargetManager::SetDrawBackBuffer()
 	//レンダーテクスチャの状態を表示状態に
 	if (isDrawing == USING_BACKBUFFER) { return; }
 	
-	CloseDrawRenderTexture();
+	//CloseDrawRenderTexture();
 
 	//バックバッファの番号取得
 	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();

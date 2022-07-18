@@ -27,6 +27,7 @@ using namespace DirectX;
 //使用する自作エンジンの機能のインクルード
 #include "NY_Object3D.h"
 #include "RVector.h"
+#include "RenderTargetManager.h"
 
 //3Dパイプライン
 typedef struct Pipeline3D
@@ -73,7 +74,6 @@ private:
 
 	//モデル用グラフィックスパイプラインステート構造体
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipelineStateDesc;
-	
 
 	//----------シェーダーオブジェクト----------//
 
@@ -92,6 +92,20 @@ private:
 
 	//デフォルトテクスチャの色
 	XMFLOAT4 defColor = { 1.0,0.0,0.0,1.0 };
+
+	//--------------------ディファードレンダリング用変数-------------------------------//
+
+	//ディファードレンダリングGBuffer用グラフィックスパイプライン設定
+	Pipeline3D m_diferredRenderingPipeline;
+	//本描画は3D描画ではないので別クラスが担当する
+
+	//ディファードレンダリング用ステート構造体
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC m_diferredRenderingStateDesc;
+
+	//GBuffer(RTex)
+public:
+	RTex m_gBuffer;
+private:
 
 	//コンストラクタ、デストラクタ
 	NY_Object3DManager() {};
@@ -146,7 +160,11 @@ public:
 	/// <param name="cmd">ID3D12GraphicsCommandListのポインタ</param>
 	void SetCommonBeginDrawObject3D();
 
+	void CloseDrawObject3D();
+
 	void SetCommonBeginDrawObject3DFeatRTex(int rtHandle);
+
+	void SetCommonBeginDrawObject3DFeatRTex(RTex* rt);
 
 	void SetCommonBeginDrawObject3D2MultiPassRenderResource();
 
@@ -176,6 +194,8 @@ private:
 	Pipeline3D Create3DPipelineState(ID3D12Device *dev);
 
 	Pipeline3D CreateMPPipelineState(Pipeline3D defaultPP);
+
+	Pipeline3D CreateDiferredRenderingPipelineState();
 
 };
 

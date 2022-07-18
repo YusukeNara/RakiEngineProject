@@ -27,3 +27,10 @@ struct GSOutput
     float3 normal : NORMAL;      //法線ベクトル
     float2 uv     : TEXCOORD;    //uv値
 };
+
+//ピクセルシェーダー出力構造体
+struct PixelOutput
+{
+    float4 pixel_color	: SV_TARGET0;
+    float4 normal	: SV_TARGET1;
+};

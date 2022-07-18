@@ -33,11 +33,11 @@ public:
     void Draw() override;          //描画処理をオーバーライド。
 
     //シーンで使うインスタンス
-    XMFLOAT3 eye = { 0,150,-200 };
+    XMFLOAT3 eye = { 0,25,-50 };
     XMFLOAT3 target = { 0,0,0 };
     XMFLOAT3 up = { 0,1,0 };
 
-    XMFLOAT3 eye2 = { 0,50,0 };
+    XMFLOAT3 eye2 = { 0,25,-300 };
     XMFLOAT3 target2 = { 0,0,0 };
     XMFLOAT3 up2 = { 0,1,0 };
 
@@ -49,6 +49,8 @@ public:
     Object3d *obj2;
     Object3d *gmodel;
     RVector3 scale = { 5,5,5 };
+    
+    Object3d *rtDrawer;
 
     //新型Object3d
     Object3d *newObjectSystem;
@@ -87,6 +89,7 @@ public:
     XMFLOAT2 mouseVel;
 
     //レンダリング結果描画
+    
 
     bool isadd = false;
 
