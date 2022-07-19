@@ -161,7 +161,6 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
-
     ship3->DrawObject();
     tileObject->DrawObject();
     //pl.Draw();
@@ -172,13 +171,13 @@ void Title::Draw() {
     NY_Camera::Get()->SetViewStatusEyeTargetUp(eye2, target2, up2);
 
     rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
-    ship2->DrawObject();
+    //ship2->DrawObject();
 
-    SpriteManager::Get()->SetCommonBeginDraw();
-    testInstance.DrawExtendSprite(x1, y1, x2, y2);
-    testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
-    //本描画（実際に描画される）
-    testInstance.Draw();
+    //SpriteManager::Get()->SetCommonBeginDraw();
+    //testInstance.DrawExtendSprite(x1, y1, x2, y2);
+    //testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
+    ////本描画（実際に描画される）
+    //testInstance.Draw();
 
     editor.EditorDraw();
     editor.ObjectDataDraw();

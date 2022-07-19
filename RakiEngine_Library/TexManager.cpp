@@ -20,6 +20,8 @@ void TexManager::InitTexManager()
     descHeapDesc.NumDescriptors = MAX_TEXNUM;
     result = Raki_DX12B::Get()->GetDevice()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&texDsvHeap));
 
+    texDsvHeap->SetName(L"TextureManager_SRV_HEAP");
+
     dev = Raki_DX12B::Get()->GetDevice();
 }
 

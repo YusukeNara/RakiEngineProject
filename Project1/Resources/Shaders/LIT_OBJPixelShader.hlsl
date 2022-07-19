@@ -16,7 +16,6 @@ float4 main(GSOutput input) : SV_TARGET
     //現時点では、ただレンダリング結果をだすだけ
     //このシェーダーはLit相当なので、後に光源計算が入る
     
-    
     float4 texColor = float4(tex.Sample(smp, input.uv));
 
     float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト

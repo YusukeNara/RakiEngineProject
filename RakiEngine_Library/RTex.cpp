@@ -35,9 +35,13 @@ void RenderTextureData::CreateTextureBuffer(int texture_width, int texture_heigh
 				IID_PPV_ARGS(&rtexBuff[i])
 			);
 
+		rtexBuff[i]->SetName(L"rTexBuffers");
+
 		//¶¬Ž¸”sŽž‚ÍI—¹
 		assert(SUCCEEDED(RenderTexture_Create_Result));
 	}
+
+	
 }
 
 void RenderTextureData::CreateSRVDescriptorHeap(int bufferCount)
@@ -78,6 +82,8 @@ void RenderTextureData::CreateSRVDescriptorHeap(int bufferCount)
 				RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV))
 		);
 	}
+
+	srvHeap->SetName(L"RTex_SRV_HEAP");
 }
 
 void RenderTextureData::CreateRTVDescriptorHeap(int bufferCount)
@@ -107,6 +113,8 @@ void RenderTextureData::CreateRTVDescriptorHeap(int bufferCount)
 			CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeap.Get()->GetCPUDescriptorHandleForHeapStart(),
 				i, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)));
 	}
+
+	rtvHeap->SetName(L"RTex_RTV_HEAP");
 }
 
 void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
@@ -136,6 +144,8 @@ void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
 
 	//¶¬Ž¸”s‚Í‹­§I—¹
 	assert(SUCCEEDED(rtex_depthbuff_create_result));
+
+	depthBuff->SetName(L"RTex_DepthBuffer");
 }
 
 void RenderTextureData::CreateDSVDescriptorHeap(int bufferCount)
@@ -158,6 +168,8 @@ void RenderTextureData::CreateDSVDescriptorHeap(int bufferCount)
 		&dsvDesc,
 		dsvHeap->GetCPUDescriptorHandleForHeapStart()
 	);
+
+	dsvHeap->SetName(L"RTex_DSV_HEAP");
 }
 
 RTex::RTex()
