@@ -9,8 +9,6 @@
 using namespace myImgui;
 
 Title::Title(ISceneChanger *changer) : BaseScene(changer) {
-    
-    //camera->SetViewStatusEyeTargetUp(eye, target, up);
 
     newObjectSystem = LoadModel_ObjFile("player");
     ship2 = LoadModel_ObjFile("player");
@@ -126,11 +124,9 @@ void Title::Finalize()
 
 //更新
 void Title::Update() {
-    //camera->SetViewStatusEyeTargetUp(eye, target, up);
 
     if(Input::isKey(DIK_SPACE)){ particle1->Prototype_Add(3, RVector3(0, 10, 0)); }
 
-    //newObjectSystem->SetAffineParamTranslate(pos1);
     ship2->SetAffineParamTranslate(pos2);
     ship3->SetAffineParamTranslate(pos3);
 
@@ -151,12 +147,6 @@ void Title::Update() {
 //描画
 void Title::Draw() {
 
-    //パーティクル描画
-    //particle1->Prototype_Draw(ptex);
-
-    //描画1回目
-    //newObjectSystem->DrawObject();
-
     NY_Camera::Get()->SetViewStatusEyeTargetUp(eye, target, up);
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
@@ -168,10 +158,7 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
-    //NY_Camera::Get()->SetViewStatusEyeTargetUp(eye2, target2, up2);
-
     rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
-    //ship2->DrawObject();
 
     SpriteManager::Get()->SetCommonBeginDraw();
     testInstance.DrawExtendSprite(x1, y1, x2, y2);
