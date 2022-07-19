@@ -137,6 +137,9 @@
     <FxCompile Include="Resources\Shaders\OBJVertexShader.hlsl">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\LIT_OBJPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic.hlsli">

@@ -268,6 +268,11 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
     D3D12_GRAPHICS_PIPELINE_STATE_DESC mpGP{};
     mpGP = gpipelineStateDesc;
 
+    //実験が終わったら別クラスに移動させる
+    //ディファード用にピクセルシェーダー変更
+    //現状抱えている問題は、このシェーダーが原因ではない（問題発生後に追加したので）
+
+
     //ブレンド設定のみ書き換える
     D3D12_RENDER_TARGET_BLEND_DESC& mpblenddesc = mpGP.BlendState.RenderTarget[0];//blenddescを書き換えるとRenderTarget[0]が書き換わる
     //ブレンドステートの共通設定
@@ -377,7 +382,6 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
 
     //レンダーターゲットにするGBufferを作成
     float clearcolors[4] = { 0.8f,0.8f,0.8f,1.0f };
-
     m_gBuffer.CreateRTex(Raki_WinAPI::window_width, Raki_WinAPI::window_height,
         clearcolors, 2);
     gpipeline.NumRenderTargets = 2;//描画対象は1つ

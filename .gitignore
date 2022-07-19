@@ -97,6 +97,8 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+!player.obj
+!enemy1.obj
 
 # Chutzpah Test files
 _Chutzpah*

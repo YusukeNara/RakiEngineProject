@@ -79,6 +79,9 @@
     <Filter Include="Behavior">
       <UniqueIdentifier>{c177c3b1-5c29-4bac-983e-c6cd638e1841}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphic\3D\lights">
+      <UniqueIdentifier>{e03dd0b6-ae7d-4cb9-acd4-7dc5e2b511b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -182,6 +185,15 @@
     </ClCompile>
     <ClCompile Include="BehaviorEditor.cpp">
       <Filter>Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLight.cpp">
+      <Filter>Graphic\3D\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Graphic\3D\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Graphic\3D\lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="BehaviorEditor.h">
       <Filter>Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLight.h">
+      <Filter>Graphic\3D\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Graphic\3D\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Graphic\3D\lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

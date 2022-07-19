@@ -70,8 +70,10 @@
     <ClCompile Include="AbstructSceneFactory.cpp" />
     <ClCompile Include="AI_BehaviorBaseNode.cpp" />
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BehaviorEditor.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="fbxModel.cpp" />
     <ClCompile Include="FPS.cpp" />
@@ -98,6 +100,7 @@
     <ClCompile Include="RTex.cpp" />
     <ClCompile Include="RVector.cpp" />
     <ClCompile Include="SceneFactory.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="TexManager.cpp" />
@@ -106,11 +109,13 @@
     <ClInclude Include="AbstructSceneFactory.h" />
     <ClInclude Include="AI_BehaviorBaseNode.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="BaseLight.h" />
     <ClInclude Include="BehaviorData.h" />
     <ClInclude Include="BehaviorEditor.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="fbxModel.h" />
     <ClInclude Include="FPS.h" />
@@ -139,6 +144,7 @@
     <ClInclude Include="RVector.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneFactory.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="Task.h" />
