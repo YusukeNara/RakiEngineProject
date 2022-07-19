@@ -70,13 +70,14 @@ void Object3d::SetAffineParam(RVector3 scale, RVector3 rot, RVector3 trans)
 
 	//ダーティフラグが有効のとき
 	if (isDirty == true) {
-		//条件に応じてパラメータ更新
-		if (isBillBoard != true) {
-			UpdateObject3D();
-		}
-		else {
-			UpdateBillBoard3D();
-		}
+		UpdateObject3D();
+		////条件に応じてパラメータ更新
+		//if (isBillBoard != true) {
+
+		//}
+		//else {
+		//	UpdateBillBoard3D();
+		//}
 	}
 }
 

@@ -25,9 +25,9 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     rot2 = { 0,0,0 };
     pos2 = { 0,5,100 };
 
-    scale3 = { 30.0,30.0,30.0 };
+    scale3 = { 50.0,50.0,50.0 };
     rot3 = { 0,0,0 };
-    pos3 = { 100,5,0 };
+    pos3 = { 0,3,0 };
 
     newObjectSystem->SetAffineParam(scale1, rot1, pos1);
     ship2->SetAffineParam(scale2, rot2, pos2);
@@ -162,7 +162,7 @@ void Title::Draw() {
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
     ship3->DrawObject();
-    tileObject->DrawObject();
+    //tileObject->DrawObject();
     //pl.Draw();
     //enemy.Draw();
 
@@ -173,11 +173,11 @@ void Title::Draw() {
     rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
     //ship2->DrawObject();
 
-    //SpriteManager::Get()->SetCommonBeginDraw();
-    //testInstance.DrawExtendSprite(x1, y1, x2, y2);
-    //testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
-    ////本描画（実際に描画される）
-    //testInstance.Draw();
+    SpriteManager::Get()->SetCommonBeginDraw();
+    testInstance.DrawExtendSprite(x1, y1, x2, y2);
+    testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
+    //本描画（実際に描画される）
+    testInstance.Draw();
 
     editor.EditorDraw();
     editor.ObjectDataDraw();
