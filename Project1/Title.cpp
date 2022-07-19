@@ -10,7 +10,7 @@ using namespace myImgui;
 
 Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     
-    camera->SetViewStatusEyeTargetUp(eye, target, up);
+    //camera->SetViewStatusEyeTargetUp(eye, target, up);
 
     newObjectSystem = LoadModel_ObjFile("player");
     ship2 = LoadModel_ObjFile("player");
@@ -25,7 +25,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     rot2 = { 0,0,0 };
     pos2 = { 0,5,100 };
 
-    scale3 = { 50.0,50.0,50.0 };
+    scale3 = { 10.0,10.0,10.0 };
     rot3 = { 0,0,0 };
     pos3 = { 0,3,0 };
 
@@ -126,7 +126,7 @@ void Title::Finalize()
 
 //XV
 void Title::Update() {
-    camera->SetViewStatusEyeTargetUp(eye, target, up);
+    //camera->SetViewStatusEyeTargetUp(eye, target, up);
 
     if(Input::isKey(DIK_SPACE)){ particle1->Prototype_Add(3, RVector3(0, 10, 0)); }
 
@@ -168,7 +168,7 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
-    NY_Camera::Get()->SetViewStatusEyeTargetUp(eye2, target2, up2);
+    //NY_Camera::Get()->SetViewStatusEyeTargetUp(eye2, target2, up2);
 
     rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
     //ship2->DrawObject();
