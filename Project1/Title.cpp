@@ -29,6 +29,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     newObjectSystem->SetAffineParam(scale1, rot1, pos1);
     ship2->SetAffineParam(scale2, rot2, pos2);
+
     ship3->SetAffineParam(scale3, rot3, pos3);
 
     //‰æ‘œ‚Ì“Ç‚İ‚İ

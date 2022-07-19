@@ -183,6 +183,7 @@ void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int si
 	for (auto& r : rtvhs) {
 		cmdlist->ClearRenderTargetView(r, renderTargets->clearColors.data(), 0, nullptr);
 	}
+	cmdlist->ClearDepthStencilView(dsvh, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	//ビューとシザーの設定
 	std::vector<CD3DX12_VIEWPORT> viewports;
