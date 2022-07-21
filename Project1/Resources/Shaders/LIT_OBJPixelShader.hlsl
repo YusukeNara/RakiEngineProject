@@ -1,32 +1,26 @@
-#include "OBJShaderHeader.hlsli"
-
-// 07/19 12:00時点で、このシェーダーは未使用です
+#include "LIT_OBJHeader.hlsli"
 
 //	2パス目出力用シェーダー（予定）
 //	現時点では、GBuffer画像を出力するだけ
 
-//ディファードでは、このレジスタにGBufferが入る
-Texture2D<float4> tex : register(t0);
-//サンプラーは変更なし
-SamplerState smp : register(s0);
-//光源情報の配列が入るレジスタを追加予定
-
-float4 main(GSOutput input) : SV_TARGET
+float4 main(VSOutput input) : SV_TARGET
 {
-    //現時点では、ただレンダリング結果をだすだけ
-    //このシェーダーはLit相当なので、後に光源計算が入る
+    //アルベド情報を取得
+    float4 albedo = albedoTex.Sample(smp, input.uv);
+    //法線情報取得
+    float3 normal = normalTex.Sample(smp, input.uv).xyz;
     
-    float4 texColor = float4(tex.Sample(smp, input.uv));
-
-    float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト
-    float diffuse = saturate(dot(-light, input.normal));
-	
-    float3 shade_color;
-    shade_color = m_ambient;
-    shade_color += m_diffuse * diffuse;
-	
-    float4 texcolor = tex.Sample(smp, input.uv);
-	
-    //通常の結果を出力
-    return float4(texcolor.rgb * shade_color, texcolor.a * m_alpha) * color;
+    normal = (normal * 2.0f) - 1.0f;
+    
+    //ライト計算
+    float3 lightDir = normalize(float3(1, -1, 1)); //右下奥向きライト
+    float diffuse = saturate(dot(normal,-lightDir)); //ディフューズ計算
+    
+    float4 resultColor;
+    
+    //拡散反射
+    resultColor.rgb = albedo.rgb * diffuse;
+    resultColor.a = 1.0f;
+    
+    return resultColor;
 }

@@ -9,8 +9,6 @@
 using namespace myImgui;
 
 Title::Title(ISceneChanger *changer) : BaseScene(changer) {
-
-    newObjectSystem = LoadModel_ObjFile("player");
     ship2 = LoadModel_ObjFile("player");
     ship3 = LoadModel_ObjFile("player");
     rtDrawer = NY_Object3DManager::Get()->CreateModel_Tile(32, 18, 1, 1, tiletex);
@@ -18,19 +16,17 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     scale1 = { 15.0,15.0,15.0 };
     rot1 = { 0,0,0 };
     pos1 = { -100,5,0 };
-
-    scale2 = { 30.0,30.0,30.0 };
+    scale2 = { 10.0,10.0,10.0 };
     rot2 = { 0,0,0 };
-    pos2 = { 0,5,100 };
-
+    pos2 = { 25,10,0 };
     scale3 = { 10.0,10.0,10.0 };
     rot3 = { 0,0,0 };
-    pos3 = { 0,3,0 };
+    pos3 = { 0,20,0 };
 
-    newObjectSystem->SetAffineParam(scale1, rot1, pos1);
     ship2->SetAffineParam(scale2, rot2, pos2);
-
     ship3->SetAffineParam(scale3, rot3, pos3);
+    saru = LoadModel_ObjFile("saru");
+    saru->SetAffineParam(scale3, rot3, pos3);
 
     //画像の読み込み
     tiletex = TexManager::LoadTexture("Resources/white.png");
@@ -45,59 +41,47 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     y1 = 100.0f;
     y2 = 150.0f;
 
-    //パーティクル
-    particle1 = ParticleManager::Create();
-    bomProto = new BomParticle(RVector3(0, 0, 0));
-    //プロトタイプをセット
-    particle1->Prototype_Set(bomProto);
-    //パーティクルのテクスチャ
-    ptex = TexManager::LoadTexture("Resources/effect1.png");
-
-    //プレイヤー
-    pl.Init();
-    //敵
-    enemy.Init(newObjectSystem);
-    //各種行動オブジェクト生成
-
-    //移動の判定ノード
-    firstNode = new BehaviorBaseNode;
-    //判定スクリプト付きオブジェクト
-    MoveJudgeObject* moveJudgeObject = new MoveJudgeObject(&enemy, &pl.pos);
-
-    //行動オブジェクト
-    approachNode      = new BehaviorBaseNode;
-    approachObject    = new ApproachingMoveAct(&enemy, &pl.pos);
-    approachObject->actScriptName = std::string("approach");
-    approachNode->CreateActionNode("approachAction", approachObject, moveJudgeObject);
-    retreatNode       = new BehaviorBaseNode;
-    retreatObject     = new RetreatMoveAct(&enemy, &pl.pos);
-    retreatObject->actScriptName = std::string("retreat");
-    retreatNode->CreateActionNode("retreatAction", retreatObject, moveJudgeObject);
-    waitNode          = new BehaviorBaseNode;
-    waitObject        = new WaitAct(&enemy, &pl.pos);
-    waitObject->actScriptName = std::string("wait");
-    waitNode->CreateActionNode("WaitAction", waitObject, moveJudgeObject);
-
-    //ノード生成
-    firstNode->CreateJudgeNode("firstNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
-    firstNode->AddjudgeNodeChild(approachNode);
-    firstNode->AddjudgeNodeChild(retreatNode);
-    firstNode->AddjudgeNodeChild(waitNode);
-
-    //ビヘイビア初期化
-    enemyBehaviorTree.Init(firstNode);
-
-    editor.Init(&enemyBehaviorTree);
-    editor.AddEditData_Node(approachNode);
-    editor.AddEditData_Node(retreatNode);
-    editor.AddEditData_Node(waitNode);
-
-    editor.AddEditData_ActScript(approachObject);
-    editor.AddEditData_ActScript(retreatObject);
-    editor.AddEditData_ActScript(waitObject);
+    ////プレイヤー
+    //pl.Init();
+    ////敵
+    //enemy.Init(newObjectSystem);
+    ////各種行動オブジェクト生成
+    ////移動の判定ノード
+    //firstNode = new BehaviorBaseNode;
+    ////判定スクリプト付きオブジェクト
+    //MoveJudgeObject* moveJudgeObject = new MoveJudgeObject(&enemy, &pl.pos);
+    ////行動オブジェクト
+    //approachNode      = new BehaviorBaseNode;
+    //approachObject    = new ApproachingMoveAct(&enemy, &pl.pos);
+    //approachObject->actScriptName = std::string("approach");
+    //approachNode->CreateActionNode("approachAction", approachObject, moveJudgeObject);
+    //retreatNode       = new BehaviorBaseNode;
+    //retreatObject     = new RetreatMoveAct(&enemy, &pl.pos);
+    //retreatObject->actScriptName = std::string("retreat");
+    //retreatNode->CreateActionNode("retreatAction", retreatObject, moveJudgeObject);
+    //waitNode          = new BehaviorBaseNode;
+    //waitObject        = new WaitAct(&enemy, &pl.pos);
+    //waitObject->actScriptName = std::string("wait");
+    //waitNode->CreateActionNode("WaitAction", waitObject, moveJudgeObject);
+    ////ノード生成
+    //firstNode->CreateJudgeNode("firstNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
+    //firstNode->AddjudgeNodeChild(approachNode);
+    //firstNode->AddjudgeNodeChild(retreatNode);
+    //firstNode->AddjudgeNodeChild(waitNode);
+    ////ビヘイビア初期化
+    //enemyBehaviorTree.Init(firstNode);
+    //editor.Init(&enemyBehaviorTree);
+    //editor.AddEditData_Node(approachNode);
+    //editor.AddEditData_Node(retreatNode);
+    //editor.AddEditData_Node(waitNode);
+    //editor.AddEditData_ActScript(approachObject);
+    //editor.AddEditData_ActScript(retreatObject);
+    //editor.AddEditData_ActScript(waitObject);
 
     //マルチパス描画出力
     rtDrawer->SetAffineParam(scale, RVector3(0, 0, 0), RVector3(0, 0, 0));
+
+    diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 }
 
 //初期化
@@ -109,40 +93,24 @@ void Title::Finalize()
 {
     DeleteObject(ship2);
     DeleteObject(ship3);
-    DeleteObject(newObjectSystem);
     DeleteObject(tileObject);
 
-    pl.Finalize();
-
-    delete firstNode;
-    delete approachNode;
-    delete approachObject;
-    delete retreatNode;
-    delete retreatObject;
-    delete waitObject;
-    delete waitNode;
+    //pl.Finalize();
+    //delete firstNode;
+    //delete approachNode;
+    //delete approachObject;
+    //delete retreatNode;
+    //delete retreatObject;
+    //delete waitObject;
+    //delete waitNode;
 }
 
 //更新
 void Title::Update() {
 
-    if(Input::isKey(DIK_SPACE)){ particle1->Prototype_Add(3, RVector3(0, 10, 0)); }
-
     ship2->SetAffineParamTranslate(pos2);
     ship3->SetAffineParamTranslate(pos3);
-
-    if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_L)) {
-        particle1->Prototype_Add(5, pos1);
-    }
-    if (Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_R)) {
-        particle1->Prototype_Add(20, { 0,0,0 });
-    }
-
-    particle1->Prototype_Update();
-
-    pl.Update();
-
-    enemyBehaviorTree.Run();
+    saru->SetAffineParamTranslate(pos3);
 }
 
 //描画
@@ -152,23 +120,21 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
-    ship3->DrawObject();
-    //tileObject->DrawObject();
-    //pl.Draw();
-    //enemy.Draw();
+    tileObject->DrawObject();
+    saru->DrawObject();
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
-    rtDrawer->DrawRTexObject(&NY_Object3DManager::Get()->m_gBuffer);
+    diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer);
 
-    SpriteManager::Get()->SetCommonBeginDraw();
-    testInstance.DrawExtendSprite(x1, y1, x2, y2);
-    testInstance.DrawExtendSprite(x1, y1 + 50, x2, y2 + 50);
-    //本描画（実際に描画される）
-    testInstance.Draw();
+    ImguiMgr::Get()->StartDrawImgui("window", 100, 100);
 
-    editor.EditorDraw();
-    editor.ObjectDataDraw();
-    editor.NodeDataDraw();
+    ImGui::Checkbox("swapDrawCall", &swapDraw);
+
+    ImguiMgr::Get()->EndDrawImgui();
+
+    //editor.EditorDraw();
+    //editor.ObjectDataDraw();
+    //editor.NodeDataDraw();
 
 }

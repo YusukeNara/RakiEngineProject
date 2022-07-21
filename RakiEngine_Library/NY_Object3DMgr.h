@@ -97,8 +97,6 @@ private:
 
 	//ディファードレンダリングGBuffer用グラフィックスパイプライン設定
 	Pipeline3D m_diferredRenderingPipeline;
-	//本描画は3D描画ではないので別クラスが担当する
-
 	//ディファードレンダリング用ステート構造体
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC m_diferredRenderingStateDesc;
 

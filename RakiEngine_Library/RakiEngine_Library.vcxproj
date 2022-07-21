@@ -73,6 +73,7 @@
     <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BehaviorEditor.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="DifferrdRenderingMgr.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
     <ClCompile Include="fbxModel.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />
+    <ClInclude Include="DifferrdRenderingMgr.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="FbxLoader.h" />
     <ClInclude Include="fbxModel.h" />

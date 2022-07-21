@@ -131,10 +131,16 @@
     <FxCompile Include="Resources\Shaders\OBJGeometryShader.hlsl">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\OBJPixelShader.hlsl">
+    <FxCompile Include="Resources\Shaders\OBJVertexShader.hlsl">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\OBJVertexShader.hlsl">
+    <FxCompile Include="Resources\Shaders\LIT_OBJPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\LIT_OBJVertexShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJPixelShader.hlsl">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </FxCompile>
   </ItemGroup>
@@ -155,6 +161,9 @@
       <Filter>リソース ファイル\hlsl\Sprite</Filter>
     </None>
     <None Include="Resources\Shaders\OBJShaderHeader.hlsli">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </None>
+    <None Include="Resources\Shaders\LIT_OBJHeader.hlsli">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </None>
   </ItemGroup>

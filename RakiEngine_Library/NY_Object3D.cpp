@@ -235,9 +235,6 @@ void Object3d::DrawObject()
 {
 	UpdateObject3D();
 
-	//描画スタンバイ
-	//NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
-
 	if (isThisModel == MODEL_DATA_FBX) {
 		//定数バッファ設定
 		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());

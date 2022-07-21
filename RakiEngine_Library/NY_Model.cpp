@@ -236,10 +236,10 @@ void Model3D::CreatePlaneModelXY(float x_size, float y_size, float uv_x, float u
 		animData = uvanimdata;
 		//頂点データのuv値をアニメーションデータのオフセットで作成
 		Vertex plane[4] = {
-			{{-x_size,-y_size,0},{},animData->GetOffset().offsetLT},//左上
-			{{ x_size,-y_size,0},{},animData->GetOffset().offsetRT},//右上
-			{{-x_size, y_size,0},{},animData->GetOffset().offsetLB},//左下
-			{{ x_size, y_size,0},{},animData->GetOffset().offsetRB},//右下
+			{{-x_size,-y_size,0},{0,0,-1},animData->GetOffset().offsetLT},//左上
+			{{ x_size,-y_size,0},{0,0,-1},animData->GetOffset().offsetRT},//右上
+			{{-x_size, y_size,0},{0,0,-1},animData->GetOffset().offsetLB},//左下
+			{{ x_size, y_size,0},{0,0,-1},animData->GetOffset().offsetRB},//右下
 		};
 		//頂点データ格納
 		for (int i = 0; i < 4; i++)
@@ -250,10 +250,10 @@ void Model3D::CreatePlaneModelXY(float x_size, float y_size, float uv_x, float u
 	else {
 		//決め打ちで作成
 		Vertex plane[4] = {
-			{{-x_size,-y_size,0},{},{0.0f,0.0f}},
-			{{ x_size,-y_size,0},{},{uv_x,0.0f}},
-			{{-x_size, y_size,0},{},{0.0f,uv_y}},
-			{{ x_size, y_size,0},{},{uv_x,uv_y}},
+			{{-x_size,-y_size,0},{0,0,-1},{0.0f,0.0f}},
+			{{ x_size,-y_size,0},{0,0,-1},{uv_x,0.0f}},
+			{{-x_size, y_size,0},{0,0,-1},{0.0f,uv_y}},
+			{{ x_size, y_size,0},{0,0,-1},{uv_x,uv_y}},
 		};
 		//頂点データ格納
 		for (int i = 0; i < 4; i++)

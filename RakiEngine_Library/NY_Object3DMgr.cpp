@@ -381,7 +381,7 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     //レンダーターゲット設定
 
     //レンダーターゲットにするGBufferを作成
-    float clearcolors[4] = { 0.8f,0.8f,0.8f,1.0f };
+    float clearcolors[4] = { 0.0f,0.0f,0.0f,0.0f };
     m_gBuffer.CreateRTex(Raki_WinAPI::window_width, Raki_WinAPI::window_height,
         clearcolors, 2);
     gpipeline.NumRenderTargets = 2;//描画対象は1つ
@@ -468,8 +468,6 @@ Object3d *NY_Object3DManager::CreateModel_Tile(float x_size, float y_size, float
     newobj->InitObject3D(RAKI_DX12B_DEV);
 
     newobj->CreateModel_Tile(x_size, y_size, x_uv, y_uv, useTexNum);
-
-    objects.push_back(newobj);
 
     return newobj;
 }

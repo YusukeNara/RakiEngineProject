@@ -195,6 +195,9 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>Graphic\3D\lights</Filter>
     </ClCompile>
+    <ClCompile Include="DifferrdRenderingMgr.cpp">
+      <Filter>Graphic\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="SpotLight.h">
       <Filter>Graphic\3D\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="DifferrdRenderingMgr.h">
+      <Filter>Graphic\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
