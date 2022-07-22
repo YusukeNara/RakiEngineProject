@@ -11,6 +11,12 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+struct cbuffer_b0
+{
+	DirectX::XMFLOAT3 eyePos;	//カメラ座標
+	float pad;					//パディング
+};
+
 class DiferredRenderingMgr
 {
 private:
@@ -38,6 +44,8 @@ private:
 
 	void CreateGraphicsPipeline();
 
+	void UpdateConstBuff();
+
 	//デバイス、コマンドリストのポインタ
 	ID3D12Device				*m_dev;
 	ID3D12GraphicsCommandList	*m_cmd;
@@ -50,8 +58,8 @@ private:
 	//ペラポリゴンリソース
 	ComPtr<ID3D12Resource>		m_vertBuff;		//頂点バッファ
 	D3D12_VERTEX_BUFFER_VIEW	m_vbview;		//VBV
-
-
+	//定数バッファ（カメラ視点座標）
+	ComPtr<ID3D12Resource>		m_constBuffEyePos;
 
 };
 

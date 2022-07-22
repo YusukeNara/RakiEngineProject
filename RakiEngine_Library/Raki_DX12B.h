@@ -141,7 +141,7 @@ private:
 	// Direct3DŠÖ˜A
 	ComPtr<IDXGIFactory6>				dxgiFactory;
 	ComPtr<ID3D12Device>				device;
-	ComPtr<ID3D12Debug>					debugController;
+	ComPtr<ID3D12Debug1>				debugController;
 	ComPtr<ID3D12GraphicsCommandList>	commandList;
 	ComPtr<ID3D12CommandAllocator>		commandAllocator;
 	ComPtr<ID3D12CommandQueue>			commandQueue;

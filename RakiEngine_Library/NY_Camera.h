@@ -113,6 +113,8 @@ public:
 	/// <returns>ビューと射影を合成した行列</returns>
 	XMMATRIX GetMatrixViewProjection();
 
+	XMFLOAT3 GetEye() { return _eye; }
+
 
 	/// <summary>
 	/// ビュー行列更新（セッタ実行時に自動で実行するのでユーザーが呼び出さなくてよい）

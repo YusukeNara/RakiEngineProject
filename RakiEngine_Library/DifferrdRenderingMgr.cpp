@@ -1,4 +1,5 @@
 #include "DifferrdRenderingMgr.h"
+#include "NY_Camera.h"
 
 void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd)
 {
@@ -12,6 +13,8 @@ void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cm
 
 void DiferredRenderingMgr::Rendering(RTex* gBuffer)
 {
+    UpdateConstBuff();
+
     //ディファードレンダリング実行
 
     //グラフィックスパイプラインをセット
@@ -25,6 +28,8 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     m_cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
     //頂点バッファ設定
     m_cmd->IASetVertexBuffers(0, 1, &m_vbview);
+    //定数バッファ設定
+    m_cmd->SetGraphicsRootConstantBufferView(2, m_constBuffEyePos->GetGPUVirtualAddress());
     //SRVセット（計算するパラメータが増えると、ここも増える）
     m_cmd->SetGraphicsRootDescriptorTable(0,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(), 
@@ -34,7 +39,6 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
             1,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-
     //ディファードレンダリング結果出力
     m_cmd->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -133,6 +137,26 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
     m_vbview.BufferLocation = m_vertBuff->GetGPUVirtualAddress();
     m_vbview.SizeInBytes    = sizeof(VertexPosUv) * 6;
     m_vbview.StrideInBytes  = sizeof(VertexPosUv);
+
+    //定数バッファ生成
+    auto cbuffResdDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(cbuffer_b0) + 0xff) & ~0xff);
+    m_dev->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &cbuffResdDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_constBuffEyePos)
+    );
+
+    //定数バッファデータ転送
+    cbuffer_b0 *ConstMapB0 = nullptr;
+    result = m_constBuffEyePos->Map(0, nullptr, (void**)&ConstMapB0);
+    if (SUCCEEDED(result)) {
+        ConstMapB0->eyePos = camera->GetEye();
+        m_constBuffEyePos->Unmap(0, nullptr);
+    }
+
 #pragma endregion VERTEX_INIT
 
     //-----頂点レイアウト-----//
@@ -190,13 +214,17 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
     descRangeSRV_0.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
     CD3DX12_DESCRIPTOR_RANGE descRangeSRV_1{};
     descRangeSRV_1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    //CD3DX12_DESCRIPTOR_RANGE descRangeSRV_2{};
+    //descRangeSRV_2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
 
 
     //ルートパラメーターの設定
-    CD3DX12_ROOT_PARAMETER rootparams[2] = {};
+    CD3DX12_ROOT_PARAMETER rootparams[3] = {};
     //GBufferテクスチャ用（定数バッファをライト配列を入れるのに使う予定だが、現状はなし）
     rootparams[0].InitAsDescriptorTable(1, &descRangeSRV_0, D3D12_SHADER_VISIBILITY_ALL);//アルベドテクスチャ
     rootparams[1].InitAsDescriptorTable(1, &descRangeSRV_1, D3D12_SHADER_VISIBILITY_ALL);//法線テクスチャ
+    //定数バッファ
+    rootparams[2].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
 
     //テクスチャサンプラー設定
     D3D12_STATIC_SAMPLER_DESC samplerDesc   = {};
@@ -229,4 +257,15 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
     //パイプラインステート生成
     result = m_dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&m_pipelineState));
 
+}
+
+void DiferredRenderingMgr::UpdateConstBuff()
+{
+    //定数バッファデータ転送
+    cbuffer_b0* ConstMapB0 = nullptr;
+    HRESULT result = m_constBuffEyePos->Map(0, nullptr, (void**)&ConstMapB0);
+    if (SUCCEEDED(result)) {
+        ConstMapB0->eyePos = camera->GetEye();
+        m_constBuffEyePos->Unmap(0, nullptr);
+    }
 }
