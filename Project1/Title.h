@@ -90,17 +90,17 @@ public:
     int adrate = 0;
     int isControlColor1 = 0;
 
-    //Player pl;
-    //Enemy enemy;
-    //AI_BehaviorTree enemyBehaviorTree;
-    //BehaviorBaseNode* firstNode;
-    //BehaviorBaseNode* approachNode;
-    //ApproachingMoveAct* approachObject;
-    //BehaviorBaseNode* retreatNode;
-    //RetreatMoveAct* retreatObject;
-    //BehaviorBaseNode* waitNode;
-    //WaitAct* waitObject;
-    //BehaviorEditor editor;
+    Player pl;
+    Enemy enemy;
+    AI_BehaviorTree enemyBehaviorTree;
+    BehaviorBaseNode* firstNode;
+    BehaviorBaseNode* approachNode;
+    ApproachingMoveAct* approachObject;
+    BehaviorBaseNode* retreatNode;
+    RetreatMoveAct* retreatObject;
+    BehaviorBaseNode* waitNode;
+    WaitAct* waitObject;
+    BehaviorEditor editor;
 
     //GUIƒeƒXƒg
     bool swapDraw = false;

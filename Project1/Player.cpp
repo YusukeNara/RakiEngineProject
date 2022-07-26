@@ -14,6 +14,7 @@ void Player::Init()
 {
 	//キューブ読み込み
 	object = LoadModel_FBXFile("cube");
+	object->SetAffineParamScale(RVector3(0.1, 0.1, 0.1));
 
 	//パラメータ初期化
 	pos.zero();
@@ -51,7 +52,7 @@ void Player::Update()
 	if (rot.x < 0.0f) { rot.x += 360.0f; }
 
 	//アフィン変換情報更新
-	object->SetAffineParam(RVector3(0.2, 0.2, 0.2),
+	object->SetAffineParam(RVector3(0.07, 0.07, 0.07),
 		rot,
 		pos);
 }

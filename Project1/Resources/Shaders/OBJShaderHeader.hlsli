@@ -18,19 +18,22 @@ struct VSOutput
 	float4 svpos  : SV_POSITION; //システム用頂点座標
 	float3 normal : NORMAL;      //法線ベクトル
 	float2 uv     : TEXCOORD;    //uv値
+    float4 worldPos : TEXCOORD1;
 };
 
 //ジオメトリシェーダーからピクセルシェーダーへ
 struct GSOutput
 {
-    float4 svpos  : SV_POSITION; //システム用頂点座標
+    float4 svpos  : SV_POSITION; //システム用頂点座標（これはADSようにピクセルシェーダーでも計算する）
     float3 normal : NORMAL;      //法線ベクトル
     float2 uv     : TEXCOORD;    //uv値
+    float4 worldPos : TEXCOORD1;
 };
 
 //ピクセルシェーダー出力構造体
 struct PixelOutput
 {
     float4 pixel_color	: SV_TARGET0;
-    float4 normal	: SV_TARGET1;
+    float4 normal		: SV_TARGET1;
+    float4 worldPos		: SV_TARGET2;
 };

@@ -350,7 +350,7 @@ void Object3d::SetAnotherObjectModelData(Object3d *anotherObj)
 
 void Object3d::CreateModel_Tile(float x_size, float y_size, float x_uv, float y_uv, UINT useTexNum)
 {
-	model.get()->CreatePlaneModelXY(x_size, y_size, x_uv, y_uv, useTexNum, nullptr);
+	model.get()->CreatePlaneModelXZ(x_size, y_size, x_uv, y_uv, useTexNum, nullptr);
 }
 
 

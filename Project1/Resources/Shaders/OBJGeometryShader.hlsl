@@ -12,6 +12,7 @@ void main(
 		element.svpos  = input[i].svpos;
         element.normal = input[i].normal;
         element.uv     = input[i].uv;
+        element.worldPos = input[i].worldPos;
 		output.Append(element);
 	}
 }

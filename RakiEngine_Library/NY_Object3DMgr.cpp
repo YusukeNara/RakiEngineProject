@@ -364,8 +364,9 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     blenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算
     blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;//ソースの値を100%使用
     blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;//デストの値を100%使用
-    //レンダーターゲット1にも同じ設定
+    //他レンダーターゲット1にも同じ設定
     gpipeline.BlendState.RenderTarget[1] = blenddesc;
+    gpipeline.BlendState.RenderTarget[2] = blenddesc;
 
     //デプスステンシルステート設定
     gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
@@ -383,10 +384,11 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     //レンダーターゲットにするGBufferを作成
     float clearcolors[4] = { 0.0f,0.0f,0.0f,0.0f };
     m_gBuffer.CreateRTex(Raki_WinAPI::window_width, Raki_WinAPI::window_height,
-        clearcolors, 2);
-    gpipeline.NumRenderTargets = 2;//描画対象は1つ
+        clearcolors, 3);
+    gpipeline.NumRenderTargets = 3;//描画するパラメータが増えるとここも増える
     gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
     gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
     gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
 
     CD3DX12_DESCRIPTOR_RANGE descRangeSRV{};

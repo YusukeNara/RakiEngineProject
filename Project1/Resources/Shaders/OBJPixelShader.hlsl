@@ -7,18 +7,19 @@ PixelOutput main(GSOutput input)
 {
     PixelOutput result;
 	
-    float4 texColor = float4(tex.Sample(smp, input.uv));
-    float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト
-    float diffuse = saturate(dot(-light, input.normal));
-    float3 shade_color;
-    shade_color = m_ambient;
-    shade_color += m_diffuse * diffuse;
+    //float4 texColor = float4(tex.Sample(smp, input.uv));
+    //float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト
+    //float diffuse = saturate(dot(-light, input.normal));
+    //float3 shade_color;
+    //shade_color = m_ambient;
+    //shade_color += m_diffuse * diffuse;
 	
 	float4 texcolor = tex.Sample(smp, input.uv);
 	
     result.pixel_color = float4(texcolor.rgb, 1.0f );
     result.normal.rgb = float3(input.normal.xyz / 2.0f) + 0.5f;
     result.normal.a = 1.0f;
+    result.worldPos = input.worldPos;
 	
     return result;
 }
