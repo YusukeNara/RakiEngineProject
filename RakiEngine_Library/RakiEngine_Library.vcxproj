@@ -110,12 +110,14 @@
     <ClInclude Include="AbstructSceneFactory.h" />
     <ClInclude Include="AI_BehaviorBaseNode.h" />
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BaseLight.h" />
     <ClInclude Include="BehaviorData.h" />
     <ClInclude Include="BehaviorEditor.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />
+    <ClInclude Include="ColliderManager.h" />
     <ClInclude Include="DifferrdRenderingMgr.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="FbxLoader.h" />

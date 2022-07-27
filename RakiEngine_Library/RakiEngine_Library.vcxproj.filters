@@ -82,6 +82,9 @@
     <Filter Include="Graphic\3D\lights">
       <UniqueIdentifier>{e03dd0b6-ae7d-4cb9-acd4-7dc5e2b511b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Collider">
+      <UniqueIdentifier>{a3be3e40-3647-41a2-942d-07b70bcd3cae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -331,6 +334,12 @@
     </ClInclude>
     <ClInclude Include="DifferrdRenderingMgr.h">
       <Filter>Graphic\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseCollider.h">
+      <Filter>Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderManager.h">
+      <Filter>Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
