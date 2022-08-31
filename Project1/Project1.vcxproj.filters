@@ -49,6 +49,12 @@
     <Filter Include="Engine\Basic">
       <UniqueIdentifier>{0924d464-474a-4d5b-9f85-a62b2e591306}</UniqueIdentifier>
     </Filter>
+    <Filter Include="kadai">
+      <UniqueIdentifier>{26d0f531-ff7e-49a5-8626-ad3225d0ca0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Enemys">
+      <UniqueIdentifier>{1e3ca0d3-c3c9-4b19-bc44-59c6245a265f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_Camera.cpp">
@@ -80,6 +86,27 @@
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleMoveTask.cpp">
+      <Filter>kadai</Filter>
+    </ClCompile>
+    <ClCompile Include="ConflictAndRepulsionTask.cpp">
+      <Filter>kadai</Filter>
+    </ClCompile>
+    <ClCompile Include="DotCrossTask.cpp">
+      <Filter>kadai</Filter>
+    </ClCompile>
+    <ClCompile Include="EaseTask.cpp">
+      <Filter>kadai</Filter>
+    </ClCompile>
+    <ClCompile Include="RopeTask.cpp">
+      <Filter>kadai</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordEnemy.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordEnemyNodes.cpp">
+      <Filter>App\Enemys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +170,9 @@
     <FxCompile Include="Resources\Shaders\OBJPixelShader.hlsl">
       <Filter>リソース ファイル\hlsl\OBJ</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteLineGS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Basic.hlsli">
@@ -200,6 +230,30 @@
     </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleMoveTask.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="ConflictAndRepulsionTask.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="DotCrossTask.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="EaseTask.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="RopeTask.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>kadai</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordEnemy.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordEnemyNodes.h">
+      <Filter>App\Enemys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

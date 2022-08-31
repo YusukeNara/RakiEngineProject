@@ -3,7 +3,6 @@
 #include <NY_Object3D.h>
 #include <RVector.h>
 #include <BehaviorTree.h>
-
 #include <Behavior_JudgeBase.h>
 
 

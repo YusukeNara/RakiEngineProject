@@ -82,6 +82,9 @@
     <Filter Include="Graphic\3D\lights">
       <UniqueIdentifier>{e03dd0b6-ae7d-4cb9-acd4-7dc5e2b511b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Colision">
+      <UniqueIdentifier>{34dab5dc-7f98-4d82-937d-0b22911a16d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -197,6 +200,18 @@
     </ClCompile>
     <ClCompile Include="DifferrdRenderingMgr.cpp">
       <Filter>Graphic\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraCalc.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseColider.cpp">
+      <Filter>Colision</Filter>
+    </ClCompile>
+    <ClCompile Include="ColisionManager.cpp">
+      <Filter>Colision</Filter>
+    </ClCompile>
+    <ClCompile Include="Colider.cpp">
+      <Filter>Colision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +346,18 @@
     </ClInclude>
     <ClInclude Include="DifferrdRenderingMgr.h">
       <Filter>Graphic\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraCalc.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseColider.h">
+      <Filter>Colision</Filter>
+    </ClInclude>
+    <ClInclude Include="ColisionManager.h">
+      <Filter>Colision</Filter>
+    </ClInclude>
+    <ClInclude Include="Colider.h">
+      <Filter>Colision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

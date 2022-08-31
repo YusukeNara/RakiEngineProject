@@ -169,26 +169,28 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
 
         ImGui::Text("Node Status\n");
 
-        switch (actObject->actionState)
-        {
-        case BehaviorActionBase::ACTION_STATE::STANDBY:
-            ImGui::Text("Process is standby.");
-            break;
+        if (actObject != nullptr) {
+            switch (actObject->actionState)
+            {
+            case BehaviorActionBase::ACTION_STATE::STANDBY:
+                ImGui::Text("Process is standby.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::RUNNING:
-            ImGui::Text("Process is running.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::RUNNING:
+                ImGui::Text("Process is running.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::SUCCESS:
-            ImGui::Text("Process is successed.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::SUCCESS:
+                ImGui::Text("Process is successed.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::FAILED:
-            ImGui::Text("Process is failed.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::FAILED:
+                ImGui::Text("Process is failed.");
+                break;
 
-        default:
-            break;
+            default:
+                break;
+            }
         }
 
         ImGui::Text(parentName.c_str());
@@ -270,26 +272,28 @@ void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> ed
 
         ImGui::Text("Node Status\n");
 
-        switch (actObject->actionState)
-        {
-        case BehaviorActionBase::ACTION_STATE::STANDBY:
-            ImGui::Text("Process is standby.");
-            break;
+        if (actObject != nullptr) {
+            switch (actObject->actionState)
+            {
+            case BehaviorActionBase::ACTION_STATE::STANDBY:
+                ImGui::Text("Process is standby.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::RUNNING:
-            ImGui::Text("Process is running.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::RUNNING:
+                ImGui::Text("Process is running.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::SUCCESS:
-            ImGui::Text("Process is successed.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::SUCCESS:
+                ImGui::Text("Process is successed.");
+                break;
 
-        case BehaviorActionBase::ACTION_STATE::FAILED:
-            ImGui::Text("Process is failed.");
-            break;
+            case BehaviorActionBase::ACTION_STATE::FAILED:
+                ImGui::Text("Process is failed.");
+                break;
 
-        default:
-            break;
+            default:
+                break;
+            }
         }
 
         ImGui::Text(parentName.c_str());

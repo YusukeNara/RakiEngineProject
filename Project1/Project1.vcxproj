@@ -159,13 +159,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="CircleMoveTask.cpp" />
+    <ClCompile Include="ConflictAndRepulsionTask.cpp" />
+    <ClCompile Include="DotCrossTask.cpp" />
+    <ClCompile Include="EaseTask.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RopeTask.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SwordEnemy.cpp" />
+    <ClCompile Include="SwordEnemyNodes.cpp" />
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
@@ -253,6 +260,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteLineGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resources\Shaders\SpritePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -305,16 +322,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="CircleMoveTask.h" />
+    <ClInclude Include="ConflictAndRepulsionTask.h" />
+    <ClInclude Include="DotCrossTask.h" />
+    <ClInclude Include="EaseTask.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raki_Camera.h" />
+    <ClInclude Include="RopeTask.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SwordEnemy.h" />
+    <ClInclude Include="SwordEnemyNodes.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />
     <ClInclude Include="test_LayHitCheck.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">

@@ -32,6 +32,15 @@ void BehaviorEditor::AddEditData_Node(BehaviorBaseNode* node)
 {
 	//ノード追加
 	nodes.push_back(node);
+
+	//ノードのオブジェクトを格納
+	if (node->actObject != nullptr) {
+		AddEditData_ActScript(node->actObject);
+	}
+
+	if (node->judgeObject != nullptr) {
+		AddEditData_JudgeScript(node->judgeObject);
+	}
 }
 
 BehaviorBaseNode* BehaviorEditor::CreateNewNode(std::string nodeName)

@@ -21,6 +21,7 @@ void SpriteManager::CreateSpritePipeline()
     ComPtr<ID3DBlob> vsBlob = nullptr; //頂点シェーダーオブジェクト
     ComPtr<ID3DBlob> psBlob = nullptr; //ピクセルシェーダーオブジェクト
     ComPtr<ID3DBlob> gsBlob = nullptr;
+    ComPtr<ID3DBlob> lineGSBlob = nullptr;
     ID3DBlob *errorBlob = nullptr; //エラーオブジェクト
 
     //頂点シェーダーの読み込みとコンパイル
@@ -92,6 +93,31 @@ void SpriteManager::CreateSpritePipeline()
         errstr.resize(errorBlob->GetBufferSize());
 
         std::copy_n((char *)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errstr.begin());
+        errstr += "\n";
+        //エラー内容を出力ウインドウに表示
+        OutputDebugStringA(errstr.c_str());
+        exit(1);
+    }
+
+    //ジオメトリシェーダーの読み込みとコンパイル
+    result = D3DCompileFromFile(
+        L"Resources/Shaders/SpriteLineGS.hlsl",
+        nullptr,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "main", "gs_5_0",
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+        0,
+        &lineGSBlob, &errorBlob
+    );
+    //シェーダーのエラー内容を表示
+    if (FAILED(result))
+    {
+        std::string errstr;
+        errstr.resize(errorBlob->GetBufferSize());
+
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
             errorBlob->GetBufferSize(),
             errstr.begin());
         errstr += "\n";
@@ -230,6 +256,11 @@ void SpriteManager::CreateSpritePipeline()
     rootsignature->SetName(TEXT("SP_ROOTSIG"));
     pipelinestate->SetName(TEXT("SP_PIPELINE"));
 
+    //パイプライン生成（ジオメトリのみ差し替え）
+    gpipeline.GS = CD3DX12_SHADER_BYTECODE(lineGSBlob.Get());
+    result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&linepipelinestate));
+    ExportHRESULTmessage(result);
+
     //マルチパス用グラフィックスパイプライン
 
 #pragma region mpPipeline
@@ -295,6 +326,19 @@ void SpriteManager::SetCommonBeginDraw()
     cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
+    cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void SpriteManager::SetCommonBeginDrawLine()
+{
+    //パイプラインステートをセット
+    cmd->SetPipelineState(linepipelinestate.Get());
+    //ルートシグネチャをセット
+    cmd->SetGraphicsRootSignature(rootsignature.Get());
+    //プリミティブ形状設定
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+    //デスクリプタヒープ設定
+    ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
     cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 

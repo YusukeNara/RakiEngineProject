@@ -10,6 +10,8 @@ class Sprite
 public:
 	//スプライト一枚の情報
 	std::unique_ptr<SpriteData> spdata;
+	std::unique_ptr<SpriteData> lineSpdata;
+
 	//uvオフセットハンドル（これを増減させることで分割したuv値を適用可能）
 	int uvOffsetHandle = 0;
 
@@ -60,6 +62,8 @@ public:
 	void DrawExtendSprite(float x1, float y1, float x2, float y2);
 
 	void DrawRotaSprite(float x1, float y1, float x2, float y2, float angle);
+
+	void DrawLine(float x1, float y1, float x2, float y2);
 
 	void DrawRTexSprite(int handle, float x1, float y1, float x2, float y2, float angle, DirectX::XMFLOAT4 freedata01 = { 1,1,1,1 });
 

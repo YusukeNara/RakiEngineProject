@@ -25,7 +25,7 @@ float4 main(VSOutput input) : SV_TARGET
     normal = (normal * 2.0f) - 1.0f;
     
     //ライト計算
-    float3 lightDir = normalize(float3(1, -1, 1)); //右下奥向きライト
+    float3 lightDir = normalize(float3(1, -1, -1)); //右下奥向きライト
     float diffuse = saturate(dot(normal, -lightDir)); //ディフューズ計算x
     float3 lightColor = float3(1, 1, 1);
     

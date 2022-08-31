@@ -29,8 +29,8 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     saru->SetAffineParam(scale3, rot3, pos3);
 
     //画像の読み込み
-    tiletex = TexManager::LoadTexture("Resources/white.png");
-    tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 50, 50, tiletex);
+    tiletex = TexManager::LoadTexture("Resources/blackParticleTex.png");
+    tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
     tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
     tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(0, 0, 0));
 
@@ -81,12 +81,15 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     //マルチパス描画出力
     rtDrawer->SetAffineParam(scale, RVector3(0, 0, 0), RVector3(0, 0, 0));
 
+    //敵初期化
+    swordEnemy = new SwordEnemy(&pl);
+
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 }
 
 //初期化
 void Title::Initialize() {
-
+    swordEnemy->Init();
 }
 
 void Title::Finalize()
@@ -103,6 +106,7 @@ void Title::Finalize()
     delete retreatObject;
     delete waitObject;
     delete waitNode;
+    delete swordEnemy;
 }
 
 //更新
@@ -129,13 +133,40 @@ void Title::Update() {
         eye.z -= 1;
         target.z -= 1;
     }
-
-    rot3.y += 1.0f;
     saru->SetAffineParam(scale3, rot3, pos3);
 
-    camera->SetViewStatusEyeTargetUp(eye, target, up);
+    swordEnemy->Update();
 
-    //enemyBehaviorTree.Run();
+
+    //カメラパラメーター計算
+    camRightAngle = 0.0f;
+    camUpAngle = 0.0f;
+    if (Input::isKey(DIK_RIGHT)) { camRightAngle += 0.01f; }
+    if (Input::isKey(DIK_LEFT)) { camRightAngle -= 0.01f; }
+    if (Input::isKey(DIK_UP)) { camUpAngle += 0.01f; }
+    if (Input::isKey(DIK_DOWN)) { camUpAngle -= 0.01f; }
+
+    RVector3 camUp = RVector3(up.x, up.y, up.z);
+    RVector3 camTarget = RVector3(target.x, target.y, target.z);
+    RVector3 camEye = RVector3(eye.x, eye.y, eye.z);
+    RQuaternion qCamRight = quaternion(RVector3(up.x, up.y, up.z), camRightAngle);
+    RVector3 camSide = cross(camUp, camTarget - camEye).norm();
+    RQuaternion qCamUp = quaternion(camSide, camUpAngle);
+    RQuaternion q = qCamRight * qCamUp;
+    RQuaternion qPos = quaternion(eye.x, eye.y, eye.z, 0);
+    RQuaternion qq = conjugate(q);
+    qPos = q * qPos * qq;
+    camEye = { qPos.x,qPos.y,qPos.z };
+    RQuaternion qup = RQuaternion(camUp.x, camUp.y, camUp.z, 0);
+    qup = q * qup * qq;
+    camUp = getAxis(qup);
+
+    eye = { camEye.x ,camEye.y,camEye.z };
+    RVector3 eyepos = { camEye.x - pl.pos.x ,camEye.y - pl.pos.y,camEye.z - pl.pos.z };
+    target;
+    up = { camUp.x,camUp.y,camUp.z };
+    camera->SetViewStatusEyeTargetUp(eyepos, target, up);
+
 }
 
 //描画
@@ -146,10 +177,11 @@ void Title::Draw() {
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
     tileObject->DrawObject();
-    saru->DrawObject();
-    ship3->DrawObject();
+    //saru->DrawObject();
+    //ship3->DrawObject();
     pl.Draw();
     enemy.Draw();
+    swordEnemy->Draw();
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
@@ -157,12 +189,10 @@ void Title::Draw() {
 
     ImguiMgr::Get()->StartDrawImgui("window", 100, 100);
 
-
+    ImGui::Text("enemyPos %f %f %f", swordEnemy->s_object.pos.x, swordEnemy->s_object.pos.y, swordEnemy->s_object.pos.z);
 
     ImguiMgr::Get()->EndDrawImgui();
 
-    //editor.EditorDraw();
-    //editor.ObjectDataDraw();
-    //editor.NodeDataDraw();
+    swordEnemy->DebugDraw();
 
 }

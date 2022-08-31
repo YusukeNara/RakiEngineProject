@@ -18,6 +18,10 @@
 #include <BehaviorTree.h>
 #include <BehaviorEditor.h>
 
+#include "SwordEnemy.h"
+
+#include <Quaternion.h>
+
 enum NowState {
     title,
     game,
@@ -35,7 +39,7 @@ public:
     void Draw() override;          //描画処理をオーバーライド。
 
     //シーンで使うインスタンス
-    XMFLOAT3 eye = { 0,20,-75 };
+    XMFLOAT3 eye = { 0,10,75 };
     XMFLOAT3 target = { 0,0,0 };
     XMFLOAT3 up = { 0,1,0 };
 
@@ -79,6 +83,8 @@ public:
     XMFLOAT2 mousePos;
     XMFLOAT2 mouseVel;
 
+    DiferredRenderingMgr diffMgr;
+
     //レンダリング結果描画
     bool isadd = false;
     //パーティクル出現間隔
@@ -102,9 +108,21 @@ public:
     WaitAct* waitObject;
     BehaviorEditor editor;
 
+    //近接敵
+    SwordEnemy *swordEnemy;
+
+    //クォータニオンカメラ系
+    
+    float camRightAngle = 0.0f;
+    float camUpAngle = 0.0f;
+    
+
+
+
+
+
     //GUIテスト
     bool swapDraw = false;
 
-    DiferredRenderingMgr diffMgr;
 };
 

@@ -14,12 +14,14 @@ float Sprite::depthZ = 1.0f;
 Sprite::Sprite()
 {
     spdata.reset(new SpriteData);
+    lineSpdata.reset(new SpriteData);
 }
 
 Sprite::~Sprite()
 {
     //明示的開放
     spdata.reset();
+    lineSpdata.reset();
 }
 
 void Sprite::SetSpriteColorParam(float r, float g, float b, float a)
@@ -294,6 +296,108 @@ void Sprite::Create(UINT resourceID)
     //デフォルトのuvを格納
     spdata->uvOffsets.push_back(XMFLOAT4(0.0, 0.0, 1.0, 1.0));
 
+
+
+
+    lineSpdata->vertice = vertices;
+
+    //�e�N�X�`���ݒ�
+    lineSpdata->texNumber = resourceID;
+
+    //���_�f�[�^�ƃC���f�b�N�X�f�[�^�𐶐����čX�V
+
+    //���_�f�[�^�S�̂̃T�C�Y = ���_�f�[�^����̃T�C�Y * ���_�f�[�^�̗v�f��
+    sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 2);
+    //���_�o�b�t�@����
+    heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPU�ւ̓]���p
+    resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resdesc.Width = sizeVB; //���_�f�[�^�S�̂̃T�C�Y
+    resdesc.Height = 1;
+    resdesc.DepthOrArraySize = 1;
+    resdesc.MipLevels = 1;
+    resdesc.SampleDesc.Count = 1;
+    resdesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    //���_�o�b�t�@�̐���
+    result = SpriteManager::Get()->dev->CreateCommittedResource(
+        &heapprop, //�q�[�v�ݒ�
+        D3D12_HEAP_FLAG_NONE,
+        &resdesc, //���\�[�X�ݒ�
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&lineSpdata->vertBuff));
+
+    lineSpdata->vertBuff.Get()->SetName(TEXT("SPRITE_VERTEX_DATA"));
+
+    //-----���_�o�b�t�@�ւ̃f�[�^�]��-----//
+    SpriteVertex* lvertMap = nullptr;
+    result = lineSpdata->vertBuff->Map(0, nullptr, (void**)&lvertMap);
+    //�S���_�ɑ΂���
+    lvertMap = &lineSpdata->vertice;//���W���R�s�[
+    //�}�b�v������
+    lineSpdata->vertBuff->Unmap(0, nullptr);
+    //���_�o�b�t�@�r���[����
+    lineSpdata->vbView.BufferLocation = lineSpdata->vertBuff->GetGPUVirtualAddress();
+    lineSpdata->vbView.SizeInBytes = sizeof(lineSpdata->vertice);
+    lineSpdata->vbView.StrideInBytes = sizeof(SpriteVertex);
+
+    //�C���X�^���V���O�p���_�o�b�t�@����
+    //�������p
+    SpriteInstance lspins[] = {
+        {XMMatrixIdentity()},
+    };
+    sizeInsVB = static_cast<UINT>(sizeof(SpriteInstance) * 8);
+
+    //���_�o�b�t�@�̐���
+    result = SpriteManager::Get()->dev->CreateCommittedResource(
+        &INS_HEAP_PROP, //�q�[�v�ݒ�
+        D3D12_HEAP_FLAG_NONE,
+        &INS_RESDESC, //���\�[�X�ݒ�
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&lineSpdata->vertInsBuff));
+
+    lineSpdata->vertInsBuff.Get()->SetName(TEXT("SPRITE_VERTEX_INSTANCING_DATA"));
+
+    //�f�[�^�]��
+    SpriteInstance* linsmap = nullptr;
+    result = lineSpdata->vertInsBuff->Map(0, nullptr, (void**)&linsmap);
+    for (int i = 0; i < _countof(spins); i++) {
+        linsmap[i].worldmat = spins[i].worldmat * camera->GetMatrixProjection();
+    }
+    lineSpdata->vertInsBuff->Unmap(0, nullptr);
+
+    //�r���[�쐬
+    lineSpdata->vibView.BufferLocation = lineSpdata->vertInsBuff->GetGPUVirtualAddress();
+    lineSpdata->vibView.SizeInBytes = sizeof(spins);
+    lineSpdata->vibView.StrideInBytes = sizeof(SpriteInstance);
+
+    //�萔�o�b�t�@����
+    result = SpriteManager::Get()->dev->CreateCommittedResource(
+        &HEAP_PROP,
+        D3D12_HEAP_FLAG_NONE,
+        &RESDESC,
+        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        IID_PPV_ARGS(&lineSpdata->constBuff)
+    );
+
+    lineSpdata->constBuff.Get()->SetName(TEXT("SPRITE_CONST_BUFFER"));
+
+    //�萔�o�b�t�@�f�[�^�]��
+    SpConstBufferData* lconstMap = nullptr;
+    result = lineSpdata->constBuff->Map(0, nullptr, (void**)&lconstMap);
+    lconstMap->color = XMFLOAT4(1, 1, 1, 1);//�F�w��
+
+    //���s���e�s��
+    lconstMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
+    lineSpdata->constBuff->Unmap(0, nullptr);
+
+    //�e�N�X�`���̃f�t�H���g�T�C�Y���擾
+    TEXTURE_DEFAULT_SIZE.x = float(TexManager::textureData[resourceID].metaData.width);
+    TEXTURE_DEFAULT_SIZE.y = float(TexManager::textureData[resourceID].metaData.height);
+
+    //デフォルトのuvを格納
+    lineSpdata->uvOffsets.push_back(XMFLOAT4(0.0, 0.0, 1.0, 1.0));
+
     //スプライト生成炭
     isCreated = true;
 }
@@ -522,34 +626,89 @@ void Sprite::InstanceUpdate()
     constMap->mat = spdata->matWorld * camera->GetMatrixProjection();
     constMap->color = spdata->color;
     spdata->constBuff->Unmap(0, nullptr);
+
+
+
+    //�`�搔�ɍ��킹�ĉς�����
+    lineSpdata->vibView.SizeInBytes = UINT(lineSpdata->insWorldMatrixes.size() * sizeof(SpriteInstance));
+
+    //�C���X�^���V���O���_�o�b�t�@�̃T�C�Y��ύX����K�v������ꍇ
+    if (isVertexBufferNeedResize()) {
+
+        ResizeVertexInstanceBuffer(UINT(lineSpdata->insWorldMatrixes.size() * sizeof(SpriteInstance)));
+    }
+
+    //�o�b�t�@�f�[�^�]��
+    SpriteInstance* linsmap = nullptr;
+    result = lineSpdata->vertInsBuff->Map(0, nullptr, (void**)&linsmap);
+    for (int i = 0; i < lineSpdata->insWorldMatrixes.size(); i++) {
+        linsmap[i].worldmat = lineSpdata->insWorldMatrixes[i].worldmat * camera->GetMatrixProjection2D();
+        linsmap[i].uvOffset = lineSpdata->insWorldMatrixes[i].uvOffset;
+        linsmap[i].drawsize = lineSpdata->insWorldMatrixes[i].drawsize;
+        linsmap[i].color = lineSpdata->insWorldMatrixes[i].color;
+        linsmap[i].freeData01 = lineSpdata->insWorldMatrixes[i].freeData01;
+    }
+    lineSpdata->vertInsBuff->Unmap(0, nullptr);
+
+    SpConstBufferData* lconstMap = nullptr;
+    result = lineSpdata->constBuff->Map(0, nullptr, (void**)&lconstMap);
+    lconstMap->mat = lineSpdata->matWorld * camera->GetMatrixProjection();
+    lconstMap->color = lineSpdata->color;
+    lineSpdata->constBuff->Unmap(0, nullptr);
 }
 
 void Sprite::Draw()
 {
-    if (spdata->insWorldMatrixes.size() <= 0) { return; }
-
-    SpriteManager::Get()->SetCommonBeginDraw();
-
     //�C���X�^���V���O�f�[�^�X�V
     InstanceUpdate();
 
-    //���_�o�b�t�@�Z�b�g
-    D3D12_VERTEX_BUFFER_VIEW vbviews[] = {
-        spdata->vbView,spdata->vibView
-    };
-    SpriteManager::Get()->cmd->IASetVertexBuffers(0, _countof(vbviews), vbviews);
-    //�萔�o�b�t�@�Z�b�g
-    SpriteManager::Get()->cmd->SetGraphicsRootConstantBufferView(0, spdata->constBuff->GetGPUVirtualAddress());
-    //�V�F�[�_�[���\�[�X�r���[���Z�b�g
-    SpriteManager::Get()->cmd->SetGraphicsRootDescriptorTable(1,
-        CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap->GetGPUDescriptorHandleForHeapStart(),
-        spdata->texNumber, SpriteManager::Get()->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-    //�`��
-    SpriteManager::Get()->cmd->DrawInstanced(1, (UINT)spdata->insWorldMatrixes.size(), 0, 0);
+    if (spdata->insWorldMatrixes.size() > 0) { 
+        SpriteManager::Get()->SetCommonBeginDraw();
 
-    //�C���X�^���X�f�[�^���N���A���A�R���e�i���Z�b�g
-    spdata->insWorldMatrixes.clear();
-    spdata->insWorldMatrixes.shrink_to_fit();
+
+
+        //���_�o�b�t�@�Z�b�g
+        D3D12_VERTEX_BUFFER_VIEW vbviews[] = {
+            spdata->vbView,spdata->vibView
+        };
+        SpriteManager::Get()->cmd->IASetVertexBuffers(0, _countof(vbviews), vbviews);
+        //�萔�o�b�t�@�Z�b�g
+        SpriteManager::Get()->cmd->SetGraphicsRootConstantBufferView(0, spdata->constBuff->GetGPUVirtualAddress());
+        //�V�F�[�_�[���\�[�X�r���[���Z�b�g
+        SpriteManager::Get()->cmd->SetGraphicsRootDescriptorTable(1,
+            CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap->GetGPUDescriptorHandleForHeapStart(),
+                spdata->texNumber, SpriteManager::Get()->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+        //�`��
+        SpriteManager::Get()->cmd->DrawInstanced(1, (UINT)spdata->insWorldMatrixes.size(), 0, 0);
+
+        //�C���X�^���X�f�[�^���N���A���A�R���e�i���Z�b�g
+        spdata->insWorldMatrixes.clear();
+        spdata->insWorldMatrixes.shrink_to_fit();
+    }
+
+
+
+    if (lineSpdata->insWorldMatrixes.size() > 0) {
+        //線を描画
+        SpriteManager::Get()->SetCommonBeginDrawLine();
+
+        D3D12_VERTEX_BUFFER_VIEW linevbviews[] = {
+            lineSpdata->vbView,lineSpdata->vibView
+        };
+        SpriteManager::Get()->cmd->IASetVertexBuffers(0, _countof(linevbviews), linevbviews);
+
+        SpriteManager::Get()->cmd->SetGraphicsRootConstantBufferView(0, lineSpdata->constBuff->GetGPUVirtualAddress());
+
+        SpriteManager::Get()->cmd->SetGraphicsRootDescriptorTable(1,
+            CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap->GetGPUDescriptorHandleForHeapStart(),
+                lineSpdata->texNumber, SpriteManager::Get()->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+
+        SpriteManager::Get()->cmd->DrawInstanced(1, (UINT)lineSpdata->insWorldMatrixes.size(), 0, 0);
+
+        lineSpdata->insWorldMatrixes.clear();
+        lineSpdata->insWorldMatrixes.shrink_to_fit();
+    }
+
 }
 
 void Sprite::DrawRenderTexture(int handle)
@@ -638,6 +797,29 @@ void Sprite::DrawRotaSprite(float x1, float y1, float x2, float y2, float angle)
     ins.color = sprite_color;
     spdata->insWorldMatrixes.push_back(ins);
 
+}
+
+void Sprite::DrawLine(float x1, float y1, float x2, float y2)
+{
+    XMMATRIX trans = XMMatrixTranslation(x1, y1, 0);
+    XMMATRIX rot = XMMatrixIdentity();
+    rot *= XMMatrixRotationZ(XMConvertToRadians(0));
+    XMMATRIX noScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
+
+    SpriteInstance ins = {};
+
+    ins.worldmat = XMMatrixIdentity();
+    ins.worldmat *= rot;
+    ins.worldmat *= trans;
+    //uvは使わんから適当
+    ins.uvOffset = lineSpdata->uvOffsets[uvOffsetHandle];
+    //点1からの相対座標が入る
+    ins.drawsize = { x2 - x1, y2 - y1 };
+    ins.freeData01 = { x1,y1,x2,y2 };
+    //�s��R���e�i�Ɋi�[
+    ins.color = sprite_color;
+
+    lineSpdata->insWorldMatrixes.push_back(ins);
 }
 
 void Sprite::DrawRTexSprite(int handle, float x1, float y1, float x2, float y2, float angle, DirectX::XMFLOAT4 freedata01)

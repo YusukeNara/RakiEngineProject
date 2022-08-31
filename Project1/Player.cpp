@@ -14,7 +14,7 @@ void Player::Init()
 {
 	//キューブ読み込み
 	object = LoadModel_FBXFile("cube");
-	object->SetAffineParamScale(RVector3(0.1, 0.1, 0.1));
+	object->SetAffineParamScale(RVector3(0.3, 0.5, 0.3));
 
 	//パラメータ初期化
 	pos.zero();
@@ -30,7 +30,6 @@ void Player::Init()
 void Player::Update()
 {
 
-
 	//入力に応じてパラメーター更新
 	speedVec.zero();
 	if (Input::isKey(DIK_W)) { speedVec.z = 1.0f; }
@@ -45,7 +44,6 @@ void Player::Update()
 	if (Input::isKey(DIK_LEFT)) { angleVec.y = -1.0f; }
 
 	rot += angleVec;
-
 	if (rot.y > 360.0f) { rot.y -= 360.0f; }
 	if (rot.y < 0.0f) { rot.y += 360.0f; }
 	if (rot.x > 360.0f) { rot.x -= 360.0f; }
@@ -55,6 +53,8 @@ void Player::Update()
 	object->SetAffineParam(RVector3(0.07, 0.07, 0.07),
 		rot,
 		pos);
+
+
 }
 
 void Player::Draw()

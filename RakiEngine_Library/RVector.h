@@ -80,7 +80,19 @@ float CalcAccelToFramePerVel(float onesecmove);
 
 float CalcGravity(float start, float end, float v0, int time, float& v1);
 
+inline RVector3 CalcRVector3Rotate(RVector3& rotateEuler, RVector3& rotateVec) {
 
+	XMMATRIX matRot = XMMatrixIdentity();
+	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotateEuler.z));
+	matRot *= XMMatrixRotationX(XMConvertToRadians(rotateEuler.x));
+	matRot *= XMMatrixRotationY(XMConvertToRadians(rotateEuler.y));
+
+	XMVECTOR rotVec = {};
+	rotVec.m128_f32[0] = rotateVec.x;
+	rotVec.m128_f32[1] = rotateVec.y;
+	rotVec.m128_f32[2] = rotateVec.z;
+
+}
 
 //RVector3を使用した、3次元線形補間
 namespace Rv3Ease {
@@ -105,6 +117,8 @@ namespace Rv3Ease {
 
 //RVector3型を使用した衝突判定プリミティブ
 namespace RV3Colider {
+
+
 
 	///軸並行バウンディングボックス AABB
 	struct Rv3AABB {

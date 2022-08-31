@@ -92,6 +92,10 @@ private:
 	ComPtr<ID3D12PipelineState> pipelinestate;
 	ComPtr<ID3D12RootSignature> rootsignature;
 
+	//線描画用グラフィックスパイプライン
+	ComPtr<ID3D12PipelineState> linepipelinestate;
+	ComPtr<ID3D12RootSignature> linerootsignature;
+
 	//マルチパス用にブレンド設定をいじったグラフィックスパイプライン
 	ComPtr<ID3D12PipelineState> mpPipelineState;
 
@@ -116,6 +120,8 @@ public:
 	void CreateSpritePipeline();
 	//スプライト共通のグラフィックスコマンドをセット
 	void SetCommonBeginDraw();
+
+	void SetCommonBeginDrawLine();
 	//マルチテクスチャ用
 	void SetCommonBeginDrawRTex(int handle);
 
