@@ -10,17 +10,21 @@ public:
 
 	//各種パラメータ
 	RVector3 pos;	//座標
-
 	RVector3 rot;		//回転
 	RVector3 angleVec;	//回転速度
-
 	RVector3 speedVec;		//速度ベクトル
 	RVector3 speedScale;	//速度スケーリング
+	RVector3 playerLookVec;	//向きベクトル
+	RVector3 bVec;			//弾方向ベクトル
+	RVector3 lVec;			//向きベクトル
 
-	RVector3 campos;
 
 	Player();
 	~Player();
+
+	void CameraMove();
+
+	void PlayerMove();
 	
 public:
 	//初期化

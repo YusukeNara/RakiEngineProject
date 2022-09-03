@@ -47,6 +47,6 @@ float4 main(VSOutput input) : SV_TARGET
 
     //ADSçáê¨
     float4 resultColor = albedo;
-    resultColor.xyz *= lig;
+    //resultColor.xyz *= lig;
     return resultColor;
 }

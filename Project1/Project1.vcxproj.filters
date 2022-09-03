@@ -108,6 +108,9 @@
     <ClCompile Include="SwordEnemyNodes.cpp">
       <Filter>App\Enemys</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -253,6 +256,9 @@
       <Filter>App\Enemys</Filter>
     </ClInclude>
     <ClInclude Include="SwordEnemyNodes.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
       <Filter>App\Enemys</Filter>
     </ClInclude>
   </ItemGroup>

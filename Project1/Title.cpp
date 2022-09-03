@@ -137,42 +137,10 @@ void Title::Update() {
 
     swordEnemy->Update();
 
-
-    //カメラパラメーター計算
-    camRightAngle = 0.0f;
-    camUpAngle = 0.0f;
-    if (Input::isKey(DIK_RIGHT)) { camRightAngle += 0.01f; }
-    if (Input::isKey(DIK_LEFT)) { camRightAngle -= 0.01f; }
-    if (Input::isKey(DIK_UP)) { camUpAngle += 0.01f; }
-    if (Input::isKey(DIK_DOWN)) { camUpAngle -= 0.01f; }
-
-    RVector3 camUp = RVector3(up.x, up.y, up.z);
-    RVector3 camTarget = RVector3(target.x, target.y, target.z);
-    RVector3 camEye = RVector3(eye.x, eye.y, eye.z);
-    RQuaternion qCamRight = quaternion(RVector3(up.x, up.y, up.z), camRightAngle);
-    RVector3 camSide = cross(camUp, camTarget - camEye).norm();
-    RQuaternion qCamUp = quaternion(camSide, camUpAngle);
-    RQuaternion q = qCamRight * qCamUp;
-    RQuaternion qPos = quaternion(eye.x, eye.y, eye.z, 0);
-    RQuaternion qq = conjugate(q);
-    qPos = q * qPos * qq;
-    camEye = { qPos.x,qPos.y,qPos.z };
-    RQuaternion qup = RQuaternion(camUp.x, camUp.y, camUp.z, 0);
-    qup = q * qup * qq;
-    camUp = getAxis(qup);
-
-    eye = { camEye.x ,camEye.y,camEye.z };
-    RVector3 eyepos = { camEye.x - pl.pos.x ,camEye.y - pl.pos.y,camEye.z - pl.pos.z };
-    target;
-    up = { camUp.x,camUp.y,camUp.z };
-    camera->SetViewStatusEyeTargetUp(eyepos, target, up);
-
 }
 
 //描画
 void Title::Draw() {
-
-    NY_Camera::Get()->SetViewStatusEyeTargetUp(eye, target, up);
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 

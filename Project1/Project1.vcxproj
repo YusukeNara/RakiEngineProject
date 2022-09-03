@@ -164,6 +164,7 @@
     <ClCompile Include="DotCrossTask.cpp" />
     <ClCompile Include="EaseTask.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -327,6 +328,7 @@
     <ClInclude Include="DotCrossTask.h" />
     <ClInclude Include="EaseTask.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="Player.h" />
