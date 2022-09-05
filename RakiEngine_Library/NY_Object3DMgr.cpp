@@ -388,7 +388,7 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     gpipeline.NumRenderTargets = 3;//描画するパラメータが増えるとここも増える
     gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
     gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
-    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
     gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
 
     CD3DX12_DESCRIPTOR_RANGE descRangeSRV{};
@@ -455,9 +455,6 @@ Object3d *NY_Object3DManager::CreateObject3d(Model3D *modelData)
 
     //モデルデータをセット
     newobj->SetLoadedModelData(modelData);
-
-    //初期化したオブジェクトをコンテナに格納
-    objects.push_back(newobj);
 
     //生成したオブジェクトを返却
     return newobj;

@@ -1,6 +1,7 @@
 #pragma once
 #include <BehaviorTree.h>
 #include <BehaviorEditor.h>
+#include <RVector.h>
 
 #include "Player.h"
 #include "SwordEnemyNodes.h"
@@ -14,9 +15,7 @@ private:
 	//ビヘイビアツリー
 	AI_BehaviorTree swordEnemyTree;
 
-
 	//行動構成ノード
-
 	//先頭
 	BehaviorBaseNode* rootNode;
 	//行動分岐
@@ -24,7 +23,6 @@ private:
 	BehaviorBaseNode* waitNode;
 	BehaviorBaseNode* approachNode;
 	BehaviorBaseNode* chargeNode;
-
 
 	//行動構成オブジェクト
 	Sword_WaitJudge* m_swordWaitJudge;
@@ -35,7 +33,6 @@ private:
 	Sword_ApproachingAct* m_approahAct;
 	Sword_ChargeJudge* m_chargeJudge;
 	Sword_ChargeAct* m_chargeAct;
-	
 
 public:
 	SwordEnemy(Player* player);
@@ -53,6 +50,10 @@ public:
 	SwordEnemyObject s_object;
 
 	BehaviorEditor editor;
+
+	//複製
+	SwordEnemy* clone(Player* player);
+
 };
 
 

@@ -78,6 +78,17 @@ BehaviorActionBase::ACTION_STATE Sword_AttackAct::Run()
         float t = float(frame) / float(easeFrame);
         enemy->pos = Rv3Ease::OutQuad(startPos, endPos, t);
     }
+    if (frame == 60) { 
+        isAtkEnable = true; 
+        atkSphere.center = endPos;
+    }
+    if (isAtkEnable) {
+        //攻撃命中
+        if (RV3Colider::Colision2Sphere(atkSphere, enemy->player->bodyColider)) {
+            isAtkEnable = false;
+            enemy->player->hitpoint -= damage;
+        }
+    }
 
 
     return actionState;
@@ -88,9 +99,11 @@ void Sword_AttackAct::Init()
 
     //プレイヤーとの距離を計算し、イージング用座標を設定
     startPos = enemy->pos;
-    endPos = enemy->player->pos;
+    endPos = startPos + (enemy->player->pos - enemy->pos) * 0.7f;
 
     actScriptName = "attackAct";
+
+    isAtkEnable = false;
 
     frame = 0;
 }
@@ -116,6 +129,11 @@ BehaviorActionBase::ACTION_STATE Sword_ChargeAct::Run()
     if (frame < 60) {
         float t = float(frame) / float(chargeFrame);
         enemy->pos = Rv3Ease::lerp(startPos, endPos, t);
+        //ダメージと判定無効化
+        if (RV3Colider::Colision2Sphere(enemy->bodyColision, enemy->player->bodyColider) && isAtkEnable) {
+            enemy->player->hitpoint -= damage;
+            isAtkEnable = false;
+        }
     }
 
     return actionState;
@@ -128,6 +146,8 @@ void Sword_ChargeAct::Init()
     endPos = enemy->player->pos + (enemy->player->pos - enemy->pos);
 
     actScriptName = "chargeAct";
+
+    isAtkEnable = true;
 
     frame = 0;
 }
@@ -163,4 +183,7 @@ bool Sword_ApproachJudge::Judge()
     return  distance(enemy->pos, enemy->player->pos) > 75.0f;
 }
 
-
+SwordEnemyObject::~SwordEnemyObject()
+{
+    delete swordObject;
+}

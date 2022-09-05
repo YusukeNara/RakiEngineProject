@@ -136,6 +136,7 @@ void Model3D::LoadObjModel(const char *modelName)
 	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
 	vbView.SizeInBytes = sizeVB;
 	vbView.StrideInBytes = sizeof(Vertex);
+	vertBuff.Get()->SetName(L"Model3D_VertexBuff");
 
 	RESDESC = CD3DX12_RESOURCE_DESC::Buffer(sizeIB);
 	//インデックスバッファ生成
@@ -151,6 +152,7 @@ void Model3D::LoadObjModel(const char *modelName)
 	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibview.SizeInBytes = sizeIB;
 	ibview.Format = DXGI_FORMAT_R16_UINT;
+	indexBuff.Get()->SetName(L"Model3D_IndexBuff");
 
 	//頂点バッファデータ転送
 	Vertex *vertMap = nullptr;

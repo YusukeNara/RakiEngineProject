@@ -24,6 +24,7 @@ void Object3d::InitObject3D(ID3D12Device *dev)
 		nullptr,
 		IID_PPV_ARGS(&constBuffB0)
 	);
+	constBuffB0.Get()->SetName(L"Object3d_cbuffB0");
 
 	//定数バッファb1生成
 	result = dev->CreateCommittedResource(
@@ -34,14 +35,26 @@ void Object3d::InitObject3D(ID3D12Device *dev)
 		nullptr,
 		IID_PPV_ARGS(&constBuffB1)
 	);
+	constBuffB1.Get()->SetName(L"Object3d_cbuffB1");
 
 }
 
 void Object3d::SetLoadedModelData(Model3D *loadedModel)
 {
-	//model = loadedModel;
+	model.reset(loadedModel);
 
 	isDirty = true;
+
+	isThisModel = MODEL_DATA_OBJ;
+}
+
+void Object3d::SetLoadedModelData(std::shared_ptr<Model3D> loadedmodel)
+{
+	model = loadedmodel;
+
+	isDirty = true;
+
+	isThisModel = MODEL_DATA_OBJ;
 }
 
 void Object3d::SetWorldMatrix(XMMATRIX matWorld)

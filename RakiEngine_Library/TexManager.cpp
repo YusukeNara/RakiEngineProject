@@ -123,6 +123,11 @@ UINT TexManager::LoadTexture(const char *filename)
         CD3DX12_CPU_DESCRIPTOR_HANDLE(texDsvHeap.Get()->GetCPUDescriptorHandleForHeapStart(), useTexIndexNum,
             dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
+    std::string texname = filename;
+    std::string dataName = "TextureBuffer_" + texname;
+    std::wstring nametemp = std::wstring(dataName.begin(), dataName.end());
+    textureData[useTexIndexNum].texBuff.Get()->SetName(nametemp.c_str());
+
     return useTexIndexNum;
 }
 

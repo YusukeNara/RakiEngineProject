@@ -514,12 +514,13 @@ bool Raki_DX12B::CreateFence()
 Raki_DX12B::~Raki_DX12B()
 {
 #ifdef _DEBUG
-	//ID3D12DebugDevice* debugDevice;
-	//if (SUCCEEDED(device.Get()->QueryInterface(&debugDevice)))
-	//{
-	//	debugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
-	//	debugDevice->Release();
-	//}
+	ID3D12DebugDevice* debugDevice;
+	if (SUCCEEDED(device.Get()->QueryInterface(&debugDevice)))
+	{
+		debugDevice->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
+		debugDevice->Release();
+	}
+
 #endif
 }
 

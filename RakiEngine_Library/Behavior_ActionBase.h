@@ -9,6 +9,9 @@
 class BehaviorActionBase
 {
 public:
+	BehaviorActionBase() = default;
+	~BehaviorActionBase() = default;
+
 	//ÀsƒNƒ‰ƒX‚Ìó‘Ô
 	enum ACTION_STATE
 	{

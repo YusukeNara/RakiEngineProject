@@ -45,97 +45,72 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     pl.Init();
     //敵
     enemy.Init(ship2);
-    //各種行動オブジェクト生成
-    //移動の判定ノード
-    firstNode = new BehaviorBaseNode;
-    //判定スクリプト付きオブジェクト
-    MoveJudgeObject* moveJudgeObject = new MoveJudgeObject(&enemy, &pl.pos);
-    //行動オブジェクト
-    approachNode      = new BehaviorBaseNode;
-    approachObject    = new ApproachingMoveAct(&enemy, &pl.pos);
-    approachObject->actScriptName = std::string("approach");
-    approachNode->CreateActionNode("approachAction", approachObject, moveJudgeObject);
-    retreatNode       = new BehaviorBaseNode;
-    retreatObject     = new RetreatMoveAct(&enemy, &pl.pos);
-    retreatObject->actScriptName = std::string("retreat");
-    retreatNode->CreateActionNode("retreatAction", retreatObject, moveJudgeObject);
-    waitNode          = new BehaviorBaseNode;
-    waitObject        = new WaitAct(&enemy, &pl.pos);
-    waitObject->actScriptName = std::string("wait");
-    waitNode->CreateActionNode("WaitAction", waitObject, moveJudgeObject);
-    //ノード生成
-    firstNode->CreateJudgeNode("firstNode", BehaviorBaseNode::RULE_RANDOM, moveJudgeObject);
-    firstNode->AddjudgeNodeChild(approachNode);
-    firstNode->AddjudgeNodeChild(retreatNode);
-    firstNode->AddjudgeNodeChild(waitNode);
-    //ビヘイビア初期化
-    enemyBehaviorTree.Init(firstNode);
-    editor.Init(&enemyBehaviorTree);
-    editor.AddEditData_Node(approachNode);
-    editor.AddEditData_Node(retreatNode);
-    editor.AddEditData_Node(waitNode);
-    editor.AddEditData_ActScript(approachObject);
-    editor.AddEditData_ActScript(retreatObject);
-    editor.AddEditData_ActScript(waitObject);
 
     //マルチパス描画出力
     rtDrawer->SetAffineParam(scale, RVector3(0, 0, 0), RVector3(0, 0, 0));
 
-    //敵初期化
-    swordEnemy = new SwordEnemy(&pl);
+    emanager.Init(&pl);
 
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
+
+    NowSceneState = title;
 }
 
 //初期化
 void Title::Initialize() {
-    swordEnemy->Init();
+
 }
 
 void Title::Finalize()
 {
-    DeleteObject(ship2);
-    DeleteObject(ship3);
-    DeleteObject(tileObject);
+    delete ship2;
+    delete ship3;
+    delete saru;
+    delete tileObject;
 
-    pl.Finalize();
-    delete firstNode;
-    delete approachNode;
-    delete approachObject;
-    delete retreatNode;
-    delete retreatObject;
-    delete waitObject;
-    delete waitNode;
-    delete swordEnemy;
 }
 
 //更新
 void Title::Update() {
-    pl.Update();
-    ship2->SetAffineParamTranslate(pos2);
-    ship3->SetAffineParamRotate(rot3);
-    ship3->SetAffineParamTranslate(pos1);
-    saru->SetAffineParamTranslate(pos3);
 
-    if (Input::isKey(DIK_A)) {
-        eye.x -= 1;
-        target.x -= 1;
-    }
-    if (Input::isKey(DIK_D)) {
-        eye.x += 1;
-        target.x += 1;
-    }
-    if (Input::isKey(DIK_W)) {
-        eye.z += 1;
-        target.z += 1;
-    }
-    if (Input::isKey(DIK_S)) {
-        eye.z -= 1;
-        target.z -= 1;
-    }
-    saru->SetAffineParam(scale3, rot3, pos3);
+    switch (NowSceneState)
+    {
+    case title:
+        if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
+            pl.Reset();
+            emanager.Reset();
+            NowSceneState = game; 
+        }
 
-    swordEnemy->Update();
+        break;
+    case game:
+
+        pl.Update();
+        emanager.Update();
+
+        if (pl.hitpoint <= 0) {
+            NowSceneState = over;
+        }
+
+        break;
+    case over:
+        if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
+            pl.Reset();
+            emanager.Reset();
+            NowSceneState = game; 
+        }
+        else if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_B)) { 
+            NowSceneState = title; 
+        }
+
+        break;
+    case clear:
+        break;
+
+    default:
+        break;
+    }
+
 
 }
 
@@ -145,22 +120,17 @@ void Title::Draw() {
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
     tileObject->DrawObject();
-    //saru->DrawObject();
-    //ship3->DrawObject();
     pl.Draw();
     enemy.Draw();
-    swordEnemy->Draw();
+    emanager.Draw();
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
     diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer);
 
-    ImguiMgr::Get()->StartDrawImgui("window", 100, 100);
+    SpriteManager::Get()->SetCommonBeginDraw();
 
-    ImGui::Text("enemyPos %f %f %f", swordEnemy->s_object.pos.x, swordEnemy->s_object.pos.y, swordEnemy->s_object.pos.z);
+    pl.UiDraw();
 
-    ImguiMgr::Get()->EndDrawImgui();
-
-    swordEnemy->DebugDraw();
-
+    emanager.DebugDraw();
 }

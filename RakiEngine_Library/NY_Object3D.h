@@ -71,6 +71,10 @@ public:
 		model = make_shared<Model3D>();
 		fbxmodel = make_shared<fbxModel>();
 	};
+	~Object3d() {
+		constBuffB0->Release();
+		constBuffB1->Release();
+	}
 
 	//オブジェクトの初期化
 	//static void InitObject3D(Object3d *obj, ID3D12Device *dev);
@@ -78,6 +82,8 @@ public:
 
 	//ロード済モデルデータの設定
 	void SetLoadedModelData(Model3D *loadedModel);
+
+	void SetLoadedModelData(std::shared_ptr<Model3D> loadedmodel);
 
 	//変換行列の設定
 	void SetWorldMatrix(XMMATRIX matWorld);

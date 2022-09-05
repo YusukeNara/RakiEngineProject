@@ -5,6 +5,7 @@
 #include <d3dx12.h>
 #include <wrl.h>
 #include <dxgi1_6.h>
+#include <initguid.h>
 #include <dxgidebug.h>
 #include <cstdlib>
 #include <iostream>

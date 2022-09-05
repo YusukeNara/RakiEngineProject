@@ -25,14 +25,20 @@ public:
 	Object3d* swordObject;
 	//プレイヤー座標
 	Player* player;
+	//当たり判定
+	RV3Colider::Sphere bodyColision;
+
+	~SwordEnemyObject();
 };
 
+//不本意だが、現時点では敵の攻撃の衝突判定もここでやるしかない？
 //待機ノード
 class Sword_WaitJudge : public BehaviorJudgeBase
 {
 public:
 	Sword_WaitJudge(SwordEnemyObject *enemy) {
 		this->enemy = enemy;
+		judgeScriptName = "waitjudge";
 	};
 	~Sword_WaitJudge() = default;
 
@@ -46,6 +52,7 @@ class Sword_WaitAct : public BehaviorActionBase
 public:
 	Sword_WaitAct(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		Init();
 	}
 
 	virtual ACTION_STATE Run() override;
@@ -66,6 +73,7 @@ class Sword_ApproachJudge : public BehaviorJudgeBase
 public:
 	Sword_ApproachJudge(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		judgeScriptName = "approachJudge";
 	}
 
 	virtual bool Judge() override;
@@ -78,6 +86,7 @@ class Sword_ApproachingAct : public BehaviorActionBase
 public:
 	Sword_ApproachingAct(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		Init();
 	}
 
 	virtual ACTION_STATE Run() override;
@@ -96,6 +105,7 @@ public:
 	Sword_AttackJudge(SwordEnemyObject* enemy,BehaviorActionBase *waitAct) {
 		this->enemy = enemy;
 		waitAction = waitAct;
+		judgeScriptName = "atkJudge";
 	}
 
 	virtual bool Judge() override;
@@ -112,6 +122,7 @@ class Sword_AttackAct : public BehaviorActionBase
 public:
 	Sword_AttackAct(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		Init();
 	}
 
 	virtual ACTION_STATE Run() override;
@@ -125,12 +136,13 @@ public:
 	RVector3 endPos;
 
 	//攻撃範囲（コリジョンマネージャーが完成してから本実装）
-	
-	//AABB
-
+	RV3Colider::Sphere atkSphere;
 
 	const int easeFrame			= 60;
 	const int atkMotionFrame	= 20;
+
+	int damage = 1;
+	bool isAtkEnable = false;
 
 	int frame = 0;
 
@@ -141,6 +153,7 @@ class Sword_ChargeAct : public BehaviorActionBase
 public:
 	Sword_ChargeAct(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		Init();
 	}
 
 	virtual ACTION_STATE Run() override;
@@ -154,6 +167,12 @@ public:
 	//接近用イージング
 	RVector3 startPos;
 	RVector3 endPos;
+	//攻撃判定は体
+
+	//判定有効
+	bool isAtkEnable = false;
+
+	int damage = 2;
 
 	const int chargeFrame = 100;
 
@@ -164,6 +183,7 @@ class Sword_ChargeJudge : public BehaviorJudgeBase
 public:
 	Sword_ChargeJudge(SwordEnemyObject* enemy) {
 		this->enemy = enemy;
+		judgeScriptName = "chargeJudge";
 	}
 
 	virtual bool Judge() override;

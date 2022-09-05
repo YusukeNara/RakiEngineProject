@@ -2,29 +2,25 @@
 #include "BaseScene.h"
 #include "ISceneChanger.h"
 #include "NY_Object3DMgr.h"
-
 #include <DifferrdRenderingMgr.h>
-//#include <FbxLoader.h>
-
 #include "Sprite.h"
-
 #include "Raki_Input.h"
 #include "Audio.h"
 #include <ParticleManager.h>
-
 #include "testParticle.h"
 #include "Player.h"
 #include "Enemy.h"
 #include <BehaviorTree.h>
 #include <BehaviorEditor.h>
-
 #include "SwordEnemy.h"
+#include "EnemyManager.h"
 
 #include <Quaternion.h>
 
 enum NowState {
     title,
     game,
+    clear,
     over,
 };
 
@@ -58,13 +54,6 @@ public:
     RVector3 scale1, rot1, pos1 = RVector3(-50, 250, 0);
     RVector3 scale2, rot2, pos2;
     RVector3 scale3, rot3, pos3;
-    //速度格納
-    RVector3 vel = RVector3(0, 0, 0);
-    RVector3 vel2 = RVector3(0, 0, 0);
-    RVector3 vel3 = RVector3(0, 0, 0);
-    RVector3 acc = RVector3(0, 0, 0);
-    RVector3 acc2 = RVector3(0, 0, 0);
-    RVector3 acc3 = RVector3(0, 0, 0);
 
     //時間
     int time = 0;
@@ -76,53 +65,20 @@ public:
     Object3d *tileObject;
     UINT tiletex;
 
-    //マウス確認変数
-    bool clicking = false;
-    bool clickTrigger = false;
-    bool clicked = false;
-    XMFLOAT2 mousePos;
-    XMFLOAT2 mouseVel;
-
     DiferredRenderingMgr diffMgr;
-
-    //レンダリング結果描画
-    bool isadd = false;
-    //パーティクル出現間隔
-    int pSpawnDelay = 5;
-    int PSPAWN_DELAY_TIME = 15;
-    //パーティクル出現数
-    int pSpawnNum = 1;
-    //パーティクルリソース
-    int adrate = 0;
-    int isControlColor1 = 0;
 
     Player pl;
     Enemy enemy;
-    AI_BehaviorTree enemyBehaviorTree;
-    BehaviorBaseNode* firstNode;
-    BehaviorBaseNode* approachNode;
-    ApproachingMoveAct* approachObject;
-    BehaviorBaseNode* retreatNode;
-    RetreatMoveAct* retreatObject;
-    BehaviorBaseNode* waitNode;
-    WaitAct* waitObject;
-    BehaviorEditor editor;
 
-    //近接敵
-    SwordEnemy *swordEnemy;
-
-    //クォータニオンカメラ系
-    
-    float camRightAngle = 0.0f;
-    float camUpAngle = 0.0f;
-    
-
-
-
-
-
+    //敵管理部
+    EnemyManager emanager;
     //GUIテスト
     bool swapDraw = false;
 
+
+
+
+
+    NowState NowSceneState = game;
 };
 

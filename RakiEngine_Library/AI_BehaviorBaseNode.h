@@ -31,7 +31,8 @@ public:
 
 public:
 	BehaviorBaseNode() {};
-	~BehaviorBaseNode() {};
+	~BehaviorBaseNode() {
+	};
 
 	/// <summary>
 	/// ”»’è—pƒm[ƒh‚ğ¶¬

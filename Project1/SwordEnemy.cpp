@@ -42,13 +42,19 @@ SwordEnemy::SwordEnemy(Player* player)
 
 SwordEnemy::~SwordEnemy()
 {
-	delete m_swordWaitJudge;
+	delete m_approachJudge;
+	delete m_approahAct;
+	delete m_chargeAct;
+	delete m_chargeJudge;
+	delete m_swordAttackAct;
+	delete m_swordAttackJudge;
 	delete m_swordWaitAct;
+	delete m_swordWaitJudge;
 	delete rootNode;
 	delete actNode;
 	delete waitNode;
-
-
+	delete chargeNode;
+	delete approachNode;
 }
 
 void SwordEnemy::Init()
@@ -56,7 +62,8 @@ void SwordEnemy::Init()
 	//初期パラメーター設定
 	s_object.pos.zero();
 	s_object.pos.z = 100.0f;
-
+	s_object.bodyColision.center = s_object.pos;
+	s_object.bodyColision.rad = 10.0f;
 
 }
 
@@ -64,8 +71,7 @@ void SwordEnemy::Update()
 {
 	//ツリーの実行
 	swordEnemyTree.Run();
-
-	if (Input::isKeyTrigger(DIK_R)) { Init(); }
+	s_object.bodyColision.center = s_object.pos;
 }
 
 void SwordEnemy::Draw()
@@ -80,6 +86,12 @@ void SwordEnemy::DebugDraw()
 	editor.EditorDraw();
 	editor.NodeDataDraw();
 	editor.ObjectDataDraw();
+}
 
-	
+SwordEnemy* SwordEnemy::clone(Player* player)
+{
+	SwordEnemy* clone = new SwordEnemy(player);
+	clone->Init();
+
+	return clone;
 }

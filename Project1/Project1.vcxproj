@@ -159,10 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="CircleMoveTask.cpp" />
-    <ClCompile Include="ConflictAndRepulsionTask.cpp" />
-    <ClCompile Include="DotCrossTask.cpp" />
-    <ClCompile Include="EaseTask.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -170,7 +167,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RopeTask.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SwordEnemy.cpp" />
     <ClCompile Include="SwordEnemyNodes.cpp" />
@@ -323,17 +319,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="CircleMoveTask.h" />
-    <ClInclude Include="ConflictAndRepulsionTask.h" />
-    <ClInclude Include="DotCrossTask.h" />
-    <ClInclude Include="EaseTask.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raki_Camera.h" />
-    <ClInclude Include="RopeTask.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SwordEnemy.h" />
     <ClInclude Include="SwordEnemyNodes.h" />
@@ -341,7 +333,6 @@
     <ClInclude Include="testParticle.h" />
     <ClInclude Include="test_LayHitCheck.h" />
     <ClInclude Include="Title.h" />
-    <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">

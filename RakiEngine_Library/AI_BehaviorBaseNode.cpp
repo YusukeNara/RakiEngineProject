@@ -167,6 +167,8 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
 
         ImGui::Text("Act script name : %s", actObject->actScriptName.c_str());
 
+        ImGui::Text("Judge script Name : %s", judgeObject->judgeScriptName.c_str());
+
         ImGui::Text("Node Status\n");
 
         if (actObject != nullptr) {
