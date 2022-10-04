@@ -388,7 +388,7 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     gpipeline.NumRenderTargets = 3;//描画するパラメータが増えるとここも増える
     gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
     gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
-    gpipeline.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
     gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
 
     CD3DX12_DESCRIPTOR_RANGE descRangeSRV{};
@@ -467,6 +467,17 @@ Object3d *NY_Object3DManager::CreateModel_Tile(float x_size, float y_size, float
     newobj->InitObject3D(RAKI_DX12B_DEV);
 
     newobj->CreateModel_Tile(x_size, y_size, x_uv, y_uv, useTexNum);
+
+    return newobj;
+}
+
+Object3d* NY_Object3DManager::CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum)
+{
+    Object3d* newobj = new Object3d;
+
+    newobj->InitObject3D(RAKI_DX12B_DEV);
+
+    newobj->CreateModel_Box(size, uv_x, uv_y, useTexNum);
 
     return newobj;
 }

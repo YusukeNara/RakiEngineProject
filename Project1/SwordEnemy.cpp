@@ -42,19 +42,19 @@ SwordEnemy::SwordEnemy(Player* player)
 
 SwordEnemy::~SwordEnemy()
 {
-	delete m_approachJudge;
-	delete m_approahAct;
-	delete m_chargeAct;
-	delete m_chargeJudge;
-	delete m_swordAttackAct;
-	delete m_swordAttackJudge;
-	delete m_swordWaitAct;
-	delete m_swordWaitJudge;
-	delete rootNode;
-	delete actNode;
-	delete waitNode;
-	delete chargeNode;
-	delete approachNode;
+	if (m_approachJudge != nullptr) { delete m_approachJudge; }
+	if(m_approahAct != nullptr){ delete m_approahAct; }
+	if (m_chargeAct != nullptr) { delete m_chargeAct; }
+	if (m_chargeJudge != nullptr) { delete m_chargeJudge; }
+	if (m_swordAttackAct) { delete m_swordAttackAct; }
+	if (m_swordAttackJudge ) { delete m_swordAttackJudge; }
+	if (m_swordWaitAct ) { delete m_swordWaitAct; }
+	if (m_swordWaitJudge ) { delete m_swordWaitJudge; }
+	if (rootNode ) { delete rootNode; }
+	if (actNode ) { delete actNode; }
+	if (waitNode ) { delete waitNode; }
+	if (chargeNode ) { delete chargeNode; }
+	if (approachNode ) { delete approachNode;	}
 }
 
 void SwordEnemy::Init()
@@ -92,6 +92,11 @@ SwordEnemy* SwordEnemy::clone(Player* player)
 {
 	SwordEnemy* clone = new SwordEnemy(player);
 	clone->Init();
+	clone->rootNode = rootNode;
+	clone->actNode = actNode;
+	clone->approachNode = approachNode;
+	clone->chargeNode = chargeNode;
+	clone->waitNode = waitNode;
 
 	return clone;
 }

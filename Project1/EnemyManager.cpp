@@ -14,7 +14,6 @@ EnemyManager::~EnemyManager()
 void EnemyManager::Init(Player *player)
 {
 	//複製元のエネミーオブジェクトを生成
-	//現状は複製元のビヘイビアをいじることでしかエディター操作に意味をもたせられない
 	this->player = player;
 	swordEnemyMother = new SwordEnemy(player);
 }
@@ -53,11 +52,17 @@ void EnemyManager::Draw()
 	for (auto& se : swordEnemys) {
 		se->Draw();
 	}
+
+	if (isDebugMode) { swordEnemyMother->Draw(); }
 }
 
 void EnemyManager::DebugExecution()
 {
+	//デバッグ用の敵を動かす
+	swordEnemyMother->Update();
 
+	//プレイヤーの体力を固定
+	player->hitpoint = 10;
 }
 
 void EnemyManager::DebugDraw()

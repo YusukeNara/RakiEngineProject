@@ -50,6 +50,7 @@ public:
     Object3d* ship2;
     Object3d* ship3;
     Object3d* saru;
+    Object3d* box;
     //上用変換情報
     RVector3 scale1, rot1, pos1 = RVector3(-50, 250, 0);
     RVector3 scale2, rot2, pos2;
@@ -75,7 +76,8 @@ public:
     //GUIテスト
     bool swapDraw = false;
 
-
+    //タイトル、オーバー
+    Sprite titleSprite, overSprite;
 
 
 

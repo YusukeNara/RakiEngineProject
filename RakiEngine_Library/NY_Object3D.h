@@ -113,6 +113,8 @@ public:
 
 	void CreateModel_Tile(float x_size, float y_size, float x_uv, float y_uv, UINT useTexNum);
 
+	void CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum);
+
 private:
 	// モデルデータ（ほかのオブジェクトでモデルデータは同一のものを使う場合に備えて、shared_ptrを使用）
 	shared_ptr<Model3D> model;

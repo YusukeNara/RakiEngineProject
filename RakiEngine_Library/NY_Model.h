@@ -87,6 +87,7 @@ public:
 
 	//立方体モデルデータ作成
 	void CreateBoxModel(float size, float uv_x, float uv_y, UINT useTexNum);
+	//直方体モデルデータ作成
 
 	//モデルデータ更新（実質アニメーション専用）
 	void Update();

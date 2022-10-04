@@ -139,6 +139,8 @@ public:
 
 	Object3d *CreateModel_Tile(float x_size, float y_size, float x_uv, float y_uv, UINT useTexNum);
 
+	Object3d* CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum);
+
 	/// <summary>
 	/// オブジェクトの削除
 	/// </summary>

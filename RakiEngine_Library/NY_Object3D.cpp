@@ -366,4 +366,9 @@ void Object3d::CreateModel_Tile(float x_size, float y_size, float x_uv, float y_
 	model.get()->CreatePlaneModelXZ(x_size, y_size, x_uv, y_uv, useTexNum, nullptr);
 }
 
+void Object3d::CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum)
+{
+	model.get()->CreateBoxModel(size, uv_x, uv_y, useTexNum);
+}
+
 

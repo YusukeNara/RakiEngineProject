@@ -198,6 +198,8 @@ void Player::Update()
 	Shot();
 
 	BulletManagement();
+
+	hitpoint = 10;
 }
 
 void Player::Draw()

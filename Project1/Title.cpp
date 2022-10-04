@@ -33,6 +33,8 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
     tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
     tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(0, 0, 0));
+    box = NY_Object3DManager::Get()->CreateModel_Box(20, 1, 1, tiletex);
+    box->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(10, 20, 10));
 
     //スプライトに画像を割り当てる（画像のハンドル、縦幅、横幅）
     testInstance.Create(tiletex);
@@ -53,7 +55,10 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 
-    NowSceneState = title;
+    titleSprite.Create(TexManager::LoadTexture("Resources/TitleFont.png"));
+    overSprite.Create(TexManager::LoadTexture("Resources/gameover.png"));
+    
+    NowSceneState = game;
 }
 
 //初期化
@@ -119,16 +124,28 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
+    //ゲーム内制作モデルデータ
+    box->DrawObject();
     tileObject->DrawObject();
+    //ロードモデルデータ
     pl.Draw();
-    enemy.Draw();
     emanager.Draw();
+
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
     diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer);
 
     SpriteManager::Get()->SetCommonBeginDraw();
+
+    if (NowSceneState == title) { 
+        titleSprite.DrawExtendSprite(1280.0f / 4, 720.0f / 4, 1280.0f * 0.75, 720.0f * 0.75);
+        titleSprite.Draw();
+    }
+    if (NowSceneState == over) {
+        overSprite.DrawExtendSprite(1280.0f / 4, 720.0f * 0.4, 1280.0f * 0.75, 720.0f * 0.6);
+        overSprite.Draw();
+    }
 
     pl.UiDraw();
 
