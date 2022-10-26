@@ -88,6 +88,9 @@
     <Filter Include="NewFilter1">
       <UniqueIdentifier>{8ac95e0a-b45c-4106-a7a5-63a71609b940}</UniqueIdentifier>
     </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{c33c6641-3922-4708-b839-08b8d01bda6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="ColliderShapeType.h">
       <Filter>Colision</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

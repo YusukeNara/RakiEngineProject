@@ -82,6 +82,11 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     emanager.Update();
 }
 
+Title::~Title()
+{
+
+}
+
 //‰Šú‰»
 void Title::Initialize() {
 
