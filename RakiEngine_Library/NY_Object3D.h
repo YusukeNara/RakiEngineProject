@@ -72,8 +72,6 @@ public:
 		fbxmodel = make_shared<fbxModel>();
 	};
 	~Object3d() {
-		constBuffB0->Release();
-		constBuffB1->Release();
 	}
 
 	//オブジェクトの初期化

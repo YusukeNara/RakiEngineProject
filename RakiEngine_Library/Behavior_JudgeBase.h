@@ -7,7 +7,7 @@ class BehaviorJudgeBase
 {
 public:
 	BehaviorJudgeBase() = default;
-	~BehaviorJudgeBase(){};
+	virtual ~BehaviorJudgeBase(){};
 
 	//ノードが使用する純粋仮想関数
 	//ノード選択前にこのクラスが実行され、子ノードの使用可能かを判定する

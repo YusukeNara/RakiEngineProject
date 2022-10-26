@@ -33,8 +33,20 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
     tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
     tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(0, 0, 0));
+
+    for (int i = 0; i < 4;i++) {
+        wallObject[i] = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
+    }
+
+    wallObject[0]->SetAffineParam(RVector3(1, 1, 1), RVector3(-90, 0, 0), RVector3(0, 250, 250));
+    wallObject[1]->SetAffineParam(RVector3(1, 1, 1), RVector3(90, 0, 0), RVector3(0, 250, -250));
+    wallObject[2]->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 90), RVector3(250, 250, 0));
+    wallObject[3]->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, -90), RVector3(-250, 250, 0));
+
+
     box = NY_Object3DManager::Get()->CreateModel_Box(20, 1, 1, tiletex);
-    box->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(10, 20, 10));
+    box->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(25, 20, 25));
+    boxAABB = RV3Colider::Rv3AABB(RVector3(-20, -20, -20), RVector3(20, 20, 20), RVector3(25, 20, 25));
 
     //スプライトに画像を割り当てる（画像のハンドル、縦幅、横幅）
     testInstance.Create(tiletex);
@@ -58,7 +70,16 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     titleSprite.Create(TexManager::LoadTexture("Resources/TitleFont.png"));
     overSprite.Create(TexManager::LoadTexture("Resources/gameover.png"));
     
-    NowSceneState = game;
+    NowSceneState = title;
+
+    v1 = RVector3(0, 0, 1);
+    v2 = RVector3(1, 1, 1);
+
+    pl.Reset();
+    emanager.Reset();
+
+    //pl.Update();
+    emanager.Update();
 }
 
 //初期化
@@ -116,7 +137,7 @@ void Title::Update() {
         break;
     }
 
-
+    
 }
 
 //描画
@@ -125,12 +146,17 @@ void Title::Draw() {
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
     //ゲーム内制作モデルデータ
+    float d = 0;
     box->DrawObject();
     tileObject->DrawObject();
+    for (auto w : wallObject) {
+        w->DrawObject();
+    }
+
+
     //ロードモデルデータ
     pl.Draw();
     emanager.Draw();
-
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
@@ -146,8 +172,20 @@ void Title::Draw() {
         overSprite.DrawExtendSprite(1280.0f / 4, 720.0f * 0.4, 1280.0f * 0.75, 720.0f * 0.6);
         overSprite.Draw();
     }
+    if (NowSceneState == game) {
+        pl.UiDraw();
+        ImguiMgr::Get()->StartDrawImgui("State", 100, 100);
 
-    pl.UiDraw();
+        ImGui::Text("Wave : %d  Kill : %d  Next : %d",
+            emanager.waveCount, emanager.killCount, emanager.waveKillCount - emanager.killCount);
+
+        ImGui::Text("F1 : Edit AI");
+
+        ImguiMgr::Get()->EndDrawImgui();
+    }
+
+    emanager.UIDraw();
 
     emanager.DebugDraw();
+
 }

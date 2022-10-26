@@ -85,6 +85,9 @@
     <Filter Include="Colision">
       <UniqueIdentifier>{34dab5dc-7f98-4d82-937d-0b22911a16d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{8ac95e0a-b45c-4106-a7a5-63a71609b940}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -211,6 +214,9 @@
       <Filter>Colision</Filter>
     </ClCompile>
     <ClCompile Include="Colider.cpp">
+      <Filter>Colision</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderInfo.cpp">
       <Filter>Colision</Filter>
     </ClCompile>
   </ItemGroup>
@@ -357,6 +363,12 @@
       <Filter>Colision</Filter>
     </ClInclude>
     <ClInclude Include="Colider.h">
+      <Filter>Colision</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderInfo.h">
+      <Filter>Colision</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderShapeType.h">
       <Filter>Colision</Filter>
     </ClInclude>
   </ItemGroup>

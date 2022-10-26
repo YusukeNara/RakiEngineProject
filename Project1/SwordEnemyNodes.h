@@ -167,7 +167,11 @@ public:
 	//接近用イージング
 	RVector3 startPos;
 	RVector3 endPos;
-	//攻撃判定は体
+
+	//ベクトル
+	RVector3 chargeVec;
+
+
 
 	//判定有効
 	bool isAtkEnable = false;
@@ -187,6 +191,34 @@ public:
 	}
 
 	virtual bool Judge() override;
+
+	SwordEnemyObject* enemy;
+};
+
+class Sword_TolnadeJudge : public BehaviorJudgeBase
+{
+public:
+	Sword_TolnadeJudge(SwordEnemyObject* enemy) {
+		this->enemy = enemy;
+		judgeScriptName = "tolJudge";
+	}
+
+	virtual bool Judge() override;
+
+	SwordEnemyObject* enemy;
+};
+
+class Sword_TolnadeAct : public BehaviorActionBase {
+public:
+	Sword_TolnadeAct(SwordEnemyObject* enemy) {
+		this->enemy = enemy;
+		actScriptName = "tolJudge";
+
+	}
+
+	virtual ACTION_STATE Run() override;
+
+	virtual void Init() override;
 
 	SwordEnemyObject* enemy;
 };

@@ -2,25 +2,15 @@
 
 #include "NY_Object3DMgr.h"
 #include "RVector.h"
-
-enum COLIDER_TYPE
-{
-	COLIDER_TYPE_UNKNOWN,
-	COLIDER_TYPE_AABB,
-	COLIDER_TYPE_SPHERE,
-	COLIDER_TYPE_POLYGON,
-	COLIDER_TYPE_PLANE
-
-
-
-};
+#include "ColliderShapeType.h"
+#include "ColliderInfo.h"
 
 //コライダー基底クラス
-class BaseColider
+class BaseCollider
 {
 public:
-	BaseColider()			= default;
-	virtual ~BaseColider()	= default;
+	BaseCollider()			= default;
+	virtual ~BaseCollider()	= default;
 
 	inline void SetObject(Object3d* object) {
 		this->object = object;
@@ -28,8 +18,11 @@ public:
 
 	inline Object3d *GetObject3d() { return object; }
 
-	virtual void Update();
+	virtual void Update() = 0;
 
+	inline COLIDER_TYPE GetColliderType() { return type; }
+
+	virtual void OnColision(const ColliderInfo& info){}
 
 protected:
 	// コライダー登録オブジェクト

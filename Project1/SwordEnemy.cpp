@@ -2,7 +2,7 @@
 
 SwordEnemy::SwordEnemy(Player* player)
 {
-	s_object.swordObject = LoadModel_ObjFile("enemy1");
+	s_object.swordObject = LoadModel_ObjFile("enemy_sword");
 	s_object.player = player;
 	m_swordWaitJudge	= new Sword_WaitJudge(&s_object);
 	m_swordWaitAct		= new Sword_WaitAct(&s_object);
@@ -27,7 +27,6 @@ SwordEnemy::SwordEnemy(Player* player)
 
 	//ルートノードの選択候補を追加
 	rootNode->AddjudgeNodeChild(waitNode);
-	rootNode->AddjudgeNodeChild(actNode);
 	rootNode->AddjudgeNodeChild(approachNode);
 	rootNode->AddjudgeNodeChild(chargeNode);
 

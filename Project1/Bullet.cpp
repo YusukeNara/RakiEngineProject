@@ -14,7 +14,9 @@ Bullet::Bullet(RVector3 pos, RVector3 start, RVector3 vec, float ss, float size,
 
 Bullet::~Bullet()
 {
-	delete object;
+	if (object) { 
+		delete object; 
+	}
 }
 
 void Bullet::Init(RVector3 pos, RVector3 start, RVector3 vec, float ss, float size)
@@ -45,7 +47,7 @@ void Bullet::Update()
 
 void Bullet::Draw()
 {
-	if (!isAlive) { return; }
+	//if (!isAlive) { return; }
 
 	object->DrawObject();
 }

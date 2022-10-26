@@ -3,6 +3,7 @@
 Player::Player()
 {
 	Init();
+	boxAABB = RV3Colider::Rv3AABB(RVector3(-20, -20, -20), RVector3(20, 20, 20), RVector3(25, 20, 25));
 }
 
 Player::~Player()
@@ -34,12 +35,20 @@ void Player::CameraMove()
 	RVector3 target = pos;
 	RVector3 up = { 0,1,0 };
 	NY_Camera::Get()->SetViewStatusEyeTargetUp(eye, target, up);
-
+	
 	//ベクトルを計算
+	float d = 0;
+	RVector3 hitPos;
+	if (RV3Colider::ColisionRayToAABB(ray, boxAABB, &d, &hitPos)) {
+		bVec = (pos - hitPos).norm();
+	}
+	else {
+		RVector3 farPos = RV3Colider::CalcScreen2World(DirectX::XMFLOAT2{ 1280.0f / 2,720.0f / 4 }, 1.0f);
+		bVec = (pos - farPos).norm();
+	}
 
 	//弾ベクトルはプレイヤーの座標とカメラ最遠点を単位ベクトルにして求める
-	RVector3 farPos = RV3Colider::CalcScreen2World(DirectX::XMFLOAT2{ 1280.0f / 2,720.0f / 4 }, 1.0f);
-	bVec = (pos - farPos).norm();
+
 	//向きベクトルはXZ平面のみ考慮するため、カメラ回転行列のY軸を利用する
 	//初期の向きにY軸回転行列をかけて、向きベクトルを算出
 	DirectX::XMVECTOR localLookV = { 0,0,10,0 };
@@ -47,6 +56,8 @@ void Player::CameraMove()
 	lVec = { lookV.m128_f32[0],lookV.m128_f32[1],lookV.m128_f32[2] };
 	lVec = lVec.norm();
 
+	ray.dir = bVec;
+	ray.start = eye;
 
 }
 
@@ -58,24 +69,42 @@ void Player::PlayerMove()
 	RVector3 speedtempT(0,0,0);//左右速度
 	//スプリント倍率
 	float sprintScale = 1.0f;
-	if (Input::isXpadButtonPushing(XPAD_BUTTON_LSTICK)) { sprintScale = 1.7f; }
+	if (Input::isXpadButtonPushing(XPAD_BUTTON_LSTICK) || Input::isKey(DIK_LSHIFT)) { sprintScale = 1.7f; }
 
 	//入力に応じて計算する方向ベクトルが異なる
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_UP) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_DOWN)) {
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_UP) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_DOWN) || Input::isKey(DIK_W) || Input::isKey(DIK_S)) {
 
-		speedScale = -Input::GetXpadLStickTilt().y_rate;
+
+		if (Input::isKey(DIK_W)) {
+			speedScale = -1.0f;
+		}
+		else if (Input::isKey(DIK_S)) {
+			speedScale = 1.0f;
+		}
+		else {
+			speedScale = -Input::GetXpadLStickTilt().y_rate;
+		}
+
 		speedtempF += (lVec * speedScale) * sprintScale;
 		speedtempF.y = 0;
 	}
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT)) {
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT) || Input::isKey(DIK_A) || Input::isKey(DIK_D)) {
 		RVector3 rotateVec;
 		speedScale = 0.0f;
 		if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT)) {
 			speedScale = Input::GetXpadLStickTilt().x_rate;
 			rotateVec = { -lVec.z,lVec.y,lVec.x };
 		}
-		if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT)) {
+		else if (Input::isKey(DIK_A)) {
+			speedScale = 1.0f;
+			rotateVec = { -lVec.z,lVec.y,lVec.x };
+		}
+		else if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT)) {
 			speedScale = -Input::GetXpadLStickTilt().x_rate;
+			rotateVec = { lVec.z,lVec.y,-lVec.x };
+		}
+		else if(DIK_D) {
+			speedScale = -1.0f;
 			rotateVec = { lVec.z,lVec.y,-lVec.x };
 		}
 		speedtempT += (rotateVec * speedScale);
@@ -87,6 +116,9 @@ void Player::PlayerMove()
 	
 	angleVec.y = Input::GetXpadRStickTilt().x_rate;
 	angleVec.x = Input::GetXpadRStickTilt().y_rate;
+
+	//angleVec.y = Input::getMouseVelocity().x * 0.2;
+	//angleVec.x = Input::getMouseVelocity().y * 0.2;
 
 	rot += angleVec;
 	if (rot.y > 360.0f) { rot.y -= 360.0f; }
@@ -110,7 +142,7 @@ void Player::PlayerMove()
 
 void Player::Shot()
 {
-	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RT)) {
+	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RT) || Input::isMouseClickTrigger(MOUSE_L)) {
 		for (int i = 0; i < bullets.size(); i++) {
 			if (!bullets[i].isAlive) {
 				bullets[i].Fire(pos, -bVec, 6.0f, 10.0f);
@@ -198,16 +230,18 @@ void Player::Update()
 	Shot();
 
 	BulletManagement();
-
-	hitpoint = 10;
 }
 
 void Player::Draw()
 {
+
 	object->DrawObject();
 
 	for (auto& b : bullets) {
-		b.Draw();
+		if (b.isAlive) {
+			b.Draw();
+		}
+
 	}
 }
 

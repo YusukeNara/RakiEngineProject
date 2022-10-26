@@ -7,7 +7,7 @@ bool Sword_WaitJudge::Judge()
     //その他前提条件があればここに
     judgeScriptName = "WaitMoveJudge";
 
-    //距離が近いとき候補に
+    //離れているとき
     return distance(enemy->pos, enemy->player->pos) < 50.0f;
 }
 
@@ -24,8 +24,7 @@ BehaviorActionBase::ACTION_STATE Sword_WaitAct::Run()
 
     //様子を見るようにじわじわ移動する
     enemy->pos += moveVec;
-
-
+    enemy->swordObject->SetAffineParamRotate(degreeRotate(enemy->player->pos, enemy->pos));
 
     return actionState;
 }
@@ -46,7 +45,7 @@ void Sword_WaitAct::Init()
 
     moveVec = rotVec;
     moveVec.y = 0.0f;
-    moveVec *= 1;
+    moveVec *= 0.8;
 
     actScriptName = "waitAction";
 }
@@ -110,7 +109,7 @@ void Sword_AttackAct::Init()
 
 bool Sword_ChargeJudge::Judge()
 {
-    return true;
+    return distance(enemy->pos, enemy->player->pos) < 75.0f;
 }
 
 BehaviorActionBase::ACTION_STATE Sword_ChargeAct::Run()
@@ -121,14 +120,15 @@ BehaviorActionBase::ACTION_STATE Sword_ChargeAct::Run()
     actionState = BehaviorActionBase::ACTION_STATE::RUNNING;
 
     //一定フレーム経過で成功
-    if (frame > 80) {
+    if (frame > 150) {
         actionState = BehaviorActionBase::ACTION_STATE::SUCCESS;
     }
 
-    //イージングで接近
-    if (frame < 60) {
-        float t = float(frame) / float(chargeFrame);
-        enemy->pos = Rv3Ease::lerp(startPos, endPos, t);
+    //移動ベクトルを加算
+    if (frame < 100 && frame > 40) {
+        //float t = float(frame) / float(chargeFrame);
+        //enemy->pos = Rv3Ease::lerp(startPos, endPos, t);
+        enemy->pos += chargeVec * 2;
         //ダメージと判定無効化
         if (RV3Colider::Colision2Sphere(enemy->bodyColision, enemy->player->bodyColider) && isAtkEnable) {
             enemy->player->hitpoint -= damage;
@@ -144,6 +144,10 @@ void Sword_ChargeAct::Init()
     //プレイヤーとの距離を計算し、イージング用座標を設定
     startPos = enemy->pos;
     endPos = enemy->player->pos + (enemy->player->pos - enemy->pos);
+
+    //
+    chargeVec = enemy->player->pos - enemy->pos;
+    chargeVec = chargeVec.norm();
 
     actScriptName = "chargeAct";
 
@@ -180,10 +184,24 @@ void Sword_ApproachingAct::Init()
 bool Sword_ApproachJudge::Judge()
 {
     //離れていたら候補に入る
-    return  distance(enemy->pos, enemy->player->pos) > 75.0f;
+    return  distance(enemy->pos, enemy->player->pos) > 50.0f;
 }
 
 SwordEnemyObject::~SwordEnemyObject()
 {
     delete swordObject;
+}
+
+bool Sword_TolnadeJudge::Judge()
+{
+    return  distance(enemy->pos, enemy->player->pos) > 75.0f;
+}
+
+BehaviorActionBase::ACTION_STATE Sword_TolnadeAct::Run()
+{
+    return ACTION_STATE::FAILED;
+}
+
+void Sword_TolnadeAct::Init()
+{
 }

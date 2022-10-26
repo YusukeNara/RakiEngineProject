@@ -34,6 +34,9 @@ public:
 	RVector3 playerLookVec;	//向きベクトル
 	RVector3 bVec;			//弾方向ベクトル
 	RVector3 lVec;			//向きベクトル
+	RV3Colider::Ray ray;
+
+	RV3Colider::Rv3AABB boxAABB;
 
 	//当たり判定
 	RV3Colider::Sphere bodyColider;
@@ -62,6 +65,7 @@ public:
 	//描画
 	void Draw();
 	void UiDraw();
+	void DebugDraw();
 	//終了
 	void Finalize();
 

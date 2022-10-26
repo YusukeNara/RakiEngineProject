@@ -4,6 +4,9 @@
 #include "NY_Camera.h"
 #include "FPS.h"
 
+#include <iostream>
+#include <array>
+
 bool RV3Colider::ColisionSphereToPlane(const Sphere &sphere, const Plane &plane, RVector3 *coliPos)
 {
 	//平面と球の中心との距離を求める
@@ -40,6 +43,50 @@ RVector3 RV3Colider::CalcScreen2World(const XMFLOAT2& scrPos, float fz)
 
 	RVector3 returnpos = { pos.m128_f32[0],pos.m128_f32[1],pos.m128_f32[2] };
 	return returnpos;
+}
+
+bool RV3Colider::ColisionRayToAABB(Ray& ray, const Rv3AABB& box, float* distance, RVector3* colisionPos)
+{
+	//xyzそれぞれについてスラブの判定を取る
+
+	float t = -FLT_MAX;
+	float t_max = FLT_MAX;
+
+	std::array<float, 3> p = {}, d = {}, min = {}, max = {};
+	memcpy(p.data(), &ray.start, sizeof(RVector3));
+	memcpy(d.data(), &ray.dir, sizeof(RVector3));
+	memcpy(min.data(), &box.min, sizeof(RVector3));
+	memcpy(max.data(), &box.max, sizeof(RVector3));
+	for (int i = 0; i < 3; i++) {
+		if (abs(d[i]) < FLT_EPSILON) {
+			if (p[i] < min[i] || p[i] > max[i])
+				return false; // 交差していない
+		}
+		else {
+			// スラブとの距離を算出
+			// t1が近スラブ、t2が遠スラブとの距離
+			float odd = 1.0f / d[i];
+			float t1 = (min[i] - p[i]) * odd;
+			float t2 = (max[i] - p[i]) * odd;
+			if (t1 > t2) {
+				float tmp = t1; t1 = t2; t2 = tmp;
+			}
+
+			if (t1 > t) t = t1;
+			if (t2 < t_max) t_max = t2;
+
+			// スラブ交差チェック
+			if (t >= t_max)
+				return false;
+		}
+	}
+
+	// 交差している
+	if (colisionPos) {
+		*colisionPos = ray.start + t * (ray.dir);
+	}
+
+	return true;
 }
 
 const RVector3 Rv3Ease::lerp(const RVector3 &s, const RVector3 &e, const float t)

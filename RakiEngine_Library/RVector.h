@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+#include <cmath>
 
 using namespace DirectX;
 
@@ -63,6 +64,19 @@ inline float distance(const RVector3 &v1,const RVector3 &v2){return sqrtf((float
 inline RVector3 operator*(const float &sum, const RVector3 &sum2) { return RVector3(sum2.x * sum, sum2.y * sum, sum2.z * sum); }
 inline RVector3 operator/(const float &sum, const RVector3 &sum2) { return RVector3(sum2.x / sum, sum2.y / sum, sum2.z / sum); }
 
+inline float degree(float vx1, float vy1, float vx2, float vy2) {
+	return ((vx1 * vx2) + (vy1 * vy2)) / sqrtf(((float(pow(vx1, 2)) + float(pow(vy1, 2)))) * (float(pow(vx2, 2)) + (float(pow(vy2, 2)))));
+}
+
+inline RVector3 degreeRotate(const RVector3& v1, const RVector3& v2) {
+	RVector3 result;
+	result.x = degree(v1.z, v1.y, v2.z, v2.y);
+	result.y = degree(v1.x, v1.z, v2.x, v2.z);
+	result.z = degree(v1.x, v1.y, v2.x, v2.y);
+
+	return result;
+}
+
 //保管
 inline const RVector3 lerp(const RVector3 &s, const RVector3 &e, const float t) {
 	RVector3 start = s;
@@ -121,15 +135,15 @@ namespace RV3Colider {
 
 
 	///軸並行バウンディングボックス AABB
-	struct Rv3AABB {
-
+	class Rv3AABB {
+	public:
 		RVector3 min;	//判定サイズ
 		RVector3 max;	//判定サイズ
 		RVector3 oldPos;//1F前の座標
 
 		//コンストラクタ、デストラクタ
-		Rv3AABB()	= default;
-		~Rv3AABB()	= default;
+		Rv3AABB() = default;
+		~Rv3AABB() = default;
 
 		/// <summary>
 		/// AABBデータのコンストラクタ
@@ -173,7 +187,7 @@ namespace RV3Colider {
 	/// <param name="box1">ボックス1</param>
 	/// <param name="box2">ボックス2</param>
 	/// <returns>衝突判定</returns>
-	inline bool ColisionAABB(const Rv3AABB &box1, const Rv3AABB &box2) {
+	inline bool ColisionAABB(const Rv3AABB& box1, const Rv3AABB& box2) {
 		//非衝突
 		if (box1.min.x > box2.max.x) { return false; }
 		if (box1.max.x < box2.min.x) { return false; }
@@ -186,7 +200,8 @@ namespace RV3Colider {
 	}
 
 	//球
-	struct Sphere {
+	class Sphere {
+	public:
 		//中心座標
 		RVector3 center;
 		//半径
@@ -218,8 +233,9 @@ namespace RV3Colider {
 	}
 
 	//平面
-	struct Plane
+	class Plane
 	{
+	public:
 		//法線ベクトル
 		RVector3 normal;
 		//原点からの距離
@@ -243,16 +259,17 @@ namespace RV3Colider {
 	/// <param name="plane">平面プリミティブ</param>
 	/// <param name="coliPos">衝突点を返す変数</param>
 	/// <returns>衝突判定</returns>
-	bool ColisionSphereToPlane(const Sphere &sphere, const Plane &plane, RVector3 *coliPos = nullptr);
+	bool ColisionSphereToPlane(const Sphere& sphere, const Plane& plane, RVector3* coliPos = nullptr);
 
-	struct Ray {
+	class Ray {
+	public:
 		RVector3 start;
 		RVector3 dir;
 	};
 
 	RVector3 CalcScreen2World(const XMFLOAT2& scrPos, float fz);
 
-	inline Ray CalcScreen2WorldRay(XMFLOAT2 &scrPos, float window_w, float window_h, XMMATRIX &prj,XMMATRIX &view) {
+	inline Ray CalcScreen2WorldRay(XMFLOAT2& scrPos, float window_w, float window_h, XMMATRIX& prj, XMMATRIX& view) {
 
 		Ray result;
 		result.start = CalcScreen2World(scrPos, 0);
@@ -260,7 +277,7 @@ namespace RV3Colider {
 		return result;
 	}
 
-	inline bool ColisionRay2Plane(const Ray &ray, const Plane &plane, float *distance = nullptr, RVector3 *inter = nullptr) {
+	inline bool ColisionRay2Plane(const Ray& ray, const Plane& plane, float* distance = nullptr, RVector3* inter = nullptr) {
 		const float epsilon = 1.0e-5f;
 		RVector3 n = ray.dir;
 		n.norm();
@@ -279,8 +296,14 @@ namespace RV3Colider {
 		return true;
 	}
 
+	bool ColisionRayToAABB(Ray& ray, const Rv3AABB& box, float* distance = nullptr, RVector3* colisionPos = nullptr);
+
+
+
+
 	//三角形
-	struct Triangle {
+	class Triangle {
+	public:
 		//頂点座標
 		RVector3 p0, p1, p2;
 		//法線

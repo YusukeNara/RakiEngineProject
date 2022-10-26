@@ -77,6 +77,7 @@
     <ClCompile Include="CameraCalc.cpp" />
     <ClCompile Include="Colider.cpp" />
     <ClCompile Include="ColisionManager.cpp" />
+    <ClCompile Include="ColliderInfo.cpp" />
     <ClCompile Include="DifferrdRenderingMgr.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="FbxLoader.cpp" />
@@ -124,6 +125,8 @@
     <ClInclude Include="CameraCalc.h" />
     <ClInclude Include="Colider.h" />
     <ClInclude Include="ColisionManager.h" />
+    <ClInclude Include="ColliderInfo.h" />
+    <ClInclude Include="ColliderShapeType.h" />
     <ClInclude Include="DifferrdRenderingMgr.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="FbxLoader.h" />
@@ -683,7 +686,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -730,7 +733,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>

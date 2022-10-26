@@ -51,10 +51,14 @@ public:
     Object3d* ship3;
     Object3d* saru;
     Object3d* box;
+    RV3Colider::Rv3AABB boxAABB;
     //上用変換情報
     RVector3 scale1, rot1, pos1 = RVector3(-50, 250, 0);
     RVector3 scale2, rot2, pos2;
     RVector3 scale3, rot3, pos3;
+
+    RVector3 v1;
+    RVector3 v2;
 
     //時間
     int time = 0;
@@ -64,6 +68,8 @@ public:
 
     //床
     Object3d *tileObject;
+    std::array<Object3d*, 4> wallObject;
+
     UINT tiletex;
 
     DiferredRenderingMgr diffMgr;
@@ -79,7 +85,7 @@ public:
     //タイトル、オーバー
     Sprite titleSprite, overSprite;
 
-
+    RVector3 hitPos;
 
     NowState NowSceneState = game;
 };
