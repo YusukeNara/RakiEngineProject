@@ -96,6 +96,12 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>App</Filter>
     </ClCompile>
+    <ClCompile Include="GroundObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPS.hlsl">
@@ -230,6 +236,12 @@
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingObject.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

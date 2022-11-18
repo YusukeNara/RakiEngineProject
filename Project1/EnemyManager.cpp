@@ -80,9 +80,13 @@ void EnemyManager::Update()
 
 void EnemyManager::Draw()
 {
-	//‚·‚×‚Ä‚Ì“G‚ð•`‰æ
-	for (auto& se : swordEnemys) {
-		se->Draw();
+	////‚·‚×‚Ä‚Ì“G‚ð•`‰æ
+	//for (auto& se : swordEnemys) {
+	//	se->Draw();
+	//}
+
+	for (int i = 0; i < swordEnemys.size(); i++) {
+		swordEnemys[i]->Draw();
 	}
 
 	if (isDebugMode) { swordEnemyMother->Draw(); }
@@ -147,8 +151,10 @@ void EnemyManager::Colision()
 		//Ž€‚ñ‚Å‚é’e‚Í”»’è‚µ‚È‚¢
 		if (!player->bullets[i].isAlive) { continue; }
 
+		if (swordEnemys.size() == 0) { return; }
+
 		for (auto se = swordEnemys.begin(); se != swordEnemys.end();) {
-			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision, player->bullets[i].coliSphere)) {
+			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision,player->bullets[i].sphere)) {
 				//’e‚ðÁ–Å‚³‚¹AƒGƒlƒ~[‚Éƒ_ƒ[ƒWˆ—(Á‹Ž)
 				player->bullets[i].isAlive = false;
 				se = swordEnemys.erase(se);

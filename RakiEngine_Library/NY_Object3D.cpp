@@ -41,7 +41,7 @@ void Object3d::InitObject3D(ID3D12Device *dev)
 
 void Object3d::SetLoadedModelData(Model3D *loadedModel)
 {
-	model.reset(loadedModel);
+	InitObject3D(RAKI_DX12B_DEV);
 
 	isDirty = true;
 
@@ -50,6 +50,8 @@ void Object3d::SetLoadedModelData(Model3D *loadedModel)
 
 void Object3d::SetLoadedModelData(std::shared_ptr<Model3D> loadedmodel)
 {
+	InitObject3D(RAKI_DX12B_DEV);
+
 	model = loadedmodel;
 
 	isDirty = true;
@@ -340,6 +342,8 @@ void Object3d::DrawMultiPassResource()
 
 void Object3d::LoadAndSetModelData(string modelname)
 {
+	InitObject3D(RAKI_DX12B_DEV);
+
 	//モデルデータを読み込んで設定する
 	model.get()->LoadObjModel(modelname.c_str());
 
@@ -348,6 +352,8 @@ void Object3d::LoadAndSetModelData(string modelname)
 
 void Object3d::LoadAndSetModelData_Fbx(string filename)
 {
+	InitObject3D(RAKI_DX12B_DEV);
+
 	//モデルデータをロードして所有権を移行
 	fbxModel *fmodel = FbxLoader::GetInstance()->LoadFBXFile(filename);
 	fbxmodel.reset(fmodel);

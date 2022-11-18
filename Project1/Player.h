@@ -2,18 +2,16 @@
 #include <NY_Object3DMgr.h>
 #include <Sprite.h>
 #include <NY_Camera.h>
+#include <GameObject.h>
 #include <vector>
 #include <array>
 #include <memory>
 
 #include "Bullet.h"
 
-class Player
+class Player : public GameObject
 {
 public:
-	//プレイヤーの表示オブジェクト
-	Object3d* object;
-
 	//UIリソース
 	Sprite s_hpFont;
 	Sprite s_hpBar;
@@ -21,7 +19,7 @@ public:
 	Sprite s_sight;
 
 	//弾関係
-	Model3D bulletModel;
+	std::shared_ptr<Model3D> bulletModel;
 	//std::vector<Bullet> bullets;
 	std::array<Bullet, 25> bullets;
 
@@ -58,16 +56,15 @@ public:
 	
 public:
 	//初期化
-	void Init();
+	void Init()		override;
 	void Reset();
-	//更新
-	void Update();
-	//描画
-	void Draw();
+	void Update()	override;
+	void Draw()		override;
 	void UiDraw();
-	void DebugDraw();
 	//終了
-	void Finalize();
+	void Finalize() override;
 
+	void Load() override;
+	void OnCollision(ColliderInfo* info) override;
 };
 

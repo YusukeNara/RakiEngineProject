@@ -44,7 +44,7 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
             2,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
     //ディファードレンダリング結果出力
-    m_cmd->DrawIndexedInstanced(6, 1, 0, 0, 0);
+    m_cmd->DrawInstanced(6, 1, 0, 0);
 
 }
 

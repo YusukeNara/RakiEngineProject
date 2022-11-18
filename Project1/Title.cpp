@@ -9,76 +9,36 @@
 using namespace myImgui;
 
 Title::Title(ISceneChanger *changer) : BaseScene(changer) {
-    ship2 = LoadModel_ObjFile("player");
-    ship3 = LoadModel_ObjFile("Sphere");
-    rtDrawer = NY_Object3DManager::Get()->CreateModel_Tile(32, 18, 1, 1, tiletex);
 
-    scale1 = { 10.0,10.0,10.0 };
-    rot1 = { 0,0,0 };
-    pos1 = { -25,20,0 };
-    scale2 = { 10.0,10.0,10.0 };
-    rot2 = { 0,0,0 };
-    pos2 = { 25,20,-10 };
-    scale3 = { 10.0,10.0,10.0 };
-    rot3 = { 0,0,0 };
-    pos3 = { 0,20,0 };
+    titleSprite.Create(TexManager::LoadTexture("Resources/TitleFont.png"));
 
-    ship2->SetAffineParam(scale2, rot2, pos2);
-    ship3->SetAffineParam(scale1, rot1, pos1);
-    saru = LoadModel_ObjFile("saru");
-    saru->SetAffineParam(scale3, rot3, pos3);
+    
 
-    //画像の読み込み
-    tiletex = TexManager::LoadTexture("Resources/blackParticleTex.png");
-    tileObject = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
-    tileObject->color = DirectX::XMFLOAT4(1, 1, 1, 1);
-    tileObject->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(0, 0, 0));
-
-    for (int i = 0; i < 4;i++) {
-        wallObject[i] = NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 20, 20, tiletex);
-    }
-
-    wallObject[0]->SetAffineParam(RVector3(1, 1, 1), RVector3(-90, 0, 0), RVector3(0, 250, 250));
-    wallObject[1]->SetAffineParam(RVector3(1, 1, 1), RVector3(90, 0, 0), RVector3(0, 250, -250));
-    wallObject[2]->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 90), RVector3(250, 250, 0));
-    wallObject[3]->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, -90), RVector3(-250, 250, 0));
-
-
-    box = NY_Object3DManager::Get()->CreateModel_Box(20, 1, 1, tiletex);
-    box->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(25, 20, 25));
-    boxAABB = RV3Colider::Rv3AABB(RVector3(-20, -20, -20), RVector3(20, 20, 20), RVector3(25, 20, 25));
-
-    //スプライトに画像を割り当てる（画像のハンドル、縦幅、横幅）
-    testInstance.Create(tiletex);
-    x1 = 100.0f;
-    x2 = 150.0f;
-    y1 = 100.0f;
-    y2 = 150.0f;
-
-    //プレイヤー
-    pl.Init();
-    //敵
-    enemy.Init(ship2);
-
-    //マルチパス描画出力
-    rtDrawer->SetAffineParam(scale, RVector3(0, 0, 0), RVector3(0, 0, 0));
-
-    emanager.Init(&pl);
+    ////プレイヤー
 
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 
-    titleSprite.Create(TexManager::LoadTexture("Resources/TitleFont.png"));
-    overSprite.Create(TexManager::LoadTexture("Resources/gameover.png"));
-    
-    NowSceneState = title;
+    gobject.Init();
 
-    v1 = RVector3(0, 0, 1);
-    v2 = RVector3(1, 1, 1);
+    pl.Init();
 
-    pl.Reset();
-    emanager.Reset();
+    emanager.Init(&pl);
 
-    //pl.Update();
+    build[0].Load();
+
+    for (int i = 0; i < build.size(); i++) {
+        build[i].Init();
+        if (i < 5) {
+            build[i].SetBuildingPos(RVector3(100 * i + 250, 0, 0));
+        }
+        else {
+            build[i].SetBuildingPos(RVector3(0, 0, -100 * i - 5 - 250));
+        }
+
+    }
+
+    pl.Update();
+
     emanager.Update();
 }
 
@@ -94,10 +54,6 @@ void Title::Initialize() {
 
 void Title::Finalize()
 {
-    delete ship2;
-    delete ship3;
-    delete saru;
-    delete tileObject;
 
 }
 
@@ -112,19 +68,17 @@ void Title::Update() {
             emanager.Reset();
             NowSceneState = game; 
         }
-
         break;
     case game:
 
         pl.Update();
         emanager.Update();
-
         if (pl.hitpoint <= 0) {
             NowSceneState = over;
         }
-
         break;
     case over:
+
         if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
             pl.Reset();
             emanager.Reset();
@@ -133,16 +87,14 @@ void Title::Update() {
         else if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_B)) { 
             NowSceneState = title; 
         }
-
         break;
     case clear:
         break;
-
     default:
         break;
     }
 
-    
+    gobject.Update();
 }
 
 //描画
@@ -150,18 +102,16 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
+    emanager.Draw();
+    pl.Draw();
+
     //ゲーム内制作モデルデータ
-    float d = 0;
-    box->DrawObject();
-    tileObject->DrawObject();
-    for (auto w : wallObject) {
-        w->DrawObject();
+    gobject.Draw();
+    for (auto& b : build) {
+        b.Draw();
     }
 
-
     //ロードモデルデータ
-    pl.Draw();
-    emanager.Draw();
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 

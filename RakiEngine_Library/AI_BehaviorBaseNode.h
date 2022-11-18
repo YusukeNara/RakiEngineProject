@@ -9,7 +9,8 @@ class BehaviorJudgeBase;
 
 //ビヘイビアのノード
 //ここにactionBase,JudgeBaseのポインタを入れて実行する
-//アプリケーション側ではこれを継承したクラスのポインタ型オブジェクトで実行する
+//アプリケーション側ではこいつのポインタにスクリプトを入れて実行する
+//無駄が多い
 class BehaviorBaseNode
 {
 public:
@@ -114,3 +115,30 @@ private:
 
 	friend class BehaviorEditor;
 };
+
+
+enum class NODE_STATUS
+{
+	RUNNING,	//実行中
+	SUCCESS,	//成功
+	FAILED,		//失敗
+	STOP,
+};
+
+//改造版
+//ノードの種類を派生クラスで定義したもの
+//これは基底クラスとなる
+class BehaviorNodeBase
+{
+public:
+	BehaviorNodeBase(){}
+	virtual ~BehaviorNodeBase(){}
+
+	virtual void Init() = 0;
+
+	virtual bool Judge() = 0;
+
+	virtual NODE_STATUS Run() = 0;
+
+};
+

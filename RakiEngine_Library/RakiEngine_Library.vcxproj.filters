@@ -222,6 +222,12 @@
     <ClCompile Include="ColliderInfo.cpp">
       <Filter>Colision</Filter>
     </ClCompile>
+    <ClCompile Include="ModelDataManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -376,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelDataManager.h">
+      <Filter>Graphic\3D\modelData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

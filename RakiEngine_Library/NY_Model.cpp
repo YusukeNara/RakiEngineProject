@@ -35,6 +35,8 @@ void Model3D::LoadObjModel(const char *modelName)
 	vector<XMFLOAT3> normals;
 	vector<XMFLOAT2> texcoords;
 
+	int meshCountTmp = 0;
+
 	//1行ずつ読み込み
 	string line;
 	while (getline(file, line)) {
@@ -61,6 +63,7 @@ void Model3D::LoadObjModel(const char *modelName)
 		if (key == "f") {
 			//半角スペース区切りで行の続きを読み込む
 			string index_string;
+			int indexCount = 0;
 			while (getline(line_stream, index_string, ' ')) {
 				//頂点インデックス1個分の文字列をストリームに変換して読みやすくする
 				istringstream index_stream(index_string);
@@ -76,8 +79,18 @@ void Model3D::LoadObjModel(const char *modelName)
 				vertex.normal = normals[indexNormal - 1];
 				vertex.uv = texcoords[indexTexcoord - 1];
 				vertices.emplace_back(vertex);
-				//頂点インデックスに追加
-				indices.emplace_back((unsigned short)indices.size());
+
+				if (indexCount >= 3) {
+					//2,3,0で三角形を作成
+					indices.emplace_back(unsigned short(meshCountTmp - 1));
+					indices.emplace_back(unsigned short(meshCountTmp));
+					indices.emplace_back(unsigned short(meshCountTmp - 3));
+				}
+				else {
+					indices.emplace_back(unsigned short(meshCountTmp));
+				}
+				meshCountTmp++;
+				indexCount++;
 			}
 		}
 

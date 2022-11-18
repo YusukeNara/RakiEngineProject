@@ -16,8 +16,8 @@ void Player::CameraMove()
 	RVector3 camOffsetVec = { 0,10,50 };
 	//注視するのはプレイヤーなのでプレイヤーの座標が注視点
 	//回転角はプレイヤーオブジェクトのrotを使用(x軸については80 ~ -80の間)
-	
 	//XY軸の回転行列を求め、オフセットを回転させる
+	
 	DirectX::XMMATRIX rotX, rotY, rotM;
 	rotX = XMMatrixIdentity();
 	rotY = XMMatrixIdentity();
@@ -133,7 +133,7 @@ void Player::PlayerMove()
 	if (pos.z < -250.0f) { pos.z = -250.0f; }
 
 	//アフィン変換情報更新
-	object->SetAffineParam(RVector3(0.07, 0.07, 0.07),
+	object3d->SetAffineParam(RVector3(0.07, 0.07, 0.07),
 		rot,
 		pos);
 
@@ -145,7 +145,7 @@ void Player::Shot()
 	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RT) || Input::isMouseClickTrigger(MOUSE_L)) {
 		for (int i = 0; i < bullets.size(); i++) {
 			if (!bullets[i].isAlive) {
-				bullets[i].Fire(pos, -bVec, 6.0f, 10.0f);
+				bullets[i].Fire(pos, -bVec, 6.0f, 10.0f, bulletModel);
 				break;
 			}
 		}
@@ -177,8 +177,11 @@ void Player::BulletManagement()
 void Player::Init()
 {
 	//オブジェクト読み込み
-	object = LoadModel_FBXFile("cube");
-	object->SetAffineParamScale(RVector3(0.3, 0.5, 0.3));
+	object3d.reset(LoadModel_FBXFile("cube"));
+	object3d->SetAffineParamScale(RVector3(0.3, 0.5, 0.3));
+	
+	bulletModel = std::make_shared<Model3D>();
+	bulletModel->LoadObjModel("Sphere");
 
 	//スプライト生成
 	s_hpBar.Create(TexManager::LoadTexture("Resources/healthBar.png"));
@@ -186,9 +189,11 @@ void Player::Init()
 	s_CtrlImage.Create(TexManager::LoadTexture("Resources/Stick.png"));
 	s_sight.Create(TexManager::LoadTexture("Resources/Sight.png"));
 
+
+
 	//弾初期化
 	for (auto &b : bullets) {
-		b.Init(pos, pos, bVec, 6.0f, 10.0f);
+		b.Init();
 	}
 
 	//パラメータ初期化
@@ -234,14 +239,18 @@ void Player::Update()
 
 void Player::Draw()
 {
+	object3d->DrawObject();
 
-	object->DrawObject();
+	for (int i = 0; i < bullets.size(); i++) {
+		if (bullets[i].isAlive) {
+			bullets[i].Draw();
+		}
+	}
 
 	for (auto& b : bullets) {
 		if (b.isAlive) {
 			b.Draw();
 		}
-
 	}
 }
 
@@ -267,8 +276,15 @@ void Player::UiDraw()
 
 void Player::Finalize()
 {
-	if (object != nullptr) { delete object; }
 	for (auto& b : bullets) {
 		b.Finalize();
 	}
+}
+
+void Player::Load()
+{
+}
+
+void Player::OnCollision(ColliderInfo* info)
+{
 }

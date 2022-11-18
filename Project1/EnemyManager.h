@@ -21,6 +21,8 @@ public:
 
 	void Update();
 
+	
+
 	//3d•`‰æ
 	void Draw();
 	//2d•`‰æ
