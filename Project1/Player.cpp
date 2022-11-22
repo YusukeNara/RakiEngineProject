@@ -127,13 +127,13 @@ void Player::PlayerMove()
 	if (rot.x < -80.0f) { rot.x = -70.0f; }
 
 	//範囲内に納める
-	if (pos.x > 250.0f) { pos.x = 250.0f; }
-	if (pos.x < -250.0f) { pos.x = -250.0f; }
-	if (pos.z > 250.0f) { pos.z = 250.0f; }
-	if (pos.z < -250.0f) { pos.z = -250.0f; }
+	if (pos.x > 400.0f) { pos.x = 400.0f; }
+	if (pos.x < -400.0f) { pos.x = -400.0f; }
+	if (pos.z > 400.0f) { pos.z = 400.0f; }
+	if (pos.z < -400.0f) { pos.z = -400.0f; }
 
 	//アフィン変換情報更新
-	object3d->SetAffineParam(RVector3(0.07, 0.07, 0.07),
+	object3d->SetAffineParam(RVector3(0.07f, 0.07f, 0.07f),
 		rot,
 		pos);
 
@@ -178,7 +178,7 @@ void Player::Init()
 {
 	//オブジェクト読み込み
 	object3d.reset(LoadModel_FBXFile("cube"));
-	object3d->SetAffineParamScale(RVector3(0.3, 0.5, 0.3));
+	object3d->SetAffineParamScale(RVector3(0.3f, 0.5f, 0.3f));
 	
 	bulletModel = std::make_shared<Model3D>();
 	bulletModel->LoadObjModel("Sphere");
@@ -260,12 +260,12 @@ void Player::UiDraw()
 
 	s_hpFont.DrawSprite(0, 0);
 	for (int i = 0; i < hitpoint; i++) {
-		s_hpBar.DrawSprite(120 + (48 * i), 0);
+		s_hpBar.DrawSprite(120.0f + float(48 * i), 0);
 	}
-	s_CtrlImage.DrawSprite(1056, 558);
-	float cx = 1280.0f / 2;
-	float cy = 720.0f / 4;
-	s_sight.DrawExtendSprite(cx - 48, cy - 48, cx + 48, cy + 48);
+	s_CtrlImage.DrawSprite(1056.0f, 558.0f);
+	float cx = 1280.0f / 2.0f;
+	float cy = 720.0f / 4.0f;
+	s_sight.DrawExtendSprite(cx - 48.0f, cy - 48.0f, cx + 48.0f, cy + 48.0f);
 
 	s_hpFont.Draw();
 	s_hpBar.Draw();

@@ -24,7 +24,10 @@ BehaviorActionBase::ACTION_STATE Sword_WaitAct::Run()
 
     //様子を見るようにじわじわ移動する
     enemy->pos += moveVec;
-    enemy->swordObject->SetAffineParamRotate(degreeRotate(enemy->player->pos, enemy->pos));
+    lookVec = enemy->player->pos - enemy->pos;
+
+    float angle = atan2f(lookVec.x, lookVec.z);
+    enemy->swordObject->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
     return actionState;
 }
@@ -36,6 +39,7 @@ void Sword_WaitAct::Init()
     moveVec.zero();
 
     moveVec = enemy->player->pos - enemy->pos;
+    lookVec = moveVec;
     moveVec = moveVec.norm();
 
     //xzについて、90度曲げたベクトルを作る
@@ -45,7 +49,7 @@ void Sword_WaitAct::Init()
 
     moveVec = rotVec;
     moveVec.y = 0.0f;
-    moveVec *= 0.8;
+    moveVec *= 0.8f;
 
     actScriptName = "waitAction";
 }
@@ -89,6 +93,9 @@ BehaviorActionBase::ACTION_STATE Sword_AttackAct::Run()
         }
     }
 
+    RVector3 lookVec = enemy->player->pos - enemy->pos;
+    float angle = atan2f(lookVec.x, lookVec.z);
+    enemy->swordObject->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
     return actionState;
 }
@@ -146,12 +153,17 @@ void Sword_ChargeAct::Init()
     endPos = enemy->player->pos + (enemy->player->pos - enemy->pos);
 
     //
-    chargeVec = enemy->player->pos - enemy->pos;
+    chargeVec = enemy->player->object3d->position - enemy->pos;
     chargeVec = chargeVec.norm();
 
     actScriptName = "chargeAct";
 
     isAtkEnable = true;
+
+    RVector3 lookVec = enemy->player->pos - enemy->pos;
+
+    float angle = atan2f(lookVec.x, lookVec.z);
+    enemy->swordObject->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
     frame = 0;
 }
@@ -171,6 +183,10 @@ BehaviorActionBase::ACTION_STATE Sword_ApproachingAct::Run()
     if (distance(enemy->pos, enemy->player->pos) < 50.0f) {
         actionState = BehaviorActionBase::ACTION_STATE::SUCCESS;
     }
+
+    RVector3 lookVec = enemy->player->pos - enemy->pos;
+    float angle = atan2f(lookVec.x, lookVec.z);
+    enemy->swordObject->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
     return actionState;
 }

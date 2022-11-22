@@ -1,12 +1,19 @@
 #pragma once
 
 #include "SwordEnemy.h"
+#include "GunEnemy.h"
 #include "Player.h"
 #include <Sprite.h>
 
 #include <vector>
 
 //敵の生成、更新、描画を担うクラス
+
+enum class WAVE_STATUS
+{
+	WAVE_STANDBY,
+	WAVE_RUN,
+};
 
 class EnemyManager
 {
@@ -37,8 +44,14 @@ public:
 	int killCount;
 	//ウェーブ数カウント
 	int waveCount = 0;
-	//ウェーブごとのキルカウント
+	//そのウェーブでキルしないといけないキル数
 	int waveKillCount = 1;
+	//グループ数
+	int killedGroup = 0;
+	int waveKillGroupAssignment = 0;
+
+	//クリアフラグ
+	bool gameCleared = false;
 
 private:
 
@@ -46,6 +59,8 @@ private:
 
 	//デバッグ用複製元
 	SwordEnemy* swordEnemyMother;
+
+	GunEnemy* gunEnemy;
 
 	//敵情報格納コンテナ
 	std::vector<SwordEnemy*> swordEnemys;
@@ -76,6 +91,13 @@ private:
 
 	bool isWaveMoving = false;
 
+	//ウェーブ管理
+
+	const int WAVE_GROUP_MAX_SPAWN = 8;
+	const int WAVE_GROUP_MIN_SPAWN = 4;
+	//グループ出現中心
+	RVector3	groupSpawnPos;
+	const float groupSpawnRad = 64.0f;
 
 };
 

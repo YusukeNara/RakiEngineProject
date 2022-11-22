@@ -64,6 +64,7 @@ public:
 	int frame = 0;
 
 	RVector3 moveVec;
+	RVector3 lookVec;
 };
 
 

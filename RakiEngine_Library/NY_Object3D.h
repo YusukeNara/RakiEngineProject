@@ -113,15 +113,17 @@ public:
 
 	void CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum);
 
+	//アフィン変換情報
+	RVector3 scale = { 1,1,1 };
+	RVector3 rotation = { 0,0,0 };
+	RVector3 position = { 0,0,0 };
+
 private:
 	// モデルデータ（ほかのオブジェクトでモデルデータは同一のものを使う場合に備えて、shared_ptrを使用）
 	shared_ptr<Model3D> model;
 	shared_ptr<fbxModel> fbxmodel;
 
-	//アフィン変換情報
-	RVector3 scale = { 1,1,1 };
-	RVector3 rotation = { 0,0,0 };
-	RVector3 position = { 0,0,0 };
+
 	//ワールド変換行列
 	XMMATRIX matWorld;
 

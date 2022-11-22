@@ -18,6 +18,7 @@
 #include <Quaternion.h>
 #include "GroundObject.h"
 #include "BuildingObject.h"
+#include "SkyBoxObject.h"
 
 enum NowState {
     title,
@@ -55,7 +56,7 @@ public:
     EnemyManager emanager;
 
     //タイトル、オーバー
-    Sprite titleSprite, overSprite;
+    Sprite titleSprite, overSprite, clearSprite;
 
     RVector3 hitPos;
 
@@ -64,5 +65,7 @@ public:
     GroundObject gobject;
 
     std::array<BuildingObject,10> build;
+
+    std::array<SkyBoxObject, 5> sky;
 };
 

@@ -64,6 +64,7 @@ void SwordEnemy::Init()
 	s_object.bodyColision.center = s_object.pos;
 	s_object.bodyColision.rad = 10.0f;
 
+	s_object.swordObject->SetAffineParamScale(RVector3(10.0f, 10.0f, 10.0f));
 }
 
 void SwordEnemy::Update()
@@ -71,12 +72,21 @@ void SwordEnemy::Update()
 	//ツリーの実行
 	swordEnemyTree.Run();
 	s_object.bodyColision.center = s_object.pos;
+	if (s_object.bodyColision.center.y < 10) { 
+		s_object.bodyColision.center.y = 10;
+		s_object.pos.y = 10; 
+	}
+	else if (s_object.bodyColision.center.y > 10) {
+		s_object.bodyColision.center.y = 10;
+		s_object.pos.y = 10;
+	}
+
 }
 
 void SwordEnemy::Draw()
 {
 	//パラメータセット
-	s_object.swordObject->SetAffineParam(RVector3(10.0f, 10.0f, 10.0f), RVector3(0, 270, 0), s_object.pos);
+	s_object.swordObject->SetAffineParamTranslate(s_object.pos);
 	s_object.swordObject->DrawObject();
 }
 

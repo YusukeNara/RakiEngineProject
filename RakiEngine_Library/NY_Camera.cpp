@@ -47,7 +47,7 @@ void NY_Camera::SetProjecion()
 	_matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(60.0f),
 		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
-		0.1f, 1000.0f
+		0.1f, 2000.0f
 	);
 	_matProjection2D = XMMatrixOrthographicOffCenterLH(
 		0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
@@ -100,6 +100,10 @@ XMMATRIX NY_Camera::GetMatrixViewProjection()
 XMMATRIX NY_Camera::GetMatrixBillBoardAll()
 {
 	return _matBillBoard;
+}
+XMMATRIX NY_Camera::GetMatrixBillBoardY()
+{
+	return _matBillY;
 }
 
 XMMATRIX NY_Camera::GetMatrixProjection()
@@ -358,8 +362,21 @@ void NY_Camera::UpdateViewMat() {
 	camrot.r[2] = axisZ;
 	camrot.r[3] = XMVectorSet(0, 0, 0, 1);
 	//y軸ビルボード計算をここに
+	XMMATRIX ycamrot = XMMatrixIdentity();
+	//Z軸計算
+	XMVECTOR yaxisX = axisX;
+	//x軸計算
+	XMVECTOR yaxisY = XMVector3Normalize(upVec);
+	//y軸計算
+	XMVECTOR yaxisZ = XMVector3Cross(yaxisX, yaxisY);
+
+	ycamrot.r[0] = yaxisX;
+	ycamrot.r[1] = yaxisY;
+	ycamrot.r[2] = yaxisZ;
+	ycamrot.r[3] = XMVectorSet(0, 0, 0, 1);
 
 	//全方向ビルボード計算
-	_matBillBoard = camrot;
+	_matBillBoard	= camrot;
+	_matBillY		= ycamrot;
 
 }

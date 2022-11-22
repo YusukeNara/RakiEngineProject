@@ -31,14 +31,17 @@ protected:
 	//すべてのオブジェクトに必要なもののみ
 	//その他のオブジェクトは派生クラスで定義すること
 
+
+
+public:
 	//描画オブジェクト
 	std::shared_ptr<Object3d>		object3d;
 
-public:
 	//衝突判定
 	std::shared_ptr<BaseCollider>	collider;
-	//変換情報
 
+	//変換情報
+	RVector3 pos;
 
 private:
 

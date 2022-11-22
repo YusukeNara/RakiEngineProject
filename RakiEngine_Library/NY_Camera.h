@@ -24,6 +24,7 @@ private:
 	XMMATRIX _matViewProj;
 	//ビルボード行列
 	XMMATRIX _matBillBoard;
+	XMMATRIX _matBillY;
 	//カメラローカル
 	XMMATRIX _camRocal;
 	//カメラワールド
@@ -106,6 +107,8 @@ public:
 	/// </summary>
 	/// <returns>全方向ビルボード行列返却</returns>
 	XMMATRIX GetMatrixBillBoardAll();
+
+	XMMATRIX GetMatrixBillBoardY();
 
 	/// <summary>
 	/// ビュープロジェクション行列取得

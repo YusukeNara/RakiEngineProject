@@ -12,7 +12,9 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     titleSprite.Create(TexManager::LoadTexture("Resources/TitleFont.png"));
 
-    
+    overSprite.Create(TexManager::LoadTexture("Resources/gameover.png"));
+
+    clearSprite.Create(TexManager::LoadTexture("Resources/ClearSprite.png"));
 
     ////プレイヤー
 
@@ -26,13 +28,22 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     build[0].Load();
 
+    for (int i = 0; i < 5; i++) {
+        sky[i].Init();
+    }
+    sky[0].SetAffinParam(RVector3(90.0f,0.0f,180.0f), RVector3(0,500,500));
+    sky[1].SetAffinParam(RVector3(90.f,0.f,0.f), RVector3(0,500,-500));
+    sky[2].SetAffinParam(RVector3(0.f,0.f,90.f), RVector3(500,500,0));
+    sky[3].SetAffinParam(RVector3(0.f,0.0f,-90.f), RVector3(-500,500,0));
+    sky[4].SetAffinParam(RVector3(180.f, 0.f, 0.f), RVector3(0, 500, 0));
+
     for (int i = 0; i < build.size(); i++) {
         build[i].Init();
         if (i < 5) {
-            build[i].SetBuildingPos(RVector3(100 * i + 250, 0, 0));
+            build[i].SetBuildingPos(RVector3(-400.0f + 100.0f * float(i), 0.0f, 400.0f));
         }
         else {
-            build[i].SetBuildingPos(RVector3(0, 0, -100 * i - 5 - 250));
+            build[i].SetBuildingPos(RVector3(400.0f, 0.0f, 400.0f - 100.0f * float(i)));
         }
 
     }
@@ -76,6 +87,10 @@ void Title::Update() {
         if (pl.hitpoint <= 0) {
             NowSceneState = over;
         }
+        if (emanager.gameCleared) {
+            NowSceneState = clear;
+        }
+
         break;
     case over:
 
@@ -89,6 +104,11 @@ void Title::Update() {
         }
         break;
     case clear:
+        //クリア演出と入力処理
+        if (Input::isXpadButtonPushed(XPAD_BUTTON_B)) {
+            NowSceneState = title;
+        }
+
         break;
     default:
         break;
@@ -102,8 +122,13 @@ void Title::Draw() {
 
     NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
 
+    for (int i = 0; i < 5; i++) {
+        sky[i].Draw();
+    }
+
     emanager.Draw();
     pl.Draw();
+
 
     //ゲーム内制作モデルデータ
     gobject.Draw();
@@ -137,6 +162,10 @@ void Title::Draw() {
         ImGui::Text("F1 : Edit AI");
 
         ImguiMgr::Get()->EndDrawImgui();
+    }
+    if (NowSceneState == clear) {
+        clearSprite.DrawExtendSprite(1280.0f / 4, 720.0f / 2, 1280.0f * 0.75, 720.0f * 0.8);
+        clearSprite.Draw();
     }
 
     emanager.UIDraw();

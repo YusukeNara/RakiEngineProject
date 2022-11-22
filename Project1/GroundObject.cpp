@@ -25,5 +25,5 @@ void GroundObject::OnCollision(ColliderInfo* info)
 
 void GroundObject::Load()
 {
-	object3d.reset(NY_Object3DManager::Get()->CreateModel_Tile(5000, 5000, 50, 50, TexManager::LoadTexture("Resources/blackParticleTex.png")));
+	object3d.reset(NY_Object3DManager::Get()->CreateModel_Tile(5000, 5000, 10, 10, TexManager::LoadTexture("Resources/asp3.png")));
 }

@@ -66,6 +66,7 @@
       <EnableModules>false</EnableModules>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,11 +104,14 @@
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GroundObject.cpp" />
+    <ClCompile Include="GunEnemy.cpp" />
+    <ClCompile Include="GunEnemyNodes.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SkyBoxObject.cpp" />
     <ClCompile Include="SwordEnemy.cpp" />
     <ClCompile Include="SwordEnemyNodes.cpp" />
     <ClCompile Include="testParticle.cpp" />
@@ -245,10 +249,13 @@
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GroundObject.h" />
+    <ClInclude Include="GunEnemy.h" />
+    <ClInclude Include="GunEnemyNodes.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raki_Camera.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SkyBoxObject.h" />
     <ClInclude Include="SwordEnemy.h" />
     <ClInclude Include="SwordEnemyNodes.h" />
     <ClInclude Include="Task.h" />

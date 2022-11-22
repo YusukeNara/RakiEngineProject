@@ -85,14 +85,13 @@ void Object3d::SetAffineParam(RVector3 scale, RVector3 rot, RVector3 trans)
 
 	//ダーティフラグが有効のとき
 	if (isDirty == true) {
-		UpdateObject3D();
-		////条件に応じてパラメータ更新
-		//if (isBillBoard != true) {
-
-		//}
-		//else {
-		//	UpdateBillBoard3D();
-		//}
+		//条件に応じてパラメータ更新
+		if (isBillBoard != true) {
+			UpdateObject3D();
+		}
+		else {
+			UpdateBillBoard3D();
+		}
 	}
 }
 
@@ -124,6 +123,11 @@ void Object3d::SetAffineParamTranslate(RVector3 trans)
 
 void Object3d::UpdateObject3D()
 {
+	if (isBillBoard) {
+		UpdateBillBoard3D();
+		return;
+	}
+
 	XMMATRIX matScale, matRot, matTrans;
 
 	// スケール、回転、平行行列の計算
@@ -205,7 +209,7 @@ void Object3d::UpdateBillBoard3D()
 
 	matWorld = XMMatrixIdentity();
 
-	matWorld *= camera->GetMatrixBillBoardAll();
+	matWorld *= camera->GetMatrixBillBoardY();
 
 	matWorld *= matScale;
 	matWorld *= matRot;
@@ -248,7 +252,13 @@ void Object3d::UpdateBillBoard3D()
 
 void Object3d::DrawObject()
 {
-	UpdateObject3D();
+	if (isBillBoard) {
+		UpdateBillBoard3D();
+	}
+	else {
+		UpdateObject3D();
+	}
+
 
 	if (isThisModel == MODEL_DATA_FBX) {
 		//定数バッファ設定
