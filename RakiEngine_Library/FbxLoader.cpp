@@ -262,7 +262,9 @@ void FbxLoader::ParseMaterial(fbxModel* model, FbxNode* node)
 
                     model->material.texNumber = TexManager::LoadTexture(baseDir + folderPass + name);
 
-                    textureLoaded = true;
+                    if (model->material.texNumber != -1) {
+                        textureLoaded = true;
+                    }
                 }
             }
         }

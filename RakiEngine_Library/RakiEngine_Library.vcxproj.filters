@@ -91,6 +91,9 @@
     <Filter Include="object">
       <UniqueIdentifier>{c33c6641-3922-4708-b839-08b8d01bda6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Behavior\Navigation">
+      <UniqueIdentifier>{a9b11ca7-e184-4d58-a91f-06161dd44417}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -227,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshAstar.cpp">
+      <Filter>Behavior\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMash.cpp">
+      <Filter>Behavior\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -385,6 +394,15 @@
     </ClInclude>
     <ClInclude Include="ModelDataManager.h">
       <Filter>Graphic\3D\modelData</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMash.h">
+      <Filter>Behavior\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshAstar.h">
+      <Filter>Behavior\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshTestData.h">
+      <Filter>Behavior\Navigation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

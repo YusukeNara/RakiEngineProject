@@ -1,9 +1,10 @@
 #pragma once
 
-#include "NY_Object3DMgr.h"
 #include "RVector.h"
 #include "ColliderShapeType.h"
 #include "ColliderInfo.h"
+
+class GameObject;
 
 //コライダー基底クラス
 class BaseCollider
@@ -12,11 +13,13 @@ public:
 	BaseCollider()			= default;
 	virtual ~BaseCollider()	= default;
 
-	inline void SetObject(Object3d* object) {
+	inline void SetObject(GameObject* object) {
 		this->object = object;
 	}
 
-	inline Object3d *GetObject3d() { return object; }
+	GameObject *GetObject3d() { 
+		return object; 
+	}
 
 	virtual void Update() = 0;
 
@@ -26,7 +29,7 @@ public:
 
 protected:
 	// コライダー登録オブジェクト
-	Object3d* object;
+	GameObject* object;
 
 	// コライダーの種類
 	COLIDER_TYPE type = COLIDER_TYPE_UNKNOWN;

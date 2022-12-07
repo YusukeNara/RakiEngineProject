@@ -60,6 +60,8 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="ModelDataManager.cpp" />
+    <ClCompile Include="NavMash.cpp" />
+    <ClCompile Include="NavMeshAstar.cpp" />
     <ClCompile Include="NY_Camera.cpp" />
     <ClCompile Include="NY_Model.cpp" />
     <ClCompile Include="NY_Object3D.cpp" />
@@ -112,6 +114,9 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="ModelDataManager.h" />
+    <ClInclude Include="NavMash.h" />
+    <ClInclude Include="NavMeshAstar.h" />
+    <ClInclude Include="NavMeshTestData.h" />
     <ClInclude Include="NY_Camera.h" />
     <ClInclude Include="NY_Model.h" />
     <ClInclude Include="NY_Object3D.h" />

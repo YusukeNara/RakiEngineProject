@@ -10,7 +10,7 @@ class BehaviorJudgeBase;
 //ビヘイビアのノード
 //ここにactionBase,JudgeBaseのポインタを入れて実行する
 //アプリケーション側ではこいつのポインタにスクリプトを入れて実行する
-//無駄が多い
+//無駄が多いから改善の余地あり
 class BehaviorBaseNode
 {
 public:

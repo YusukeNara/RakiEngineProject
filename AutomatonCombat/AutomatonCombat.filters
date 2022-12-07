@@ -1,0 +1,270 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{2d7d4fd8-b565-45e6-ab91-2b181e55fa14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App">
+      <UniqueIdentifier>{4929d392-8a34-4f4c-9659-d8a790d4c56b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Scene">
+      <UniqueIdentifier>{8b67d443-4c03-408b-ae84-822d8a498f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\SceneManager">
+      <UniqueIdentifier>{8b475cfe-bd12-4f5e-8d61-e4e0867240cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utility">
+      <UniqueIdentifier>{7844a2a8-3e17-49f6-aadd-481c074d81c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Particle">
+      <UniqueIdentifier>{f93d3483-c9ca-4a33-ad9c-547fe055e693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl">
+      <UniqueIdentifier>{a6aed411-17e5-4956-9d7f-7791515c3cfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl\OBJ">
+      <UniqueIdentifier>{f4676a62-12fd-4019-a34d-e46070847a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl\Sprite">
+      <UniqueIdentifier>{e5db94a9-bbc0-4833-a822-94c2acc8e127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl\Particle">
+      <UniqueIdentifier>{2886e826-dede-4a4f-a88e-eda490946fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\hlsl\SmartDraw">
+      <UniqueIdentifier>{c3e8d480-a305-4663-b7c4-27452c99cbee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Basic">
+      <UniqueIdentifier>{0924d464-474a-4d5b-9f85-a62b2e591306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Enemys">
+      <UniqueIdentifier>{1e3ca0d3-c3c9-4b19-bc44-59c6245a265f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Raki_Camera.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseScene.cpp">
+      <Filter>App\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>App\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>App\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>App\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneChanger.cpp">
+      <Filter>App\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="testParticle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordEnemy.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordEnemyNodes.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="BuildingObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxObject.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GunEnemy.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+    <ClCompile Include="GunEnemyNodes.cpp">
+      <Filter>App\Enemys</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="BasicPS.hlsl">
+      <Filter>Engine\Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicVS.hlsl">
+      <Filter>Engine\Basic</Filter>
+    </FxCompile>
+    <FxCompile Include="SmartDrawVS.hlsl">
+      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
+    </FxCompile>
+    <FxCompile Include="SmartDrawPS.hlsl">
+      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
+    </FxCompile>
+    <FxCompile Include="SmartDrawGS.hlsl">
+      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
+      <Filter>リソース ファイル\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticlePS.hlsl">
+      <Filter>リソース ファイル\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticleVS.hlsl">
+      <Filter>リソース ファイル\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\mpPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\mpVertexShader.hlsl">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\mpEffectPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpritePS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteGS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteSepiaPS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJGeometryShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJVertexShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\LIT_OBJPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\LIT_OBJVertexShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJPixelShader.hlsl">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteLineGS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Basic.hlsli">
+      <Filter>Engine\Basic</Filter>
+    </None>
+    <None Include="SmartDrawShaderHeader.hlsli">
+      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
+    </None>
+    <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
+      <Filter>リソース ファイル\hlsl\Particle</Filter>
+    </None>
+    <None Include="Resources\Shaders\mpShaderHeader.hlsli">
+      <Filter>リソース ファイル\hlsl</Filter>
+    </None>
+    <None Include="Resources\Shaders\Sprite.hlsli">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </None>
+    <None Include="Resources\Shaders\OBJShaderHeader.hlsli">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </None>
+    <None Include="Resources\Shaders\LIT_OBJHeader.hlsli">
+      <Filter>リソース ファイル\hlsl\OBJ</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test_LayHitCheck.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Raki_Camera.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseScene.h">
+      <Filter>App\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneChanger.h">
+      <Filter>App\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>App\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>App\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>App\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="testParticle.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordEnemy.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordEnemyNodes.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="GroundObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingObject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxObject.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GunEnemy.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+    <ClInclude Include="GunEnemyNodes.h">
+      <Filter>App\Enemys</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="engine.ico">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

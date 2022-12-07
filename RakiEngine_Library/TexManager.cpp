@@ -62,6 +62,7 @@ UINT TexManager::LoadTexture(const char *filename)
         std::wstringstream stream;
         stream << std::system_category().message(result).c_str() << std::endl;
         OutputDebugString(stream.str().c_str());
+        return -1;
     }
 
     // テクスチャバッファ生成
@@ -92,6 +93,7 @@ UINT TexManager::LoadTexture(const char *filename)
         std::wstringstream stream;
         stream << std::system_category().message(result).c_str() << std::endl;
         OutputDebugString(stream.str().c_str());
+        return -1;
     }
 
     //テクスチャバッファへのデータ転送
@@ -107,6 +109,7 @@ UINT TexManager::LoadTexture(const char *filename)
         std::wstringstream stream;
         stream << std::system_category().message(result).c_str() << std::endl;
         OutputDebugString(stream.str().c_str());
+        return -1;
     }
 
     //シェーダーリソースビュー設定

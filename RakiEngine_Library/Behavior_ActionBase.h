@@ -3,9 +3,6 @@
 #include <string>
 
 //アクション基底クラス
-
-//実際どんな動きをするかを派生クラスで定義するべきだが
-//それをどう実現したらいいかわからん...
 class BehaviorActionBase
 {
 public:
