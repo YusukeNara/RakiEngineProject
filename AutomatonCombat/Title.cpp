@@ -3,6 +3,7 @@
 #include "TexManager.h"
 
 #include "NY_random.h"
+#include "WaveDirections.h"
 
 #include <AI_BehaviorBaseNode.h>
 
@@ -53,6 +54,20 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     pl.Update();
 
     emanager.Update();
+
+    stage.Init();
+
+    WaveDirections::Get()->Init();
+
+    t_frame = 0;
+
+    nData.LoadNavMesh("Resources/NavMeshTestData.txt");
+    astar.SetNavMeshData(nData.navMeshData);
+    std::vector<NavMesh> result;
+    astar.NavMeshSearchAstar(nData.navMeshData[2], nData.navMeshData[10], result);
+
+    NavMesh stand;
+    astar.NowStandingMesh(RVector3(50, 0, 50), stand);
 }
 
 Title::~Title()
@@ -76,13 +91,20 @@ void Title::Update() {
     switch (NowSceneState)
     {
     case title:
+        t_frame = 0;
         if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
+
             pl.Reset();
             emanager.Reset();
             NowSceneState = game; 
+            WaveDirections::Get()->PlayNextWaveDir();
         }
         break;
     case game:
+
+        if (t_frame < 60) {
+            t_frame++;
+        }
 
         gobject.Update();
 
@@ -102,15 +124,18 @@ void Title::Update() {
             pl.Reset();
             emanager.Reset();
             NowSceneState = game; 
+            t_frame = 0;
         }
         else if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_B)) { 
             NowSceneState = title; 
+            t_frame = 0;
         }
         break;
     case clear:
         //クリア演出と入力処理
         if (Input::isXpadButtonPushed(XPAD_BUTTON_B)) {
             NowSceneState = title;
+            t_frame = 0;
         }
 
         break;
@@ -119,6 +144,8 @@ void Title::Update() {
     }
 
     gobject.Update();
+
+    WaveDirections::Get()->Update();
 }
 
 //描画
@@ -136,9 +163,8 @@ void Title::Draw() {
 
     //ゲーム内制作モデルデータ
     gobject.Draw();
-    for (auto& b : build) {
-        b.Draw();
-    }
+
+    //stage.Draw();
 
     //ロードモデルデータ
 
@@ -146,10 +172,15 @@ void Title::Draw() {
 
     diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer);
 
+    pl.ParticleDraw();
+
     SpriteManager::Get()->SetCommonBeginDraw();
 
+    float rate = (float)t_frame / 60;
+    t_pos = Rv3Ease::InQuad(t_center,t_up,rate);
+
     if (NowSceneState == title) { 
-        titleSprite.DrawExtendSprite(1280.0f / 4, 720.0f / 4, 1280.0f * 0.75, 720.0f * 0.75);
+        titleSprite.DrawExtendSprite(t_pos.x - 300.f, t_pos.y - 100.f, t_pos.x + 300.f, t_pos.y + 100.f);
         titleSprite.Draw();
     }
     if (NowSceneState == over) {
@@ -157,6 +188,10 @@ void Title::Draw() {
         overSprite.Draw();
     }
     if (NowSceneState == game) {
+        if(t_frame < 60){
+            titleSprite.DrawExtendSprite(t_pos.x - 300.f, t_pos.y - 100.f, t_pos.x + 300.f, t_pos.y + 100.f);
+            titleSprite.Draw();
+        }
         pl.UiDraw();
         ImguiMgr::Get()->StartDrawImgui("State", 100, 100);
 
@@ -173,6 +208,8 @@ void Title::Draw() {
     }
 
     emanager.UIDraw();
+
+    WaveDirections::Get()->Draw();
 
     emanager.DebugDraw();
 

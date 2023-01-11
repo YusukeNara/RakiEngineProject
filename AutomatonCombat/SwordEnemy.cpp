@@ -37,6 +37,7 @@ SwordEnemy::SwordEnemy(Player* player)
 	editor.AddEditData_Node(approachNode);
 	editor.AddEditData_Node(chargeNode);
 
+
 }
 
 SwordEnemy::~SwordEnemy()

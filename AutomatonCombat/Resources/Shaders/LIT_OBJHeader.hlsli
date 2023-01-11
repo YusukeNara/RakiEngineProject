@@ -7,6 +7,11 @@ cbuffer cbuff0 : register(b0)
     float3 eyePos : packoffset(c0);
 }
 
+cbuffer cbuff1 : register(b1)
+{
+    float3 dirLight;
+}
+
 
 struct VSOutput
 {

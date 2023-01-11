@@ -5,16 +5,13 @@
 
 class BaseCollider;
 class Object3d;
+class GameObject;
 
 class ColliderInfo
 {
 public:
-	ColliderInfo(Object3d* obj, BaseCollider* colider, RVector3 inter,std::string tag);
+	ColliderInfo(RVector3 inter,std::string tag);
 
-	//衝突したオブジェクト
-	Object3d* object;
-	//衝突したコライダー
-	BaseCollider* colider;
 	//衝突点
 	RVector3 inter;
 	//タグ名

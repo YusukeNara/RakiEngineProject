@@ -17,6 +17,12 @@ struct cbuffer_b0
 	float pad;					//パディング
 };
 
+struct cbuffer_b1
+{
+	DirectX::XMFLOAT3 lightDir;
+	float pad;
+};
+
 class DiferredRenderingMgr
 {
 private:
@@ -60,6 +66,7 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW	m_vbview;		//VBV
 	//定数バッファ（カメラ視点座標）
 	ComPtr<ID3D12Resource>		m_constBuffEyePos;
+	ComPtr<ID3D12Resource>		m_constBuffDirLight;
 
 };
 

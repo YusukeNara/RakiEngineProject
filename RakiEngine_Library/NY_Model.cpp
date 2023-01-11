@@ -360,10 +360,10 @@ void Model3D::CreatePlaneModelXZ(float x_size, float z_size, float uv_x, float u
 	else {
 		//頂点データ作成
 		Vertex plane[4] = {
-			{{-x_size,0,-z_size},{1.0f,-1.0f,1.0f},{0.0f,0.0f}},
-			{{ x_size,0,-z_size},{1.0f,-1.0f,1.0f},{uv_x,0.0f}},
-			{{-x_size,0, z_size},{1.0f,-1.0f,1.0f},{0.0f,uv_y}},
-			{{ x_size,0, z_size},{1.0f,-1.0f,1.0f},{uv_x,uv_y}},
+			{{-x_size,0,-z_size},{0.0f, 1.0f,0.0f},{0.0f,0.0f}},
+			{{ x_size,0,-z_size},{0.0f, 1.0f,0.0f},{uv_x,0.0f}},
+			{{-x_size,0, z_size},{0.0f, 1.0f,0.0f},{0.0f,uv_y}},
+			{{ x_size,0, z_size},{0.0f, 1.0f,0.0f},{uv_x,uv_y}},
 		};
 		//頂点データ格納
 		for (int i = 0; i < 4; i++)

@@ -19,6 +19,10 @@
 #include "GroundObject.h"
 #include "BuildingObject.h"
 #include "SkyBoxObject.h"
+#include "Stage.h"
+
+#include <NavMeshData.h>
+#include <NavMeshAstar.h>
 
 enum NowState {
     title,
@@ -57,6 +61,10 @@ public:
 
     //タイトル、オーバー
     Sprite titleSprite, overSprite, clearSprite;
+    int t_frame = 0;
+    RVector3 t_center = { 640.f,360.f,0 };
+    RVector3 t_up = { 640.f,-180.f,0 };
+    RVector3 t_pos;
 
     RVector3 hitPos;
 
@@ -67,5 +75,10 @@ public:
     std::array<BuildingObject,10> build;
 
     std::array<SkyBoxObject, 5> sky;
+
+    NavMeshData nData;
+    NavMeshAstar astar;
+    
+    StageObjects stage;
 };
 

@@ -6,6 +6,7 @@
 #include "Player.h"
 #include <string>
 #include <GameObject.h>
+#include <NavMeshAstar.h>
 
 class Gun_WaitJudge : public BehaviorJudgeBase
 {
@@ -28,10 +29,11 @@ public:
 class Gun_WaitAct : public BehaviorActionBase
 {
 public:
-	Gun_WaitAct(GameObject* object, Player* player, RVector3 *pos) {
+	Gun_WaitAct(GameObject* object, Player* player, RVector3 *pos,NavMeshAstar *na) {
 		this->object = object;
 		this->player = player;
 		this->pos = pos;
+		this->navAstar = na;
 		Init();
 	}
 
@@ -47,6 +49,8 @@ public:
 	RVector3 moveVec;
 
 	RVector3 *pos;
+
+	NavMeshAstar* navAstar;
 };
 
 

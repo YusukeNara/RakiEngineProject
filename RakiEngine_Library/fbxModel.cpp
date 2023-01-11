@@ -2,6 +2,13 @@
 
 #include <iostream>
 
+const int fbxModel::BONE_INDICES_MAX;
+
+fbxModel::~fbxModel()
+{
+	//fbxScene->Destroy();
+}
+
 void fbxModel::CreateBuffers()
 {
 	HRESULT result;

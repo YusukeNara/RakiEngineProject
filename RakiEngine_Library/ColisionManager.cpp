@@ -51,6 +51,7 @@ void CollisionManager::CheckCollisionSphereTo(BaseCollider* sphere, BaseCollider
 	switch (colB->GetColliderType())
 	{
 	case COLIDER_TYPE_AABB:
+
 		break;
 
 	case COLIDER_TYPE_PLANE:
@@ -68,6 +69,9 @@ void CollisionManager::CheckCollisionSphereTo(BaseCollider* sphere, BaseCollider
 		b = dynamic_cast<SphereCollider*>(colB);
 
 		if (RV3Colider::Colision2Sphere(a->sphere, b->sphere)) {
+
+
+
 			
 
 		}

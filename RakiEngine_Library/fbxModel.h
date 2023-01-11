@@ -11,6 +11,7 @@
 
 #include <Windows.h>
 #include <wrl.h>
+#include <fbxsdk.h>
 
 #include <string>
 #include <vector>
@@ -35,6 +36,19 @@ struct fbxVertex
 	DirectX::XMFLOAT3 pos;   //xyz
 	DirectX::XMFLOAT3 normal;//法線
 	DirectX::XMFLOAT2 uv;    //uv
+	UINT boneIndex[4];
+	float boneWeight[4];
+};
+
+struct Bone
+{
+	std::string name;
+	DirectX::XMMATRIX invInitialBone;
+	FbxCluster* fbxCluster;
+	Bone(std::string name) {
+		this->name = name;
+	}
+
 };
 
 //マテリアルデータ構造体
@@ -71,8 +85,12 @@ private:
 	using string = std::string;
 	template <class T> using vector = std::vector<T>;
 
+
+
 public:
 	friend class FbxLoader;
+	fbxModel(){}
+	~fbxModel();
 
 	void CreateBuffers();
 
@@ -82,11 +100,18 @@ public:
 
 	inline const fbxMaterial& GetMaterial() { return material; }
 
+	inline std::vector<Bone>& GetBones() { return bones; }
+
+	FbxScene* GetFbxScene() { return fbxScene; }
+
+	static const int BONE_INDICES_MAX = 4;
+
 private:
 	//モデル名
 	std::string name;
 
 	std::vector<Node> nodes;
+	std::vector<Bone> bones;
 
 	Node* meshNode = nullptr;
 
@@ -94,12 +119,14 @@ private:
 	ComPtr<ID3D12Resource> vertbuff;
 
 	std::vector<unsigned short> indices;
-	ComPtr<ID3D12Resource> indexbuff;
+	ComPtr<ID3D12Resource>		indexbuff;
 
 	D3D12_VERTEX_BUFFER_VIEW vbview = {};
 	D3D12_INDEX_BUFFER_VIEW ibview = {};
 
 	fbxMaterial material;
+
+	FbxScene* fbxScene = nullptr;
 };
 
 #pragma warning (pop)

@@ -15,7 +15,7 @@ public:
 	void Draw()		override;
 	void Finalize() override;
 	void Load() override;
-	void OnCollision(ColliderInfo* info) override;
+	void OnCollision(const ColliderInfo* info) override;
 
 	void SetPlayer(Player* player);
 
@@ -42,6 +42,9 @@ public:
 	std::shared_ptr<Model3D> bModel;
 
 	std::shared_ptr<Object3d> hpBarModel;
+
+	NavMeshData nData;
+	NavMeshAstar astar;
 
 	bool isAlive = false;
 

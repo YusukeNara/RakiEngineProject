@@ -7,6 +7,8 @@
 
 #include <vector>
 
+#include "EnemyDefeatEffect.h"
+
 //敵の生成、更新、描画を担うクラス
 
 enum class WAVE_STATUS
@@ -99,5 +101,9 @@ private:
 	RVector3	groupSpawnPos;
 	const float groupSpawnRad = 64.0f;
 
+	ParticleManager* m_defeatPM;
+	DefeatParticle* m_defeatP;
+
+	int defeatPtex;
 };
 

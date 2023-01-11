@@ -94,6 +94,11 @@ float CalcAccelToFramePerVel(float onesecmove);
 
 float CalcGravity(float start, float end, float v0, int time, float& v1);
 
+inline RVector3 CalcTriangleCenter(RVector3 v1, RVector3 v2, RVector3 v3) {
+
+	return RVector3((v1.x + v2.x + v3.x) / 3, (v1.y + v2.y + v3.y) / 3, (v1.z + v2.z + v3.z) / 3);
+}
+
 inline RVector3 CalcRVector3Rotate(RVector3& rotateEuler, RVector3& rotateVec) {
 
 	XMMATRIX matRot = XMMatrixIdentity();
@@ -297,9 +302,6 @@ namespace RV3Colider {
 	}
 
 	bool ColisionRayToAABB(Ray& ray, const Rv3AABB& box, float* distance = nullptr, RVector3* colisionPos = nullptr);
-
-
-
 
 	//ŽOŠpŒ`
 	class Triangle {

@@ -2,12 +2,17 @@
 
 void GunEnemy::Init()
 {
+	nData.LoadNavMesh("Resources/NavMeshTestData.txt");
+	astar.SetNavMeshData(nData.navMeshData);
+	std::vector<NavMesh> result;
+	astar.NavMeshSearchAstar(nData.navMeshData[0], nData.navMeshData[10], result);
+
 	rootNode = new BehaviorBaseNode;
 	shotNode = new BehaviorBaseNode;
 	waitNode = new BehaviorBaseNode;
 
 	gun_wjudgeNode = new Gun_WaitJudge(this, player,&this->pos);
-	gun_wactNode = new Gun_WaitAct(this, player ,&this->pos);
+	gun_wactNode = new Gun_WaitAct(this, player, &this->pos, &astar);
 	gun_sactNode = new Gun_ShotAct(this, player, &this->pos);
 	gunsjudgeNode = new Gun_ShotJudge(this, player, &this->pos);
 
@@ -34,6 +39,8 @@ void GunEnemy::Init()
 	isAlive = false;
 
 	bullet.Init();
+
+
 }
 
 void GunEnemy::Update()
@@ -70,7 +77,7 @@ void GunEnemy::Load()
 {
 }
 
-void GunEnemy::OnCollision(ColliderInfo* info)
+void GunEnemy::OnCollision(const ColliderInfo* info)
 {
 }
 

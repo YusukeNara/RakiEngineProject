@@ -81,6 +81,7 @@ private:
 	ComPtr<ID3DBlob> obj_VS;
 	ComPtr<ID3DBlob> obj_GS;
 	ComPtr<ID3DBlob> obj_PS;
+	ComPtr<ID3DBlob> fbx_VS;
 
 	//シェーダーオブジェクト（即時描画用）
 	ComPtr<ID3DBlob> qd_BoxGS;
@@ -99,6 +100,8 @@ private:
 	Pipeline3D m_diferredRenderingPipeline;
 	//ディファードレンダリング用ステート構造体
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC m_diferredRenderingStateDesc;
+	//FBX用のパイプラインステートがいるらしい...
+	Pipeline3D m_fbxPipeline;
 
 	//GBuffer(RTex)
 public:
@@ -164,6 +167,10 @@ public:
 
 	void SetCommonBeginDrawObject3DFeatRTex(int rtHandle);
 
+	void SetRestartObject3D();
+
+	void SetCommonBeginDrawFBX();
+
 	void SetCommonBeginDrawObject3DFeatRTex(RTex* rt);
 
 	void SetCommonBeginDrawObject3D2MultiPassRenderResource();
@@ -196,6 +203,8 @@ private:
 	Pipeline3D CreateMPPipelineState(Pipeline3D defaultPP);
 
 	Pipeline3D CreateDiferredRenderingPipelineState();
+
+	Pipeline3D CreateFbxPipeline();
 
 };
 

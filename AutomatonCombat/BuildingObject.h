@@ -17,7 +17,7 @@ public:
 
     void Finalize() override;
 
-    void OnCollision(ColliderInfo* info) override;
+    void OnCollision(const ColliderInfo *info) override;
 
     void Load() override;
 

@@ -17,3 +17,10 @@ struct GSOutput
     float2 uv    : TEXCOORD;    //uvíl
     float4 color : COLOR;       //êFèÓïÒ
 };
+
+struct PSOutput
+{
+    float4 pixel_color  : SV_TARGET0;
+    float4 normal       : SV_TARGET1;
+    float4 worldPos     : SV_TARGET2;
+};

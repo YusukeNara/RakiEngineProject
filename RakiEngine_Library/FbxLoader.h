@@ -41,6 +41,8 @@ public:
 
 	void ParseMesh(fbxModel* model, FbxNode* fbxnode);
 
+	void ConvertMatrixFromFbx(DirectX::XMMATRIX* dst, const FbxAMatrix& src);
+
 private:
 	// privateなコンストラクタ（シングルトンパターン）
 	FbxLoader() = default;
@@ -58,6 +60,10 @@ private:
 	void ParseMeshFaces(fbxModel* model, FbxMesh* mesh);
 
 	void ParseMaterial(fbxModel* model, FbxNode* node);
+
+	
+
+	void ParseSkin(fbxModel* model, FbxMesh* fbxMesh);
 
 	
 	//テクスチャはテクスチャマネージャーのしごと

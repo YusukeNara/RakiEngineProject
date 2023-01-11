@@ -126,6 +126,9 @@ public:
 	//バックバッファへの描画を開始（レンダーテクスチャへ描画している時）
 	void SetDrawBackBuffer();
 
+	//デプスのみを設定
+	void SetDSV(RTex* gBuffer);
+
 	//スワップチェーン用バッファをフリップし、現在フレームでの描画終了コマンド実行
 	void SwapChainBufferFlip();
 

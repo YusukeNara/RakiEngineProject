@@ -6,6 +6,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <ParticleManager.h>
 
 #include "Bullet.h"
 
@@ -18,6 +19,7 @@ public:
 	Sprite s_CtrlImage;
 	Sprite s_sight;
 	Sprite s_numFont;
+	Sprite s_noammo;
 
 	//弾関係
 	std::shared_ptr<Model3D> bulletModel;
@@ -54,6 +56,8 @@ public:
 	const int HEAL_COOLTIME = 180;
 	float redEffectScale = 0.0f;
 
+	RVector3 l_rot;
+
 
 	Player();
 	~Player();
@@ -80,12 +84,13 @@ public:
 	void Update()	override;
 	void Draw()		override;
 	void UiDraw();
+	void ParticleDraw();
 	void DebugDraw();
 	//終了
 	void Finalize() override;
 
 	void Load() override;
-	void OnCollision(ColliderInfo* info) override;
+	void OnCollision(const ColliderInfo* info) override;
 
 	//ダメージ処理
 	void PlayerDamaged(int damage);

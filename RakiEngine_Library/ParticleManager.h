@@ -153,6 +153,9 @@ private:
 
 
 public:
+	ParticleManager() {};
+	~ParticleManager() {};
+
 	/// <summary>
 	/// パーティクルマネージャー生成
 	/// </summary>

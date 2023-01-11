@@ -60,6 +60,9 @@
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
       <Filter>Resources</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\FBXVertexShader.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_Camera.cpp" />
@@ -117,6 +120,13 @@
     </ClCompile>
     <ClCompile Include="HandgunObject.cpp">
       <Filter>PlayerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>Building</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveDirections.cpp" />
+    <ClCompile Include="EnemyDefeatEffect.cpp">
+      <Filter>Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +186,11 @@
       <Filter>PlayerObject</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
-      <Filter>Scene</Filter>
+      <Filter>Building</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveDirections.h" />
+    <ClInclude Include="EnemyDefeatEffect.h">
+      <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

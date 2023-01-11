@@ -1,3 +1,3 @@
 #pragma once
 
-//ベタ打ちナビメッシュcccccccccccccccvvcccccccccccccccccccccccccccccccccccccccccccccccccccccccCV                                                                                                                                                                                                                                                                                                                                                                                    
+//ベタ打ちナビメッシュ

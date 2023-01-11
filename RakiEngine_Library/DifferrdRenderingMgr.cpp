@@ -1,5 +1,6 @@
 #include "DifferrdRenderingMgr.h"
 #include "NY_Camera.h"
+#include "RenderTargetManager.h"
 
 void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd)
 {
@@ -30,6 +31,7 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     m_cmd->IASetVertexBuffers(0, 1, &m_vbview);
     //定数バッファ設定
     m_cmd->SetGraphicsRootConstantBufferView(3, m_constBuffEyePos->GetGPUVirtualAddress());
+    m_cmd->SetGraphicsRootConstantBufferView(4, m_constBuffDirLight->GetGPUVirtualAddress());
     //SRVセット（計算するパラメータが増えると、ここも増える）
     m_cmd->SetGraphicsRootDescriptorTable(0,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(), 
@@ -46,6 +48,8 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     //ディファードレンダリング結果出力
     m_cmd->DrawInstanced(6, 1, 0, 0);
 
+    //半透明用にデプスはgBufferに、描画先をバックバッファにする
+    RenderTargetManager::GetInstance()->SetDSV(gBuffer);
 }
 
 void DiferredRenderingMgr::ShaderCompile()
@@ -161,6 +165,24 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
         m_constBuffEyePos->Unmap(0, nullptr);
     }
 
+    cbuffResdDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(cbuffer_b1) + 0xff) & ~0xff);
+    m_dev->CreateCommittedResource(
+        &heapProp,
+        D3D12_HEAP_FLAG_NONE,
+        &cbuffResdDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&m_constBuffDirLight)
+    );
+
+    //定数バッファデータ転送
+    cbuffer_b1* ConstMapB1 = nullptr;
+    result = m_constBuffDirLight->Map(0, nullptr, (void**)&ConstMapB1);
+    if (SUCCEEDED(result)) {
+        ConstMapB1->lightDir = { 1,-1,1 };
+        m_constBuffDirLight->Unmap(0, nullptr);
+    }
+
 #pragma endregion VERTEX_INIT
 
     //-----頂点レイアウト-----//
@@ -223,13 +245,14 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
 
 
     //ルートパラメーターの設定
-    CD3DX12_ROOT_PARAMETER rootparams[4] = {};
+    CD3DX12_ROOT_PARAMETER rootparams[5] = {};
     //GBufferテクスチャ用（定数バッファをライト配列を入れるのに使う予定だが、現状はなし）
     rootparams[0].InitAsDescriptorTable(1, &descRangeSRV_0, D3D12_SHADER_VISIBILITY_ALL);//アルベドテクスチャ
     rootparams[1].InitAsDescriptorTable(1, &descRangeSRV_1, D3D12_SHADER_VISIBILITY_ALL);//法線テクスチャ
     rootparams[2].InitAsDescriptorTable(1, &descRangeSRV_2, D3D12_SHADER_VISIBILITY_ALL);//ワールド座標テクスチャ
     //定数バッファ
     rootparams[3].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
+    rootparams[4].InitAsConstantBufferView(1);
 
     //テクスチャサンプラー設定
     D3D12_STATIC_SAMPLER_DESC samplerDesc   = {};

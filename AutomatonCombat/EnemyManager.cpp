@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include <NY_random.h>
+#include "WaveDirections.h"
 
 EnemyManager::EnemyManager()
 {
@@ -47,6 +48,12 @@ void EnemyManager::Init(Player *player)
 		swordEnemys[i]->s_object.pos = spawnPos;
 	}
 
+	m_defeatP = new DefeatParticle;
+	m_defeatPM = ParticleManager::Create();
+	m_defeatPM->Prototype_Set(m_defeatP);
+
+	defeatPtex = TexManager::LoadTexture("Resources/effect1.png");
+
 }
 
 void EnemyManager::Reset()
@@ -54,6 +61,8 @@ void EnemyManager::Reset()
 	gameCleared = false;
 	swordEnemys.clear();
 	swordEnemys.shrink_to_fit();
+	waveCount = 1;
+	isWaveMoving = false;
 }
 
 void EnemyManager::Update()
@@ -81,20 +90,25 @@ void EnemyManager::Update()
 
 	//ウェーブ進行判定
 	if (isWaveMoving) {
+
 		//必要グループ数更新
 		waveKillGroupAssignment = waveCount * 3;
 		easeFrame++;
-		if (easeFrame < 45) {
-			wfcenter = Rv3Ease::OutQuad(WF_S, WF_CENTER, float(easeFrame) / 45.0f);
-		}
-		else if(easeFrame >= 60 && easeFrame < 105) {
-			wfcenter = Rv3Ease::InQuad(WF_CENTER, WF_E, (float(easeFrame) - 60.0f) / 45.0f);
-		}
-		else if(easeFrame > 105) {
-			easeFrame = 0;
-			isWaveMoving = false;
+		if (waveCount < 300) {
+			if (easeFrame - 300 < 45) {
+				wfcenter = Rv3Ease::OutQuad(WF_S, WF_CENTER, float(easeFrame - 300.f) / 45.0f);
+			}
+			else if (easeFrame - 300 >= 60 && easeFrame - 300 < 105) {
+				wfcenter = Rv3Ease::InQuad(WF_CENTER, WF_E, (float(easeFrame - 300.f) - 60.0f ) / 45.0f);
+			}
+			else if (easeFrame - 300 > 105) {
+				easeFrame = 0;
+				isWaveMoving = false;
+			}
 		}
 	}
+
+	m_defeatPM->Prototype_Update();
 	
 }
 
@@ -112,6 +126,8 @@ void EnemyManager::Draw()
 	gunEnemy->Draw();
 
 	if (isDebugMode) { swordEnemyMother->Draw(); }
+
+	m_defeatPM->Prototype_Draw(defeatPtex);
 }
 
 void EnemyManager::UIDraw()
@@ -143,21 +159,24 @@ void EnemyManager::DebugExecution()
 
 void EnemyManager::DebugDraw()
 {
-	ImguiMgr::Get()->StartDrawImgui("Enemys Status", 100, 200);
-
-	ImGui::Text("mustKillGroup : %d  killedGroup : %d waveCount : %d", waveKillGroupAssignment, killedGroup, waveCount);
-
-	ImguiMgr::Get()->EndDrawImgui();
 
 	if (!isDebugMode) { return; }
 
 	swordEnemyMother->DebugDraw();
 
+	ImguiMgr::Get()->StartDrawImgui("Enemys Status", 100, 200);
 
+	ImGui::Text("mustKillGroup : %d  killedGroup : %d waveCount : %d", waveKillGroupAssignment, killedGroup, waveCount);
+
+	ImguiMgr::Get()->EndDrawImgui();
 }
 
 void EnemyManager::EnemySpawn()
 {
+	if (isWaveMoving) {
+		return;
+	}
+
 	//敵が全滅するたび、撃破グループ数加算し出現処理
 	if (swordEnemys.size() <= 0) {
 		killedGroup++;
@@ -168,8 +187,12 @@ void EnemyManager::EnemySpawn()
 			isWaveMoving = true;
 			killedGroup = 0;
 			waveCount++;
+			
 			if (waveCount == 3) {
 				gameCleared = true;
+			}
+			else {
+				WaveDirections::Get()->PlayNextWaveDir();
 			}
 
 			return;
@@ -211,6 +234,7 @@ void EnemyManager::Colision()
 			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision,player->bullets[i].sphere)) {
 				//弾を消滅させ、エネミーにダメージ処理(消去)
 				player->bullets[i].isAlive = false;
+				m_defeatPM->Prototype_Add(16, (*se)->s_object.pos);
 				se = swordEnemys.erase(se);
 				
 				killCount++;

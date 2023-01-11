@@ -37,6 +37,11 @@ struct ConstBufferDataB1
 	float alpha;       //アルファ
 };
 
+struct ConstBufferDataSkin
+{
+	XMMATRIX bones[32];
+};
+
 //ビルボードパーティクル頂点データ
 struct ParticleVertex
 {
@@ -113,6 +118,8 @@ public:
 
 	void CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum);
 
+	void PlayAnimation();
+
 	//アフィン変換情報
 	RVector3 scale = { 1,1,1 };
 	RVector3 rotation = { 0,0,0 };
@@ -130,11 +137,21 @@ private:
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0;
 	ComPtr<ID3D12Resource> constBuffB1;
+	ComPtr<ID3D12Resource> constBuffSkin;
 
 	//定数バッファビューハンドル(CPU)
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleCBV;
 	//定数バッファビューハンドル(GPU)
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleCBV;
+
+	//アニメーション管理系
+	FbxTime frameTime;
+	FbxTime startTime;
+	FbxTime endTime;
+	FbxTime currentTime;
+
+	bool isPlay = false;
+
 
 	//ダーティフラグ
 	bool isDirty;

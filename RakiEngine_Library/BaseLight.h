@@ -9,7 +9,7 @@ class BaseLight
 	virtual void Init() = 0;
 	//光源データアップロード
 	virtual void Upload() = 0;
-
+	
 
 };
 

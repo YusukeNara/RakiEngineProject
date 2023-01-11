@@ -18,6 +18,7 @@ void SkyBoxObject::Draw()
 
 void SkyBoxObject::Finalize()
 {
+
 }
 
 void SkyBoxObject::Load()
@@ -25,7 +26,7 @@ void SkyBoxObject::Load()
 	object3d.reset(NY_Object3DManager::Get()->CreateModel_Tile(500, 500, 1, 1, TexManager::LoadTexture("Resources/Sky2.png")));
 }
 
-void SkyBoxObject::OnCollision(ColliderInfo* info)
+void SkyBoxObject::OnCollision(const ColliderInfo* info)
 {
 }
 

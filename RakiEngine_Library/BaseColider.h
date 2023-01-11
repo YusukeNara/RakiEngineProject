@@ -25,7 +25,7 @@ public:
 
 	inline COLIDER_TYPE GetColliderType() { return type; }
 
-	virtual void OnColision(const ColliderInfo& info){}
+	virtual void OnColision(const ColliderInfo& info);
 
 protected:
 	// コライダー登録オブジェクト

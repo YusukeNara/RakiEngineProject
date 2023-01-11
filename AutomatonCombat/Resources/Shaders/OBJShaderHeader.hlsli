@@ -12,6 +12,22 @@ cbuffer cbuff1 : register(b1)
 	float m_alpha     : packoffset(c2.w); //アルファ
 }
 
+static const int MAX_BONES = 32;
+
+cbuffer skinnning : register(b4)
+{
+    matrix matSkinning[MAX_BONES];
+}
+
+struct VSInput
+{
+    float4 svpos        : POSITION; //システム用頂点座標
+    float3 normal       : NORMAL; //法線ベクトル
+    float2 uv           : TEXCOORD; //uv値
+    uint4 boneIndices   : BONEINDICES;
+    float4 boneWeights  : BONEWEIGHTS;
+};
+
 //頂点シェーダーからジオメトリシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {
@@ -28,6 +44,12 @@ struct GSOutput
     float3 normal : NORMAL;      //法線ベクトル
     float2 uv     : TEXCOORD;    //uv値
     float4 worldPos : TEXCOORD1;
+};
+
+struct SkinOutput
+{
+    float4 pos;
+    float3 normal;
 };
 
 //ピクセルシェーダー出力構造体

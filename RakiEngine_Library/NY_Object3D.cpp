@@ -37,6 +37,20 @@ void Object3d::InitObject3D(ID3D12Device *dev)
 	);
 	constBuffB1.Get()->SetName(L"Object3d_cbuffB1");
 
+	auto skinresdesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(constBuffSkin) + 0xff) & ~0xff);
+
+	result = dev->CreateCommittedResource(
+		&HEAP_PROP,
+		D3D12_HEAP_FLAG_NONE,
+		&skinresdesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuffSkin)
+	);
+	constBuffB1.Get()->SetName(L"Object3d_cbuffSkin");
+
+	frameTime.SetTime(0, 0, 0, 1, 0, FbxTime::EMode::eFrames60);
+
 }
 
 void Object3d::SetLoadedModelData(Model3D *loadedModel)
@@ -123,6 +137,14 @@ void Object3d::SetAffineParamTranslate(RVector3 trans)
 
 void Object3d::UpdateObject3D()
 {
+	if (isPlay && fbxmodel != nullptr) {
+		currentTime += frameTime;
+
+		if (currentTime > endTime) {
+			currentTime = startTime;
+		}
+	}
+
 	if (isBillBoard) {
 		UpdateBillBoard3D();
 		return;
@@ -157,6 +179,7 @@ void Object3d::UpdateObject3D()
 
 	//定数バッファB1データ転送
 	ConstBufferDataB1 *ConstMapB1 = nullptr;
+	ConstBufferDataSkin *constMapSkin = nullptr;
 	if (isThisModel == MODEL_DATA_FBX) {
 		if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void**)&ConstMapB1)))
 		{
@@ -165,6 +188,21 @@ void Object3d::UpdateObject3D()
 			ConstMapB1->specular = fbxmodel->GetMaterial().specurar;
 			ConstMapB1->alpha = fbxmodel->GetMaterial().alpha;
 			constBuffB1->Unmap(0, nullptr);
+
+			auto& bones = fbxmodel->GetBones();
+
+			ConstBufferDataSkin* constMapSkin = nullptr;
+			if (SUCCEEDED(constBuffSkin->Map(0, nullptr, (void**)&constMapSkin))) {
+				for (int i = 0; i < bones.size(); i++) {
+					XMMATRIX matcurrentPose;
+					FbxAMatrix fbxCurrentPose = bones[i].fbxCluster->GetLink()->EvaluateGlobalTransform(currentTime);
+
+					FbxLoader::GetInstance()->ConvertMatrixFromFbx(&matcurrentPose, fbxCurrentPose);
+
+					constMapSkin->bones[i] = bones[i].invInitialBone * matcurrentPose;
+				}
+				constBuffSkin->Unmap(0, nullptr);
+			}
 		}
 	}
 	else {
@@ -174,7 +212,8 @@ void Object3d::UpdateObject3D()
 			ConstMapB1->diffuse = model->material.diffuse;
 			ConstMapB1->specular = model->material.specurar;
 			ConstMapB1->alpha = model->material.alpha;
-			constBuffB1->Unmap(0, nullptr);
+
+
 		}
 	}
 
@@ -252,6 +291,8 @@ void Object3d::UpdateBillBoard3D()
 
 void Object3d::DrawObject()
 {
+	NY_Object3DManager::Get()->SetRestartObject3D();
+
 	if (isBillBoard) {
 		UpdateBillBoard3D();
 	}
@@ -261,14 +302,19 @@ void Object3d::DrawObject()
 
 
 	if (isThisModel == MODEL_DATA_FBX) {
+		NY_Object3DManager::Get()->SetCommonBeginDrawFBX();
+
 		//定数バッファ設定
 		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
 		//定数バッファ設定
 		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(4, constBuffSkin->GetGPUVirtualAddress());
 
 		fbxmodel->Draw();
 	}
 	else {
+		NY_Object3DManager::Get()->SetRestartObject3D();
+
 		//頂点バッファ設定
 		RAKI_DX12B_CMD->IASetVertexBuffers(0, 1, &model->vbView);
 		//インデックスバッファ設定
@@ -385,6 +431,28 @@ void Object3d::CreateModel_Tile(float x_size, float y_size, float x_uv, float y_
 void Object3d::CreateModel_Box(float size, float uv_x, float uv_y, UINT useTexNum)
 {
 	model.get()->CreateBoxModel(size, uv_x, uv_y, useTexNum);
+}
+
+void Object3d::PlayAnimation()
+{
+	if (fbxmodel == nullptr) {
+		return;
+	}
+
+	FbxScene* fbxScene = fbxmodel->GetFbxScene();
+
+	FbxAnimStack* animStack = fbxScene->GetSrcObject<FbxAnimStack>(0);
+
+	const char* animStackName = animStack->GetName();
+
+	FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(animStackName);
+
+	startTime = takeInfo->mLocalTimeSpan.GetStart();
+
+	endTime = takeInfo->mLocalTimeSpan.GetStop();
+
+	isPlay = true;
+
 }
 
 

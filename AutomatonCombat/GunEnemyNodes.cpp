@@ -12,10 +12,10 @@ BehaviorActionBase::ACTION_STATE Gun_WaitAct::Run()
 
     actionState = BehaviorActionBase::ACTION_STATE::RUNNING;
 
-    RVector3 moveVec;
-    moveVec = player->pos - *pos;
+    bool isMoved = false;
+    RVector3 moveVec = navAstar->MoveWaypointDirectLine(0.0f, *pos, isMoved);
     RVector3 lookVec = moveVec;
-    moveVec = moveVec.norm() * 1.5;
+    moveVec = moveVec * 2.0;
 
     *pos += moveVec;
 
@@ -25,7 +25,7 @@ BehaviorActionBase::ACTION_STATE Gun_WaitAct::Run()
     object->object3d->SetAffineParamTranslate(*pos);
     object->pos = *pos;
 
-    if (distance(*pos, player->pos) < 70.0f) {
+    if (!isMoved) {
         actionState = BehaviorActionBase::ACTION_STATE::SUCCESS;
     }
 
@@ -35,9 +35,8 @@ BehaviorActionBase::ACTION_STATE Gun_WaitAct::Run()
 void Gun_WaitAct::Init()
 {
     //ƒvƒŒƒCƒ„[‚ðŒü‚­
-
-
-
+    std::vector<NavMesh> result;
+    //navAstar->NavMeshSearchAster(*pos, player->pos, result);
 
 }
 

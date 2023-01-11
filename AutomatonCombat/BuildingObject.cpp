@@ -27,7 +27,7 @@ void BuildingObject::Finalize()
 {
 }
 
-void BuildingObject::OnCollision(ColliderInfo* info)
+void BuildingObject::OnCollision(const ColliderInfo* info)
 {
 }
 

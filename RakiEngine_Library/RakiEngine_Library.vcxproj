@@ -62,6 +62,7 @@
     <ClCompile Include="ModelDataManager.cpp" />
     <ClCompile Include="NavMash.cpp" />
     <ClCompile Include="NavMeshAstar.cpp" />
+    <ClCompile Include="NavMeshData.cpp" />
     <ClCompile Include="NY_Camera.cpp" />
     <ClCompile Include="NY_Model.cpp" />
     <ClCompile Include="NY_Object3D.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="ModelDataManager.h" />
     <ClInclude Include="NavMash.h" />
     <ClInclude Include="NavMeshAstar.h" />
+    <ClInclude Include="NavMeshData.h" />
     <ClInclude Include="NavMeshTestData.h" />
     <ClInclude Include="NY_Camera.h" />
     <ClInclude Include="NY_Model.h" />

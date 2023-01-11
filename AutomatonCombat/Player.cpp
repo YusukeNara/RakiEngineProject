@@ -2,7 +2,6 @@
 
 Player::Player()
 {
-	Init();
 	boxAABB = RV3Colider::Rv3AABB(RVector3(-20, -20, -20), RVector3(20, 20, 20), RVector3(25, 20, 25));
 }
 
@@ -13,7 +12,7 @@ Player::~Player()
 
 void Player::CameraMove()
 {
-	RVector3 camOffsetVec = { 0,10,50 };
+	RVector3 camOffsetVec = { 0,60,60 };
 	//注視するのはプレイヤーなのでプレイヤーの座標が注視点
 	//回転角はプレイヤーオブジェクトのrotを使用(x軸については80 ~ -80の間)
 	//XY軸の回転行列を求め、オフセットを回転させる
@@ -22,8 +21,8 @@ void Player::CameraMove()
 	rotX = XMMatrixIdentity();
 	rotY = XMMatrixIdentity();
 	rotM = XMMatrixIdentity();
-	rotX = XMMatrixRotationX(XMConvertToRadians(rot.x));
-	rotY = XMMatrixRotationY(XMConvertToRadians(rot.y));
+	rotX = XMMatrixRotationX(XMConvertToRadians(l_rot.x));
+	rotY = XMMatrixRotationY(XMConvertToRadians(l_rot.y));
 	rotM *= rotX;
 	rotM *= rotY;
 	DirectX::XMVECTOR v0 = { camOffsetVec.x,camOffsetVec.y,camOffsetVec.z,0 };
@@ -120,17 +119,19 @@ void Player::PlayerMove()
 	//angleVec.y = Input::getMouseVelocity().x * 0.2;
 	//angleVec.x = Input::getMouseVelocity().y * 0.2;
 
-	rot += angleVec;
-	if (rot.y > 360.0f) { rot.y -= 360.0f; }
-	if (rot.y < 0.0f) { rot.y += 360.0f; }
-	if (rot.x > 80.0f) { rot.x = 80.0f; }
-	if (rot.x < -80.0f) { rot.x = -70.0f; }
+	l_rot += angleVec;
+	if (l_rot.y > 360.0f) { l_rot.y -= 360.0f; }
+	if (l_rot.y < 0.0f) { l_rot.y += 360.0f; }
+	if (l_rot.x > 80.0f) { l_rot.x = 80.0f; }
+	if (l_rot.x < -80.0f) { l_rot.x = -70.0f; }
 
 	//範囲内に納める
-	if (pos.x > 400.0f) { pos.x = 400.0f; }
-	if (pos.x < -400.0f) { pos.x = -400.0f; }
-	if (pos.z > 400.0f) { pos.z = 400.0f; }
-	if (pos.z < -400.0f) { pos.z = -400.0f; }
+	if (pos.x > 500.0f) { pos.x = 500.0f; }
+	if (pos.x < -500.0f) { pos.x = -500.0f; }
+	if (pos.z > 500.0f) { pos.z = 500.0f; }
+	if (pos.z < -500.0f) { pos.z = -500.0f; }
+
+	rot.y = l_rot.y - 180.0f;
 
 	//アフィン変換情報更新
 	object3d->SetAffineParam(RVector3(10.0f, 10.0f, 10.0f),
@@ -146,7 +147,7 @@ void Player::Shot()
 		if (nowBullet > 0) {
 			for (int i = 0; i < bullets.size(); i++) {
 				if (!bullets[i].isAlive) {
-					bullets[i].Fire(pos, -bVec, 6.0f, 10.0f, bulletModel);
+					bullets[i].Fire(pos, -bVec, 20.0f, 5.0f, bulletModel);
 					nowBullet--;
 					break;
 				}
@@ -206,7 +207,7 @@ void Player::HealthManagement()
 void Player::Init()
 {
 	//オブジェクト読み込み
-	object3d.reset(LoadModel_FBXFile("StandingRunForward"));
+	object3d.reset(LoadModel_FBXFile("FiringRifle"));
 	//object3d.reset(LoadModel_FBXFile("cube"));
 	
 	bulletModel = std::make_shared<Model3D>();
@@ -218,6 +219,7 @@ void Player::Init()
 	s_CtrlImage.Create(TexManager::LoadTexture("Resources/Stick.png"));
 	s_sight.Create(TexManager::LoadTexture("Resources/Sight.png"));
 	s_numFont.CreateAndSetDivisionUVOffsets(10, 5, 2, 64, 64, TexManager::LoadTexture("Resources/zenNum.png"));
+	s_noammo.Create(TexManager::LoadTexture("Resources/noammo.png"));
 
 	warningSprite.Create(TexManager::LoadTexture("Resources/warningEffect.png"));
 	damagedAlpha = 0.0f;
@@ -239,6 +241,10 @@ void Player::Init()
 	hitpoint = HITPOINT_MAX;
 
 	nowBullet = MAX_BULLET;
+
+	l_rot = rot;
+
+	object3d->PlayAnimation();
 }
 
 void Player::Reset()
@@ -286,11 +292,7 @@ void Player::Draw()
 		}
 	}
 
-	for (auto& b : bullets) {
-		if (b.isAlive) {
-			b.Draw();
-		}
-	}
+
 }
 
 void Player::UiDraw()
@@ -298,15 +300,24 @@ void Player::UiDraw()
 	//2dUIの描画
 
 	s_hpFont.DrawSprite(0, 0);
-	s_CtrlImage.DrawSprite(1056.0f, 558.0f);
+	s_CtrlImage.DrawSprite(32.0f, 558.0f);
 	float cx = 1280.0f / 2.0f;
 	float cy = 720.0f / 4.0f;
-	s_sight.DrawExtendSprite(cx - 48.0f, cy - 48.0f, cx + 48.0f, cy + 48.0f);
+
+	if (nowBullet > 0) {
+		s_sight.DrawExtendSprite(cx - 48.0f, cy - 48.0f, cx + 48.0f, cy + 48.0f);
+		s_sight.Draw();
+
+	}
+	else {
+		s_noammo.DrawExtendSprite(cx - 128.0f, cy - 32.0f, cx + 128.0f, cy + 32.0f);
+		s_noammo.Draw();
+	}
+
 
 	s_hpFont.Draw();
 	s_CtrlImage.Draw();
-	s_sight.Draw();
-
+	
 	s_numFont.uvOffsetHandle = (nowBullet % (int)pow(10, 1 + 1)) / (int)pow(10, 1);
 	s_numFont.DrawExtendSprite(1280.f - 128.f, 720.f - 64.f, 1280.f - 64.f, 720.f);
 	s_numFont.uvOffsetHandle = (nowBullet % (int)pow(10, 0 + 1)) / (int)pow(10, 0);
@@ -319,6 +330,15 @@ void Player::UiDraw()
 	warningSprite.Draw();
 
 	warningSprite.SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void Player::ParticleDraw()
+{
+	for (auto& b : bullets) {
+		if (b.isAlive) {
+			b.Draw();
+		}
+	}
 }
 
 void Player::DebugDraw()
@@ -341,7 +361,7 @@ void Player::Load()
 {
 }
 
-void Player::OnCollision(ColliderInfo* info)
+void Player::OnCollision(const ColliderInfo* info)
 {
 }
 

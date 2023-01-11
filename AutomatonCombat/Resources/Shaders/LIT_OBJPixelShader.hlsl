@@ -25,9 +25,9 @@ float4 main(VSOutput input) : SV_TARGET
     normal = (normal * 2.0f) - 1.0f;
     
     //ライト計算
-    float3 lightDir = normalize(float3(1, -1, -1)); //右下奥向きライト
+    float3 lightDir = dirLight; //右下奥向きライト
     float diffuse = saturate(dot(normal, -lightDir)); //ディフューズ計算x
-    float3 lightColor = float3(1, 1, 1);
+    float3 lightColor = float3(0.5, 0.5, 0.5);
     
     //結果保存
     float3 lig = 0.0f;
@@ -47,6 +47,6 @@ float4 main(VSOutput input) : SV_TARGET
 
     //ADS合成
     float4 resultColor = albedo;
-    //resultColor.xyz *= lig;
+    resultColor.xyz *= lig;
     return resultColor;
 }

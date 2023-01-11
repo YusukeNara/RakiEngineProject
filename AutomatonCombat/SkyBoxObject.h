@@ -9,7 +9,7 @@ public:
 	void Draw()		override;
 	void Finalize() override;
 	void Load() override;
-	void OnCollision(ColliderInfo* info) override;
+	void OnCollision(const ColliderInfo* info) override;
 
 	void SetAffinParam(RVector3 rot, RVector3 pos);
 

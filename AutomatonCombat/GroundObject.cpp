@@ -30,11 +30,17 @@ void GroundObject::Finalize()
 {
 }
 
-void GroundObject::OnCollision(ColliderInfo* info)
+void GroundObject::OnCollision(const ColliderInfo* info)
 {
 }
 
 void GroundObject::Load()
 {
-	object3d.reset(NY_Object3DManager::Get()->CreateModel_Tile(5000, 5000, 10, 10, TexManager::LoadTexture("Resources/asp3.png")));
+	std::shared_ptr<Model3D> plane = std::make_shared<Model3D>();
+
+	plane->CreatePlaneModelXZ(1000.0f, 1000.0f, 10, 10, TexManager::LoadTexture("Resources/asp3.png"), nullptr);
+
+	object3d = std::make_shared<Object3d>();
+
+	object3d->SetLoadedModelData(plane);
 }

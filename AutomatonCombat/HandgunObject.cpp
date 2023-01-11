@@ -34,7 +34,7 @@ void HandgunObject::Finalize()
 {
 }
 
-void HandgunObject::OnCollision(ColliderInfo* info)
+void HandgunObject::OnCollision(const ColliderInfo* info)
 {
 }
 

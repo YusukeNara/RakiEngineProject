@@ -308,6 +308,24 @@ void RenderTargetManager::SetDrawBackBuffer()
 	isDrawing = USING_BACKBUFFER;
 }
 
+void RenderTargetManager::SetDSV(RTex* gBuffer)
+{
+	//バックバッファの番号取得
+	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
+
+	//デスクリプタヒープ設定
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvh = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		rtvHeap->GetCPUDescriptorHandleForHeapStart(),
+		bbIndex,
+		dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
+	);
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvh = CD3DX12_CPU_DESCRIPTOR_HANDLE(gBuffer->rtdata->dsvHeap->GetCPUDescriptorHandleForHeapStart());
+
+	//レンダーターゲットに設定
+	cmdlist->OMSetRenderTargets(1, &rtvh, false, &dsvh);
+}
+
 void RenderTargetManager::SwapChainBufferFlip()
 {
 	//Imgui描画実行

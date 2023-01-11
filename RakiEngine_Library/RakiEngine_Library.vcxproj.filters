@@ -237,6 +237,9 @@
     <ClCompile Include="NavMash.cpp">
       <Filter>Behavior\Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="NavMeshData.cpp">
+      <Filter>Behavior\Navigation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -402,6 +405,9 @@
       <Filter>Behavior\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="NavMeshTestData.h">
+      <Filter>Behavior\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshData.h">
       <Filter>Behavior\Navigation</Filter>
     </ClInclude>
   </ItemGroup>

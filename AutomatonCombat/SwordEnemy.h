@@ -5,7 +5,8 @@
 
 #include "Player.h"
 #include "SwordEnemyNodes.h"
-
+#include <ParticleManager.h>
+#include "EnemyDefeatEffect.h"
 
 
 //ëÄçÏÇ∑ÇÈ
@@ -33,6 +34,8 @@ private:
 	Sword_ApproachingAct* m_approahAct;
 	Sword_ChargeJudge* m_chargeJudge;
 	Sword_ChargeAct* m_chargeAct;
+
+
 
 public:
 	SwordEnemy(Player* player);
