@@ -9,8 +9,13 @@ Texture2D<float4> albedoTex : register(t0);
 Texture2D<float4> normalTex : register(t1);
 //ワールド座標テクスチャ
 Texture2D<float4> worldTex  : register(t2);
+//深度情報テクスチャ
+Texture2D<float4> LdepthTex : register(t3);
 //サンプラーは変更なし
 SamplerState smp : register(s0);
+
+//ピクセルのz値をライト空間の座標に変換する
+
 
 float4 main(VSOutput input) : SV_TARGET
 {
@@ -20,6 +25,8 @@ float4 main(VSOutput input) : SV_TARGET
     float3 normal = normalTex.Sample(smp, input.uv).xyz;
     //ワールド座標取得
     float3 worldPos = worldTex.Sample(smp, input.uv).xyz;
+    //深度情報取得
+    float4 depth = LdepthTex.Sample(smp, input.uv);
     
     //法線情報を復元
     normal = (normal * 2.0f) - 1.0f;
@@ -48,5 +55,6 @@ float4 main(VSOutput input) : SV_TARGET
     //ADS合成
     float4 resultColor = albedo;
     resultColor.xyz *= lig;
+    //resultColor.xyz *= depth.xyz;
     return resultColor;
 }

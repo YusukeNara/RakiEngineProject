@@ -2,6 +2,7 @@ cbuffer cbuff0 : register(b0)
 {
 	matrix mat;  //3D変換行列
     float4 color;//色
+    matrix lightMat;
 }
 
 cbuffer cbuff1 : register(b1)
@@ -24,7 +25,7 @@ struct VSInput
     float4 svpos        : POSITION; //システム用頂点座標
     float3 normal       : NORMAL; //法線ベクトル
     float2 uv           : TEXCOORD; //uv値
-    uint4 boneIndices   : BONEINDICES;
+    uint4  boneIndices  : BONEINDICES;
     float4 boneWeights  : BONEWEIGHTS;
 };
 
@@ -58,4 +59,5 @@ struct PixelOutput
     float4 pixel_color	: SV_TARGET0;
     float4 normal		: SV_TARGET1;
     float4 worldPos		: SV_TARGET2;
+    float4 zColor       : SV_TARGET3;   //影のみテクスチャ
 };

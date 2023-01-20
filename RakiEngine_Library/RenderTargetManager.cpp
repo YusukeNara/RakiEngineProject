@@ -87,8 +87,10 @@ int RenderTargetManager::CreateRenderTexture(int width, int height)
 	//新しく作るレンダーテクスチャ
 	RTex* returnData = new RTex;
 
+	RenderTextureOption option = {DXGI_FORMAT_R8G8B8A8_UNORM,{0.f,0.f,0.f,0.f}};
+
 	//テクスチャデータ生成
-	returnData->CreateRTex(width, height, clearcolor);
+	returnData->CreateRTex(width, height, clearcolor, 1, &option);
 
 	//レンダーテクスチャコンテナにデータ格納
 	renderTextures.emplace_back().reset(returnData);

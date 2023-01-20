@@ -10,7 +10,11 @@ public:
 
 	static DirectX::XMFLOAT3 GetLightDir() { return dir; }
 
+	static DirectX::XMMATRIX GetLightCamera() { return lightCamera; }
+
 private:
 	static DirectX::XMFLOAT3 dir;
+
+	static DirectX::XMMATRIX lightCamera;
 };
 

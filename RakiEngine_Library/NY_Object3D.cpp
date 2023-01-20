@@ -4,6 +4,7 @@
 #include "TexManager.h"
 #include "Raki_DX12B.h"
 #include "NY_Object3DMgr.h"
+#include "DirectionalLight.h"
 #include "RenderTargetManager.h"
 
 //----- NY_Object3D -----//
@@ -174,6 +175,7 @@ void Object3d::UpdateObject3D()
 	{
 		ConstMapB0->mat = matWorld * camera->GetMatrixView() * camera->GetMatrixProjection();
 		ConstMapB0->color = this->color;
+		ConstMapB0->lightCamMat = DirectionalLight::GetLightCamera();
 		constBuffB0->Unmap(0, nullptr);
 	}
 
@@ -212,8 +214,6 @@ void Object3d::UpdateObject3D()
 			ConstMapB1->diffuse = model->material.diffuse;
 			ConstMapB1->specular = model->material.specurar;
 			ConstMapB1->alpha = model->material.alpha;
-
-
 		}
 	}
 

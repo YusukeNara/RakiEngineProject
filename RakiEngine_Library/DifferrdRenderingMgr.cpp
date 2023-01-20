@@ -1,11 +1,14 @@
 #include "DifferrdRenderingMgr.h"
 #include "NY_Camera.h"
 #include "RenderTargetManager.h"
+#include "DirectionalLight.h"
 
 void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd)
 {
 	m_dev = dev;
 	m_cmd = cmd;
+
+    DirectionalLight::SetLightDir(1.f, -1.f, 1.f);
 
 	ShaderCompile();
 
@@ -29,9 +32,9 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     m_cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
     //頂点バッファ設定
     m_cmd->IASetVertexBuffers(0, 1, &m_vbview);
-    //定数バッファ設定
-    m_cmd->SetGraphicsRootConstantBufferView(3, m_constBuffEyePos->GetGPUVirtualAddress());
-    m_cmd->SetGraphicsRootConstantBufferView(4, m_constBuffDirLight->GetGPUVirtualAddress());
+    //定数バッファ設定（パラメーターを増やすたびにここを確認せよ）
+    m_cmd->SetGraphicsRootConstantBufferView(4, m_constBuffEyePos->GetGPUVirtualAddress());
+    m_cmd->SetGraphicsRootConstantBufferView(5, m_constBuffDirLight->GetGPUVirtualAddress());
     //SRVセット（計算するパラメータが増えると、ここも増える）
     m_cmd->SetGraphicsRootDescriptorTable(0,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(), 
@@ -44,6 +47,10 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     m_cmd->SetGraphicsRootDescriptorTable(2,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
             2,
+            m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+    m_cmd->SetGraphicsRootDescriptorTable(3,
+        CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
+            3,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
     //ディファードレンダリング結果出力
     m_cmd->DrawInstanced(6, 1, 0, 0);
@@ -179,7 +186,7 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
     cbuffer_b1* ConstMapB1 = nullptr;
     result = m_constBuffDirLight->Map(0, nullptr, (void**)&ConstMapB1);
     if (SUCCEEDED(result)) {
-        ConstMapB1->lightDir = { 1,-1,1 };
+        ConstMapB1->lightDir = DirectionalLight::GetLightDir();
         m_constBuffDirLight->Unmap(0, nullptr);
     }
 
@@ -242,17 +249,20 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
     descRangeSRV_1.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
     CD3DX12_DESCRIPTOR_RANGE descRangeSRV_2{};
     descRangeSRV_2.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
+    CD3DX12_DESCRIPTOR_RANGE descRangeSRV_3{};
+    descRangeSRV_3.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 3);
 
 
     //ルートパラメーターの設定
-    CD3DX12_ROOT_PARAMETER rootparams[5] = {};
+    CD3DX12_ROOT_PARAMETER rootparams[6] = {};
     //GBufferテクスチャ用（定数バッファをライト配列を入れるのに使う予定だが、現状はなし）
     rootparams[0].InitAsDescriptorTable(1, &descRangeSRV_0, D3D12_SHADER_VISIBILITY_ALL);//アルベドテクスチャ
     rootparams[1].InitAsDescriptorTable(1, &descRangeSRV_1, D3D12_SHADER_VISIBILITY_ALL);//法線テクスチャ
     rootparams[2].InitAsDescriptorTable(1, &descRangeSRV_2, D3D12_SHADER_VISIBILITY_ALL);//ワールド座標テクスチャ
+    rootparams[3].InitAsDescriptorTable(1, &descRangeSRV_3, D3D12_SHADER_VISIBILITY_ALL);//深度情報テクスチャ
     //定数バッファ
-    rootparams[3].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
-    rootparams[4].InitAsConstantBufferView(1);
+    rootparams[4].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
+    rootparams[5].InitAsConstantBufferView(1);
 
     //テクスチャサンプラー設定
     D3D12_STATIC_SAMPLER_DESC samplerDesc   = {};

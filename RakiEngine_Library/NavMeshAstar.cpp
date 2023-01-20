@@ -86,6 +86,8 @@ void NavMeshAstar::NavMeshSearchAstar(NavMesh start, NavMesh goal, std::vector<N
 		}
 	}
 
+	
+
 	rootData = result_route;
 
 	result = result_route;

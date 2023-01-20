@@ -6,6 +6,12 @@
 #include <DirectXTex.h>
 #include <array>
 
+struct RenderTextureOption
+{
+	DXGI_FORMAT format;
+	float clearColor[4];
+};
+
 //レンダーテクスチャ一枚のデータ
 class RenderTextureData
 {
@@ -24,7 +30,7 @@ public:
 	/// <param name="texheight">レンダーテクスチャ縦幅</param>
 	/// <param name="clearColor">クリアカラー</param>
 	/// <param name="addBufferNums">Rtex一枚に生成するバッファの数</param>
-	void Init(int texwidth, int texheight, float *clearColor,int addBufferNums = 1);
+	void Init(int texwidth, int texheight, float* clearColor, int addBufferNums, RenderTextureOption option[]);
 
 private:
 	//テクスチャバッファ（vector）
@@ -39,10 +45,10 @@ private:
 	ComPtr<ID3D12Resource>					depthBuff = nullptr;
 
 	//テクスチャバッファ生成
-	void CreateTextureBuffer(int texture_width, int texture_height, float *clearColor,int addBufferNums);
+	void CreateTextureBuffer(int texture_width, int texture_height, float* clearColor, int addBufferNums, RenderTextureOption option[]);
 
 	//SRVデスクリプタヒープ生成
-	void CreateSRVDescriptorHeap(int bufferCount);
+	void CreateSRVDescriptorHeap(int bufferCount,RenderTextureOption option[]);
 
 	//RTVデスクリプタヒープ作成
 	void CreateRTVDescriptorHeap(int bufferCount);
@@ -77,7 +83,7 @@ public:
 	~RTex();
 
 	//レンダーテクスチャ生成
-	void CreateRTex(int texture_width, int texture_height, float* clearColor,int bufferCount = 1);
+	void CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount, RenderTextureOption *option = nullptr);
 
 	//レンダーテクスチャのデータ取得
 	const RenderTextureData* GetRTData() { return rtdata.get(); }

@@ -24,6 +24,7 @@ struct ConstBufferDataB0
 {
 	XMMATRIX mat;
 	XMFLOAT4 color;
+	XMMATRIX lightCamMat;
 };
 
 //定数バッファデータ構造体B1（マテリアルを使用->モデル依存なので複数いらない）

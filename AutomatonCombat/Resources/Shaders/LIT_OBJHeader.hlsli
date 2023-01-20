@@ -10,6 +10,8 @@ cbuffer cbuff0 : register(b0)
 cbuffer cbuff1 : register(b1)
 {
     float3 dirLight;
+    //ライトビュープロジェクション
+    //float4x4 LVPMat;
 }
 
 

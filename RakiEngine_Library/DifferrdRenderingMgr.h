@@ -14,7 +14,7 @@
 struct cbuffer_b0
 {
 	DirectX::XMFLOAT3 eyePos;	//カメラ座標
-	float pad;					//パディング
+	float pad;
 };
 
 struct cbuffer_b1
