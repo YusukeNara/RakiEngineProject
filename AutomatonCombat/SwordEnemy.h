@@ -35,10 +35,14 @@ private:
 	Sword_ChargeJudge* m_chargeJudge;
 	Sword_ChargeAct* m_chargeAct;
 
+	//モデルデータ
+	static std::shared_ptr<Model3D> swordModel;
+	static bool isLoaded;
 
+	NavMeshAstar *navAstar;
 
 public:
-	SwordEnemy(Player* player);
+	SwordEnemy(Player* player,NavMeshAstar *astar);
 	~SwordEnemy();
 
 	void Init();

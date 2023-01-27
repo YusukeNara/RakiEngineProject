@@ -25,7 +25,7 @@ public:
 	EnemyManager();
 	~EnemyManager();
 
-	void Init(Player *player);
+	void Init(Player *player,NavMeshAstar *astar);
 	void Reset();
 
 	void Update();

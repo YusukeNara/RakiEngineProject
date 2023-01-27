@@ -1,15 +1,25 @@
 #include "SwordEnemy.h"
 
-SwordEnemy::SwordEnemy(Player* player)
+std::shared_ptr<Model3D> SwordEnemy::swordModel;
+bool SwordEnemy::isLoaded = false;
+
+SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 {
-	s_object.swordObject = LoadModel_ObjFile("enemy_sword");
+	if (!isLoaded) {
+		swordModel = std::make_shared<Model3D>();
+		swordModel->LoadObjModel("enemy_sword");
+		isLoaded = true;
+	}
+
+	s_object.swordObject = std::make_unique<Object3d>();
+	s_object.swordObject->SetLoadedModelData(swordModel);
 	s_object.player = player;
 	m_swordWaitJudge	=	new Sword_WaitJudge(&s_object);
 	m_swordWaitAct		=	new Sword_WaitAct(&s_object);
 	m_swordAttackJudge =	new Sword_AttackJudge(&s_object, m_swordWaitAct);
 	m_swordAttackAct =		new Sword_AttackAct(&s_object);
 	m_approachJudge =		new Sword_ApproachJudge(&s_object);
-	m_approahAct =			new Sword_ApproachingAct(&s_object);
+	m_approahAct =			new Sword_ApproachingAct(&s_object,astar);
 	m_chargeJudge =			new Sword_ChargeJudge(&s_object);
 	m_chargeAct =			new Sword_ChargeAct(&s_object);
 
@@ -100,7 +110,7 @@ void SwordEnemy::DebugDraw()
 
 SwordEnemy* SwordEnemy::clone(Player* player)
 {
-	SwordEnemy* clone = new SwordEnemy(player);
+	SwordEnemy* clone = new SwordEnemy(player, navAstar);
 	clone->Init();
 	clone->rootNode = rootNode;
 	clone->actNode = actNode;

@@ -231,7 +231,8 @@ void Player::Init()
 
 	//ƒpƒ‰ƒ[ƒ^‰Šú‰»
 	pos.zero();
-	pos.y = 5.0f;
+	pos.z = 400.0f;
+	pos.y = 4.0f;
 	rot.zero();
 	speedVec.zero();
 	bodyColider.rad = 5.0f;

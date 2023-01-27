@@ -174,13 +174,14 @@ BehaviorActionBase::ACTION_STATE Sword_ApproachingAct::Run()
 
     actionState = BehaviorActionBase::ACTION_STATE::RUNNING;
 
-    RVector3 moveVec;
-    moveVec = enemy->player->pos - enemy->pos;
+    bool isMoved = false;
+    //RVector3 moveVec = astar->MoveWaypointDirectLine(0.0f, enemy->pos, isMoved);
+    RVector3 moveVec = enemy->player->pos - enemy->pos;
     moveVec = moveVec.norm() * 1.5;
 
     enemy->pos += moveVec;
 
-    if (distance(enemy->pos, enemy->player->pos) < 50.0f) {
+    if (isMoved) {
         actionState = BehaviorActionBase::ACTION_STATE::SUCCESS;
     }
 
@@ -195,6 +196,7 @@ void Sword_ApproachingAct::Init()
 {
     actScriptName = "approachAct";
 
+    astar->NavMeshSearchAster(enemy->pos, enemy->player->pos, result);
 }
 
 bool Sword_ApproachJudge::Judge()
@@ -205,7 +207,7 @@ bool Sword_ApproachJudge::Judge()
 
 SwordEnemyObject::~SwordEnemyObject()
 {
-    delete swordObject;
+    
 }
 
 bool Sword_TolnadeJudge::Judge()

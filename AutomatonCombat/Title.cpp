@@ -19,6 +19,9 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     ////プレイヤー
 
+    nData.LoadNavMesh("Resources/NavMeshTestData.txt");
+    astar.SetNavMeshData(nData.navMeshData);
+
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 
     gobject.Init();
@@ -27,7 +30,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     gobject.SetPlayer(&pl);
 
-    emanager.Init(&pl);
+    emanager.Init(&pl, &astar);
 
     build[0].Load();
 
@@ -60,14 +63,8 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     WaveDirections::Get()->Init();
 
     t_frame = 0;
-
-    nData.LoadNavMesh("Resources/NavMeshTestData.txt");
-    astar.SetNavMeshData(nData.navMeshData);
     std::vector<NavMesh> result;
-    astar.NavMeshSearchAstar(nData.navMeshData[2], nData.navMeshData[10], result);
-
-    NavMesh stand;
-    astar.NowStandingMesh(RVector3(50, 0, 50), stand);
+    //astar.NavMeshSearchAstar(nData.navMeshData[2], nData.navMeshData[10], result);
 }
 
 Title::~Title()
@@ -164,7 +161,7 @@ void Title::Draw() {
     //ゲーム内制作モデルデータ
     gobject.Draw();
 
-    //stage.Draw();
+    stage.Draw();
 
     //ロードモデルデータ
 

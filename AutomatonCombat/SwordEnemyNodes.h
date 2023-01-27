@@ -9,6 +9,8 @@
 #include "Player.h"
 
 #include <string>
+#include <memory>
+#include <NavMeshAstar.h>
 using namespace std;
 
 //ノードと行動定義
@@ -22,7 +24,7 @@ public:
 	//方向ベクトル
 	RVector3 lookVec;
 	//描画オブジェクト
-	Object3d* swordObject;
+	std::unique_ptr<Object3d> swordObject;
 	//プレイヤー座標
 	Player* player;
 	//当たり判定
@@ -85,8 +87,9 @@ public:
 class Sword_ApproachingAct : public BehaviorActionBase
 {
 public:
-	Sword_ApproachingAct(SwordEnemyObject* enemy) {
+	Sword_ApproachingAct(SwordEnemyObject* enemy,NavMeshAstar *astar) {
 		this->enemy = enemy;
+		this->astar = astar;
 		Init();
 	}
 
@@ -95,6 +98,9 @@ public:
 	virtual void Init() override;
 
 	SwordEnemyObject* enemy;
+	NavMeshAstar* astar;
+
+	std::vector<NavMesh> result;
 };
 
 

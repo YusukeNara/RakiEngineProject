@@ -12,11 +12,11 @@ EnemyManager::~EnemyManager()
 	delete swordEnemyMother;
 }
 
-void EnemyManager::Init(Player *player)
+void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 {
 	//複製元のエネミーオブジェクトを生成
 	this->player = player;
-	swordEnemyMother = new SwordEnemy(player);
+	swordEnemyMother = new SwordEnemy(player, astar);
 	swordEnemyMother->s_object.swordObject->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
 	gunEnemy = new GunEnemy();

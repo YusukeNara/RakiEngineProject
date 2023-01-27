@@ -38,6 +38,8 @@ void NavMeshAstar::NavMeshSearchAstar(NavMesh start, NavMesh goal, std::vector<N
 				if (m->heuristicCost == -1) {
 					costtmp = CaclHeuristicCost(&goal, (*searcingMesh));
 				}
+
+				costtmp = CaclHeuristicCost(&goal, (*searcingMesh));
 				
 				//’Ç‰Á”»’è‚ğÀs‚µAok‚È‚çopen‚É’Ç‰Á
 				if (CheckNavMeshAddOpenAdd(openMesh, closeMesh, (*searcingMesh), costtmp)) {
