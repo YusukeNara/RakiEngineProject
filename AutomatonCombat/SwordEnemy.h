@@ -8,6 +8,26 @@
 #include <ParticleManager.h>
 #include "EnemyDefeatEffect.h"
 
+class DeathParticle :public ParticlePrototype
+{
+public:
+	DeathParticle() {
+		Init();
+	};
+
+	virtual void Init() override;
+
+	virtual void Update() override;
+
+	virtual ParticlePrototype* clone(RVector3 pos) override;
+
+	void SetVec(RVector3 vec);
+
+private:
+
+	RVector3 vec;
+};
+
 
 //操作する
 class SwordEnemy
@@ -36,10 +56,14 @@ private:
 	Sword_ChargeAct* m_chargeAct;
 
 	//モデルデータ
-	static std::shared_ptr<Model3D> swordModel;
+	static std::shared_ptr<fbxModel> swordModel;
 	static bool isLoaded;
 
 	NavMeshAstar *navAstar;
+
+	ParticleManager *deathpm;
+	DeathParticle *dp;
+	int dptex;
 
 public:
 	SwordEnemy(Player* player,NavMeshAstar *astar);
@@ -51,6 +75,8 @@ public:
 
 	void Draw();
 
+	void ParticleDraw();
+
 	void DebugDraw();
 	
 	//オブジェクト
@@ -59,9 +85,10 @@ public:
 	BehaviorEditor editor;
 
 	//複製
-	SwordEnemy* clone(Player* player);
+	SwordEnemy* clone(Player* player, NavMeshAstar* a);
 
 };
+
 
 
 

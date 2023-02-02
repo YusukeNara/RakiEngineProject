@@ -240,6 +240,9 @@
     <ClCompile Include="NavMeshData.cpp">
       <Filter>Behavior\Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="DebugDrawer.cpp">
+      <Filter>Graphic\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="NavMeshData.h">
       <Filter>Behavior\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDrawer.h">
+      <Filter>Graphic\3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

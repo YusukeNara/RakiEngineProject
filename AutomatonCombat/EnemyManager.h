@@ -36,6 +36,7 @@ public:
 	void Draw();
 	//2d描画
 	void UIDraw();
+	void ParticleDraw();
 
 	//デバッグモード
 	void DebugExecution();
@@ -105,5 +106,7 @@ private:
 	DefeatParticle* m_defeatP;
 
 	int defeatPtex;
+
+	NavMeshAstar* astar;
 };
 

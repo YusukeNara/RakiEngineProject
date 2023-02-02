@@ -14,6 +14,10 @@ void DefeatParticle::Update()
 	}
 
 	nowFrame++;
+
+	color = { 0.8f,0.3f,0.3f,1.0f };
+
+	scale = 5.0f;
 }
 
 ParticlePrototype* DefeatParticle::clone(RVector3 pos)

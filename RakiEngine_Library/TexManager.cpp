@@ -27,6 +27,26 @@ void TexManager::InitTexManager()
 
 UINT TexManager::LoadTexture(const char *filename)
 {
+    std::string fp = filename;
+    //拡張子を取得し、対応するロード方法を選択
+    size_t pos1;
+    std::wstring exceptExt;
+    std::wstring filepath, fileExt_;
+    int buffsize = MultiByteToWideChar(CP_ACP, 0, fp.c_str(), -1, nullptr, 0);
+    filepath.resize(buffsize);
+    MultiByteToWideChar(CP_ACP, 0, fp.c_str(), -1, &filepath[0], buffsize);
+
+    pos1 = filepath.rfind('.');
+
+    if (pos1 != std::wstring::npos) {
+        fileExt_ = filepath.substr(pos1 + 1, filepath.size() - pos1 - 1);
+        exceptExt = filepath.substr(0, pos1);
+    }
+    else {
+        fileExt_ = L"";
+        exceptExt = filepath;
+    }
+
     //ヌルチェック
     assert(filename != nullptr);
 
@@ -51,12 +71,25 @@ UINT TexManager::LoadTexture(const char *filename)
     size_t convertedChars = 0;
     mbstowcs_s(&convertedChars, FileName, newsize, filename, _TRUNCATE);
 
-    // WICテクスチャのロード
-    result = LoadFromWICFile(FileName,
-        WIC_FLAGS_IGNORE_SRGB,
-        &textureData[useTexIndexNum].metaData,
-        textureData[useTexIndexNum].scratchImg);
-    textureData[useTexIndexNum].img = textureData[useTexIndexNum].scratchImg.GetImage(0, 0, 0);
+    //ddsはdds、それ以外はWIC
+
+    if (wcscmp(fileExt_.c_str(), L"dds") == 0) {
+        // WICテクスチャのロード
+        result = LoadFromDDSFile(FileName,
+            DDS_FLAGS_NONE,
+            &textureData[useTexIndexNum].metaData,
+            textureData[useTexIndexNum].scratchImg);
+        textureData[useTexIndexNum].img = textureData[useTexIndexNum].scratchImg.GetImage(0, 0, 0);
+    }
+    else {
+        // WICテクスチャのロード
+        result = LoadFromWICFile(FileName,
+            WIC_FLAGS_IGNORE_SRGB,
+            &textureData[useTexIndexNum].metaData,
+            textureData[useTexIndexNum].scratchImg);
+        textureData[useTexIndexNum].img = textureData[useTexIndexNum].scratchImg.GetImage(0, 0, 0);
+    }
+
 
     if (FAILED(result)) {
         std::wstringstream stream;

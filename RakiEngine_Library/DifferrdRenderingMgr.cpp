@@ -8,14 +8,16 @@ void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cm
 	m_dev = dev;
 	m_cmd = cmd;
 
-    DirectionalLight::SetLightDir(1.f, -1.f, 1.f);
+    DirectionalLight::SetLightPos(RVector3(300.f, 300.f, 300.f),
+        RVector3(0.f, 0.f, 0.f),
+        RVector3(0.f, 1.f, 0.f));
 
 	ShaderCompile();
 
 	CreateGraphicsPipeline();
 }
 
-void DiferredRenderingMgr::Rendering(RTex* gBuffer)
+void DiferredRenderingMgr::Rendering(RTex* gBuffer, RTex* shadowMap)
 {
     UpdateConstBuff();
 
@@ -32,28 +34,33 @@ void DiferredRenderingMgr::Rendering(RTex* gBuffer)
     m_cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
     //頂点バッファ設定
     m_cmd->IASetVertexBuffers(0, 1, &m_vbview);
-    //定数バッファ設定（パラメーターを増やすたびにここを確認せよ）
-    m_cmd->SetGraphicsRootConstantBufferView(4, m_constBuffEyePos->GetGPUVirtualAddress());
-    m_cmd->SetGraphicsRootConstantBufferView(5, m_constBuffDirLight->GetGPUVirtualAddress());
     //SRVセット（計算するパラメータが増えると、ここも増える）
-    m_cmd->SetGraphicsRootDescriptorTable(0,
+    m_cmd->SetGraphicsRootDescriptorTable(2,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(), 
             0, 
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-    m_cmd->SetGraphicsRootDescriptorTable(1,
+    m_cmd->SetGraphicsRootDescriptorTable(3,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
             1,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-    m_cmd->SetGraphicsRootDescriptorTable(2,
+    m_cmd->SetGraphicsRootDescriptorTable(4,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
             2,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-    m_cmd->SetGraphicsRootDescriptorTable(3,
+    m_cmd->SetGraphicsRootDescriptorTable(5,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(gBuffer->GetDescriptorHeapSRV()->GetGPUDescriptorHandleForHeapStart(),
             3,
             m_dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+    //定数バッファ設定（パラメーターを増やすたびにここを確認せよ）
+    m_cmd->SetGraphicsRootConstantBufferView(0, m_constBuffEyePos->GetGPUVirtualAddress());
+    m_cmd->SetGraphicsRootConstantBufferView(1, m_constBuffDirLight->GetGPUVirtualAddress());
+
     //ディファードレンダリング結果出力
     m_cmd->DrawInstanced(6, 1, 0, 0);
+
+    shadowMap->ClearRenderTarget();
+
+   
 
     //半透明用にデプスはgBufferに、描画先をバックバッファにする
     RenderTargetManager::GetInstance()->SetDSV(gBuffer);
@@ -255,14 +262,15 @@ void DiferredRenderingMgr::CreateGraphicsPipeline()
 
     //ルートパラメーターの設定
     CD3DX12_ROOT_PARAMETER rootparams[6] = {};
+    rootparams[0].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
+    rootparams[1].InitAsConstantBufferView(1);
     //GBufferテクスチャ用（定数バッファをライト配列を入れるのに使う予定だが、現状はなし）
-    rootparams[0].InitAsDescriptorTable(1, &descRangeSRV_0, D3D12_SHADER_VISIBILITY_ALL);//アルベドテクスチャ
-    rootparams[1].InitAsDescriptorTable(1, &descRangeSRV_1, D3D12_SHADER_VISIBILITY_ALL);//法線テクスチャ
-    rootparams[2].InitAsDescriptorTable(1, &descRangeSRV_2, D3D12_SHADER_VISIBILITY_ALL);//ワールド座標テクスチャ
-    rootparams[3].InitAsDescriptorTable(1, &descRangeSRV_3, D3D12_SHADER_VISIBILITY_ALL);//深度情報テクスチャ
+    rootparams[2].InitAsDescriptorTable(1, &descRangeSRV_0, D3D12_SHADER_VISIBILITY_ALL);//アルベドテクスチャ
+    rootparams[3].InitAsDescriptorTable(1, &descRangeSRV_1, D3D12_SHADER_VISIBILITY_ALL);//法線テクスチャ
+    rootparams[4].InitAsDescriptorTable(1, &descRangeSRV_2, D3D12_SHADER_VISIBILITY_ALL);//ワールド座標テクスチャ
+    rootparams[5].InitAsDescriptorTable(1, &descRangeSRV_3, D3D12_SHADER_VISIBILITY_ALL);//深度情報テクスチャ
     //定数バッファ
-    rootparams[4].InitAsConstantBufferView(0);//b0 スペキュラ用視点座標
-    rootparams[5].InitAsConstantBufferView(1);
+
 
     //テクスチャサンプラー設定
     D3D12_STATIC_SAMPLER_DESC samplerDesc   = {};

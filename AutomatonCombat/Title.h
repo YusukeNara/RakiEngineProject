@@ -73,6 +73,7 @@ public:
     GroundObject gobject;
 
     std::array<BuildingObject,10> build;
+    bool isBuildDraw = true;
 
     std::array<SkyBoxObject, 5> sky;
 

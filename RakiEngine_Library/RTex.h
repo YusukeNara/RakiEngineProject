@@ -98,6 +98,8 @@ public:
 
 	ID3D12DescriptorHeap* GetDescriptorHeapSRV() { return rtdata->srvHeap.Get(); }
 
+	void ClearRenderTarget();
+
 	friend class RenderTargetManager;
 
 private:

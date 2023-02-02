@@ -212,6 +212,17 @@ void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor, 
 	graph_size.second = texture_height;
 }
 
+void RTex::ClearRenderTarget()
+{
+
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvh = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtdata->rtvHeap->GetCPUDescriptorHandleForHeapStart());
+	RAKI_DX12B_CMD->ClearRenderTargetView(rtvh, clearColors.data(), 0, nullptr);
+
+	CD3DX12_CPU_DESCRIPTOR_HANDLE dsvh = CD3DX12_CPU_DESCRIPTOR_HANDLE(rtdata->dsvHeap->GetCPUDescriptorHandleForHeapStart());
+	RAKI_DX12B_CMD->ClearDepthStencilView(dsvh, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
 void RTex::InitViewAndRect(int width, int height)
 {
 	//ビューポートはウィンドウサイズに合わせる

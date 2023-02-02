@@ -1,4 +1,5 @@
 #include "BuildingObject.h"
+#include <Raki_imguiMgr.h>
 
 shared_ptr<Model3D> BuildingObject::BuildModel;
 
@@ -11,6 +12,8 @@ void BuildingObject::Init()
 
 	object3d->SetAffineParamScale(RVector3(5, 5, 5));
 	object3d->SetAffineParamTranslate(RVector3(100, 0, 100));
+
+	object3d->isDrawShadow = true;
 }
 
 void BuildingObject::Update()
@@ -21,6 +24,11 @@ void BuildingObject::Update()
 void BuildingObject::Draw()
 {
 	object3d->DrawObject();
+}
+
+void BuildingObject::DebugDraw()
+{
+
 }
 
 void BuildingObject::Finalize()

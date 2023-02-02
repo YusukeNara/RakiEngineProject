@@ -28,7 +28,7 @@ PixelOutput main(GSOutput input)
     result.pixel_color = float4(texcolor.rgb, 1.0f );
     result.normal.rgb = float3(input.normal.xyz / 2.0f) + 0.5f;
     result.normal.a = 1.0f;
-    result.worldPos = mul(mat, input.worldPos);
+    result.worldPos = input.svpos;
     
     //通常カメラ空間z値
     float4 cz = float4(input.svpos.z, input.svpos.z, input.svpos.z, 1.0f);
@@ -39,7 +39,7 @@ PixelOutput main(GSOutput input)
     
     //ライト空間zより低い値の場合は影
     //result.zColor = MakeShadowTexture(lightMat, cz, lvppos, result.pixel_color);
-    result.zColor = float4(lz.z, lz.z, lz.z, 1.0f);
+    result.zColor = float4(texcolor.rgb, 1.0f);
     
     return result;
 }

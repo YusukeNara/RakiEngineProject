@@ -82,6 +82,9 @@ private:
 	ComPtr<ID3DBlob> obj_GS;
 	ComPtr<ID3DBlob> obj_PS;
 	ComPtr<ID3DBlob> fbx_VS;
+	ComPtr<ID3DBlob> shadow_VS;
+	ComPtr<ID3DBlob> shadow_PS;
+	ComPtr<ID3DBlob> shadowFBX_VS;
 
 	//シェーダーオブジェクト（即時描画用）
 	ComPtr<ID3DBlob> qd_BoxGS;
@@ -103,9 +106,15 @@ private:
 	//FBX用のパイプラインステートがいるらしい...
 	Pipeline3D m_fbxPipeline;
 
+	//さらにシャドウマップレンダリング用パイプライン
+	Pipeline3D m_shadowMapPipeline;
+	Pipeline3D m_shadowMapFbxPipeline;
+
 	//GBuffer(RTex)
 public:
 	RTex m_gBuffer;
+
+	RTex m_shadomMap;
 private:
 
 	//コンストラクタ、デストラクタ
@@ -175,6 +184,14 @@ public:
 
 	void SetCommonBeginDrawObject3D2MultiPassRenderResource();
 
+	void SetCommonBeginDrawShadow();
+
+	void SetCommonBeginDrawShadow_FBX();
+
+	void ReturnShadowToDifferd();
+
+	void ShadowMapClear();
+
 	static ID3D12Device *GetDev() {
 		return dev;
 	}
@@ -205,6 +222,10 @@ private:
 	Pipeline3D CreateDiferredRenderingPipelineState();
 
 	Pipeline3D CreateFbxPipeline();
+
+	Pipeline3D CreateShadowMapPipeline();
+
+	Pipeline3D CreateShadowMapFbxPipeline();
 
 };
 

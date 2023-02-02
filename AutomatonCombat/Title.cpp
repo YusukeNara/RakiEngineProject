@@ -64,7 +64,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     t_frame = 0;
     std::vector<NavMesh> result;
-    //astar.NavMeshSearchAstar(nData.navMeshData[2], nData.navMeshData[10], result);
+    //astar.NavMeshSearchAstar(&nData.navMeshData[0], &nData.navMeshData[3], result);
 }
 
 Title::~Title()
@@ -161,15 +161,18 @@ void Title::Draw() {
     //ゲーム内制作モデルデータ
     gobject.Draw();
 
-    stage.Draw();
+    if(isBuildDraw){ stage.Draw(); }
+
 
     //ロードモデルデータ
 
     NY_Object3DManager::Get()->CloseDrawObject3D();
 
-    diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer);
+    diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer, &NY_Object3DManager::Get()->m_shadomMap);
 
     pl.ParticleDraw();
+
+    emanager.ParticleDraw();
 
     SpriteManager::Get()->SetCommonBeginDraw();
 
@@ -203,6 +206,12 @@ void Title::Draw() {
         clearSprite.DrawExtendSprite(1280.0f / 4, 720.0f / 2, 1280.0f * 0.75, 720.0f * 0.8);
         clearSprite.Draw();
     }
+
+    ImguiMgr::Get()->StartDrawImgui("Build", 100, 100);
+
+    ImGui::Checkbox("isDraw", &isBuildDraw);
+
+    ImguiMgr::Get()->EndDrawImgui();
 
     emanager.UIDraw();
 

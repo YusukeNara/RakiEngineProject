@@ -37,7 +37,7 @@ public:
 	void Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd);
 
 	//•`‰æ
-	void Rendering(RTex* gBuffer);
+	void Rendering(RTex* gBuffer, RTex* shadowMap);
 
 
 private:

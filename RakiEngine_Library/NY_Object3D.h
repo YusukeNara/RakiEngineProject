@@ -68,6 +68,9 @@ public:
 	//ビルボードフラグ
 	bool isBillBoard;
 
+	//影描画フラグ
+	bool isDrawShadow = false;
+
 public:
 	//コンストラクタ
 	Object3d() {
@@ -88,6 +91,7 @@ public:
 	void SetLoadedModelData(Model3D *loadedModel);
 
 	void SetLoadedModelData(std::shared_ptr<Model3D> loadedmodel);
+	void SetLoadedModelData(std::shared_ptr<fbxModel> loadedmodel);
 
 	//変換行列の設定
 	void SetWorldMatrix(XMMATRIX matWorld);
@@ -101,6 +105,8 @@ public:
 	void UpdateObject3D();
 	//ビルボード更新（カメラオブジェクトをそのまま取り込んで、ビルボード用の更新処理を行う）
 	void UpdateBillBoard3D();
+
+	void DrawShadow();
 
 	//オブジェクト描画
 	void DrawObject();
@@ -156,6 +162,8 @@ private:
 
 	//ダーティフラグ
 	bool isDirty;
+
+	//影描画フラグ
 
 	//適用するリソースの番号
 	UINT resourceNumber;

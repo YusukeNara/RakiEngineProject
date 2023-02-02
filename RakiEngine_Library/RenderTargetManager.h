@@ -73,18 +73,20 @@ public:
 	/// <param name="handle">レンダーテクスチャのハンドル</param>
 	void SetRenderTarget(int handle);
 
+	void SetRenderTarget(RTex* rt, int handle, bool clearFlag = false);
+
 	/// <summary>
 	/// レンダーターゲット複数設定（現状ディファードレンダリング用）
 	/// </summary>
 	/// <param name="renderTargets">レンダーテクスチャの配列</param>
-	void SetMultiRenderTargets(const RTex* renderTargets,int size);
+	void SetMultiRenderTargets(const RTex* renderTargets,int size, bool clearFlag = false);
 
 	/// <summary>
 	/// ディファードレンダリングで設定したレンダーターゲットをクローズ
 	/// </summary>
 	/// <param name="renderTargets">レンダーターゲット配列</param>
 	/// <param name="size">レンダーターゲットの枚数</param>
-	void CloseMultiRenderTargets(const RTex *renderTargets, int size);
+	void CloseMultiRenderTargets(const RTex *renderTargets, int size, bool isChangeBB = false);
 
 
 	/// <summary>
@@ -122,6 +124,8 @@ public:
 	void SetClearColor(float red, float green, float blue);
 
 	void ClearRenderTexture(int handle);
+
+	
 
 	//バックバッファへの描画を開始（レンダーテクスチャへ描画している時）
 	void SetDrawBackBuffer();

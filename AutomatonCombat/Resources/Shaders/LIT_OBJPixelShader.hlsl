@@ -16,7 +16,6 @@ SamplerState smp : register(s0);
 
 //ピクセルのz値をライト空間の座標に変換する
 
-
 float4 main(VSOutput input) : SV_TARGET
 {
     //アルベド情報を取得
@@ -51,6 +50,10 @@ float4 main(VSOutput input) : SV_TARGET
     t = pow(t, 4.0f);
     //スペキュラを合成
     lig += lightColor * t;
+    
+    float4 tmp = albedo;
+    albedo = depth;
+    albedo = tmp;
 
     //ADS合成
     float4 resultColor = albedo;

@@ -154,7 +154,13 @@ void RenderTargetManager::SetRenderTarget(int handle)
 	nowRenderTargetHandle = handle;
 }
 
-void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int size)
+void RenderTargetManager::SetRenderTarget(RTex* rt, int handle, bool clearFlag)
+{
+
+
+}
+
+void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int size, bool clearFlag)
 {
 	//RTV用デスクリプタハンドルは複数
 	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> rtvhs;
@@ -182,10 +188,12 @@ void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int si
 	cmdlist->OMSetRenderTargets(UINT(rtvhs.size()), rtvhs.data(), true, &dsvh);
 
 	//レンダーターゲットクリア
-	for (auto& r : rtvhs) {
-		cmdlist->ClearRenderTargetView(r, renderTargets->clearColors.data(), 0, nullptr);
+	if (clearFlag) {
+		for (auto& r : rtvhs) {
+			cmdlist->ClearRenderTargetView(r, renderTargets->clearColors.data(), 0, nullptr);
+		}
+		cmdlist->ClearDepthStencilView(dsvh, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
-	cmdlist->ClearDepthStencilView(dsvh, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 	//ビューとシザーの設定
 	std::vector<CD3DX12_VIEWPORT> viewports;
@@ -202,7 +210,7 @@ void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int si
 	isDrawing = USING_RENDERTEXTURE;
 }
 
-void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int size)
+void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int size,bool isChangeBB)
 {
 	//レンダーターゲットをクローズ、バックバッファに切り替え
 	for (auto& rt : renderTargets->rtdata->rtexBuff) {
@@ -215,7 +223,10 @@ void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int
 		cmdlist->ResourceBarrier(1, &barrierState);
 	}
 	
-	SetDrawBackBuffer();
+	if (isChangeBB) {
+		SetDrawBackBuffer();
+	}
+
 }
 
 void RenderTargetManager::SetRenderTargetDrawArea(int handle, int x1, int y1, int x2, int y2)
@@ -280,7 +291,6 @@ void RenderTargetManager::ClearRenderTexture(int handle)
 	}
 
 }
-
 void RenderTargetManager::SetDrawBackBuffer()
 {
 	//レンダーテクスチャの状態を表示状態に

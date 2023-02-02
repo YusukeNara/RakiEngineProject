@@ -16,8 +16,12 @@ void DirectionalLight::SetLightDir(float x, float y, float z)
 
 	//ビュー行列格納
 	lightCamera = XMMatrixLookAtLH(XMLoadFloat3(&dir), XMLoadFloat3(&target), XMLoadFloat3(&up));
+}
 
-	lightCamera *= NY_Camera::Get()->GetMatrixProjection();
+void DirectionalLight::SetLightPos(RVector3 lightPos, RVector3 lightVec, RVector3 lightUp)
+{
+	lightCamera = XMMatrixLookAtLH(XMLoadFloat3(&lightPos), XMLoadFloat3(&lightVec), XMLoadFloat3(&lightUp));
 
-	
+	//座標とベクトルからライト方向を計算
+	dir = { RVector3(lightPos - lightVec).norm() * 2 };
 }

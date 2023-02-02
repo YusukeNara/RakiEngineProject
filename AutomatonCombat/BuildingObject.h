@@ -15,6 +15,8 @@ public:
 
     void Draw() override;
 
+    void DebugDraw();
+
     void Finalize() override;
 
     void OnCollision(const ColliderInfo *info) override;

@@ -74,6 +74,17 @@ void Object3d::SetLoadedModelData(std::shared_ptr<Model3D> loadedmodel)
 	isThisModel = MODEL_DATA_OBJ;
 }
 
+void Object3d::SetLoadedModelData(std::shared_ptr<fbxModel> loadedmodel)
+{
+	InitObject3D(RAKI_DX12B_DEV);
+
+	fbxmodel = loadedmodel;
+
+	isDirty = true;
+
+	isThisModel = MODEL_DATA_FBX;
+}
+
 void Object3d::SetWorldMatrix(XMMATRIX matWorld)
 {
 	//変換行列を設定
@@ -175,7 +186,7 @@ void Object3d::UpdateObject3D()
 	{
 		ConstMapB0->mat = matWorld * camera->GetMatrixView() * camera->GetMatrixProjection();
 		ConstMapB0->color = this->color;
-		ConstMapB0->lightCamMat = DirectionalLight::GetLightCamera();
+		ConstMapB0->lightCamMat = matWorld * DirectionalLight::GetLightCamera() * camera->GetMatrixProjection();
 		constBuffB0->Unmap(0, nullptr);
 	}
 
@@ -289,6 +300,39 @@ void Object3d::UpdateBillBoard3D()
 	model->Update();
 }
 
+void Object3d::DrawShadow()
+{
+	if (isThisModel == MODEL_DATA_FBX) {
+		NY_Object3DManager::Get()->SetCommonBeginDrawShadow_FBX();
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(4, constBuffSkin->GetGPUVirtualAddress());
+
+		fbxmodel->Draw();
+
+		NY_Object3DManager::Get()->ReturnShadowToDifferd();
+	}
+	else {
+		NY_Object3DManager::Get()->SetCommonBeginDrawShadow();
+
+		//頂点バッファ設定
+		RAKI_DX12B_CMD->IASetVertexBuffers(0, 1, &model->vbView);
+		//インデックスバッファ設定
+		RAKI_DX12B_CMD->IASetIndexBuffer(&model->ibview);
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+		//描画
+		RAKI_DX12B_CMD->DrawIndexedInstanced(UINT(model->indices.size()), 1, 0, 0, 0);
+
+		NY_Object3DManager::Get()->ReturnShadowToDifferd();
+	}
+
+}
+
 void Object3d::DrawObject()
 {
 	NY_Object3DManager::Get()->SetRestartObject3D();
@@ -298,6 +342,10 @@ void Object3d::DrawObject()
 	}
 	else {
 		UpdateObject3D();
+	}
+
+	if (isDrawShadow) {
+		DrawShadow();
 	}
 
 

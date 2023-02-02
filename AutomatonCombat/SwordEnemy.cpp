@@ -1,13 +1,16 @@
 #include "SwordEnemy.h"
 
-std::shared_ptr<Model3D> SwordEnemy::swordModel;
+#include <FbxLoader.h>
+#include <NY_random.h>
+
+std::shared_ptr<fbxModel> SwordEnemy::swordModel;
 bool SwordEnemy::isLoaded = false;
 
 SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 {
 	if (!isLoaded) {
-		swordModel = std::make_shared<Model3D>();
-		swordModel->LoadObjModel("enemy_sword");
+		swordModel = std::make_shared<fbxModel>();
+		swordModel.reset(FbxLoader::GetInstance()->LoadFBXFile("FiringRifle"));
 		isLoaded = true;
 	}
 
@@ -47,7 +50,10 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 	editor.AddEditData_Node(approachNode);
 	editor.AddEditData_Node(chargeNode);
 
-
+	deathpm = ParticleManager::Create();
+	dptex = TexManager::LoadTexture("Resources/effect1.png");
+	dp = new DeathParticle;
+	deathpm->Prototype_Set(dp);
 }
 
 SwordEnemy::~SwordEnemy()
@@ -82,6 +88,9 @@ void SwordEnemy::Update()
 {
 	//ÉcÉäÅ[ÇÃé¿çs
 	swordEnemyTree.Run();
+
+	s_object.pos += s_object.mVec;
+
 	s_object.bodyColision.center = s_object.pos;
 	if (s_object.bodyColision.center.y < 10) { 
 		s_object.bodyColision.center.y = 10;
@@ -108,9 +117,9 @@ void SwordEnemy::DebugDraw()
 	editor.ObjectDataDraw();
 }
 
-SwordEnemy* SwordEnemy::clone(Player* player)
+SwordEnemy* SwordEnemy::clone(Player* player,NavMeshAstar *a)
 {
-	SwordEnemy* clone = new SwordEnemy(player, navAstar);
+	SwordEnemy* clone = new SwordEnemy(player, a);
 	clone->Init();
 	clone->rootNode = rootNode;
 	clone->actNode = actNode;
@@ -119,4 +128,44 @@ SwordEnemy* SwordEnemy::clone(Player* player)
 	clone->waitNode = waitNode;
 
 	return clone;
+}
+
+void SwordEnemy::ParticleDraw()
+{
+	deathpm->Draw(dptex);
+}
+
+void DeathParticle::Init()
+{
+	nowFrame = 0;
+
+	endFrame = 60;
+
+	scale = 5.0f;
+
+	color = { 1.0f,1.0f,1.0f,1.0f };
+
+	vel = RVector3(NY_random::floatrand_sl(3.0f, -3.0f), NY_random::floatrand_sl(3.0f, -3.0f), NY_random::floatrand_sl(3.0f, -3.0f));
+}
+
+void DeathParticle::Update()
+{
+	pos += vel;
+	nowFrame++;
+
+}
+
+ParticlePrototype* DeathParticle::clone(RVector3 pos)
+{
+	DeathParticle* p = new DeathParticle();
+
+	p->pos = pos;
+	p->vel = vel;
+
+	return p;
+}
+
+void DeathParticle::SetVec(RVector3 vec)
+{
+	vel = vec;
 }

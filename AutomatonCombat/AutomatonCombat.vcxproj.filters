@@ -63,6 +63,21 @@
     <FxCompile Include="Resources\Shaders\FBXVertexShader.hlsl">
       <Filter>Resources</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShadowMapPS.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShadowMapVS.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ShadowMapFbxVS.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\DebugDrawPS.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\DebugDrawVS.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_Camera.cpp" />
@@ -214,6 +229,12 @@
       <Filter>Resources</Filter>
     </None>
     <None Include="Resources\Shaders\Sprite.hlsli">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Shaders\ShadowMapShaderHeader.hlsli">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Shaders\DebugDrawShaderHeader.hlsli">
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>

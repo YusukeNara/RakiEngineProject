@@ -36,6 +36,8 @@ void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 	killedGroup = 0;
 	waveKillGroupAssignment = 3;
 
+	this->astar = astar;
+
 	//Å‰‚ÌoŒ»ˆ—
 	int spawnCount = NY_random::intrand_sl(WAVE_GROUP_MAX_SPAWN, WAVE_GROUP_MIN_SPAWN);
 	groupSpawnPos = RVector3(NY_random::floatrand_sl(300, -300), 10, NY_random::floatrand_sl(300, 300));
@@ -44,7 +46,7 @@ void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 		RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 			0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-		swordEnemys.push_back(swordEnemyMother->clone(player));
+		swordEnemys.push_back(swordEnemyMother->clone(player, astar));
 		swordEnemys[i]->s_object.pos = spawnPos;
 	}
 
@@ -127,7 +129,7 @@ void EnemyManager::Draw()
 
 	if (isDebugMode) { swordEnemyMother->Draw(); }
 
-	m_defeatPM->Prototype_Draw(defeatPtex);
+
 }
 
 void EnemyManager::UIDraw()
@@ -146,6 +148,11 @@ void EnemyManager::UIDraw()
 	NumSprite.DrawSprite(wfcenter.x - 128 + WF_X_OFFSET, wfcenter.y - 128);
 	NumSprite.DrawSprite(1280.f - 64.f,0);
 	NumSprite.Draw();
+}
+
+void EnemyManager::ParticleDraw()
+{
+	m_defeatPM->Prototype_Draw(defeatPtex);
 }
 
 void EnemyManager::DebugExecution()
@@ -207,7 +214,7 @@ void EnemyManager::EnemySpawn()
 			RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 				0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-			swordEnemys.push_back(swordEnemyMother->clone(player));
+			swordEnemys.push_back(swordEnemyMother->clone(player, astar));
 			swordEnemys[i]->s_object.pos = spawnPos;
 		}
 
@@ -247,5 +254,26 @@ void EnemyManager::Colision()
 			}
 		}
 	}
+
+	//“G“¯m‚Ìd‚È‚è‚ğ‰ñ”ğ
+	for (int i = 0; i < swordEnemys.size(); i++) {
+		for (int j = 0; j < swordEnemys.size(); j++) {
+			if (i == j) {
+				continue;
+			}
+
+			RV3Colider::Sphere jsphere(swordEnemys[j]->s_object.pos + swordEnemys[j]->s_object.mVec,
+				swordEnemys[j]->s_object.bodyColision.rad);
+
+			if (RV3Colider::Colision2Sphere(
+				swordEnemys[i]->s_object.bodyColision,
+				jsphere))
+			{
+				swordEnemys[j]->s_object.mVec = RVector3(0, 0, 0);
+			}
+		}
+	}
+
+
 
 }

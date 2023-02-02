@@ -23,6 +23,7 @@ public:
 	RVector3 pos;
 	//方向ベクトル
 	RVector3 lookVec;
+	RVector3 mVec;
 	//描画オブジェクト
 	std::unique_ptr<Object3d> swordObject;
 	//プレイヤー座標
@@ -98,9 +99,13 @@ public:
 	virtual void Init() override;
 
 	SwordEnemyObject* enemy;
-	NavMeshAstar* astar;
+	static NavMeshAstar* astar;
+
+	int index = 0;
 
 	std::vector<NavMesh> result;
+
+	std::vector<RVector3> resultRoot;
 };
 
 

@@ -5,7 +5,7 @@ void GunEnemy::Init()
 	nData.LoadNavMesh("Resources/NavMeshTestData.txt");
 	astar.SetNavMeshData(nData.navMeshData);
 	std::vector<NavMesh> result;
-	astar.NavMeshSearchAstar(nData.navMeshData[0], nData.navMeshData[10], result);
+	//astar.NavMeshSearchAstar(&nData.navMeshData[0], &nData.navMeshData[6], result);
 
 	rootNode = new BehaviorBaseNode;
 	shotNode = new BehaviorBaseNode;

@@ -13,6 +13,7 @@ BehaviorActionBase::ACTION_STATE Gun_WaitAct::Run()
     actionState = BehaviorActionBase::ACTION_STATE::RUNNING;
 
     bool isMoved = false;
+    //
     RVector3 moveVec = navAstar->MoveWaypointDirectLine(0.0f, *pos, isMoved);
     RVector3 lookVec = moveVec;
     moveVec = moveVec * 2.0;
@@ -34,9 +35,11 @@ BehaviorActionBase::ACTION_STATE Gun_WaitAct::Run()
 
 void Gun_WaitAct::Init()
 {
-    //プレイヤーを向く
-    std::vector<NavMesh> result;
-    //navAstar->NavMeshSearchAster(*pos, player->pos, result);
+    
+    std::vector<RVector3> result;
+
+    //ナビメッシュによる経路探索を実行
+    navAstar->NavMeshSearchAster(*pos, player->pos, result);
 
 }
 

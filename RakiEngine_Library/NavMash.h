@@ -14,6 +14,7 @@ public:
 	NavMesh() {}
 	~NavMesh(){}
 
+	void InitCost();
 
 	//ナビメッシュ頂点情報
 	std::array<RVector3, 3> navmashVertex;
@@ -32,9 +33,16 @@ public:
 	//ヒューリスティックコスト（エージェントが計算する）
 	int heuristicCost = -1;
 
+	//トータルコスト
+	int totalCost = -1;
+
 	bool operator > (const NavMesh& str) const
 	{
-		return (heuristicCost > str.heuristicCost);
+		return (totalCost > str.totalCost);
+	}
+	bool operator < (const NavMesh& str) const
+	{
+		return (totalCost < str.totalCost);
 	}
 	bool operator==(const NavMesh& other) const
 	{

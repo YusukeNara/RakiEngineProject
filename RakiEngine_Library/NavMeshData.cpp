@@ -87,7 +87,6 @@ void NavMeshData::LoadNavMesh(std::string file)
 			navMeshData[i].navmeshptr.push_back(&(*nm1));
 			nm1++;
 		}
-		else { nm1 = navMeshData.begin(); }
 
 		//“ñ–‡–Ú
 		auto nm2 = std::find_if(nm1, navMeshData.end(), [&](
@@ -96,7 +95,6 @@ void NavMeshData::LoadNavMesh(std::string file)
 			navMeshData[i].navmeshptr.push_back(&(*nm2)); 
 			nm2++;
 		}
-		else { nm2 = navMeshData.begin(); }
 
 		//ŽO–‡–Ú
 		auto nm3 = std::find_if(nm2, navMeshData.end(), [&](
@@ -104,7 +102,6 @@ void NavMeshData::LoadNavMesh(std::string file)
 		if (nm3 != navMeshData.end()) {
 			navMeshData[i].navmeshptr.push_back(&(*nm3));
 		}
-		else { nm3 = navMeshData.begin(); }
 	}
 
 }
@@ -114,10 +111,17 @@ bool NavMeshData::ChackIsNearMesh(NavMesh *lm, NavMesh *rm)
 	std::array<bool, 3> isMatchIndex = { false,false,false };
 
 	for (int i = 0; i < 3; i++) {
-		auto idx = rm->indexNumStr.find(std::to_string(lm->indices[i]));
-		if (idx != std::string::npos) { isMatchIndex.at(i) = true; }
+		auto idx = std::find(rm->indices.begin(), rm->indices.end(),lm->indices[i]);
+		if (idx != rm->indices.end()) { isMatchIndex.at(i) = true; }
 	}
 
 	//3‚Â‚Ì‚¤‚¿2‚Â‚ªˆê’v
 	return std::count(isMatchIndex.begin(), isMatchIndex.end(), true) == 2;
+}
+
+void NavMeshData::InitNavMeshes()
+{
+	for (auto& m : navMeshData) {
+		m.InitCost();
+	}
 }

@@ -1,6 +1,7 @@
 #include "SwordEnemyNodes.h"
 #include <Behavior_ActionBase.h>
 
+NavMeshAstar* Sword_ApproachingAct::astar = nullptr;
 
 bool Sword_WaitJudge::Judge()
 {
@@ -23,7 +24,6 @@ BehaviorActionBase::ACTION_STATE Sword_WaitAct::Run()
     }
 
     //様子を見るようにじわじわ移動する
-    enemy->pos += moveVec;
     lookVec = enemy->player->pos - enemy->pos;
 
     float angle = atan2f(lookVec.x, lookVec.z);
@@ -36,20 +36,20 @@ void Sword_WaitAct::Init()
 {
     frame = 0;
 
-    moveVec.zero();
+    enemy->mVec.zero();
 
-    moveVec = enemy->player->pos - enemy->pos;
-    lookVec = moveVec;
-    moveVec = moveVec.norm();
+    enemy->mVec = enemy->player->pos - enemy->pos;
+    lookVec = enemy->mVec;
+    enemy->mVec = enemy->mVec.norm();
 
     //xzについて、90度曲げたベクトルを作る
-    RVector3 rotVec = moveVec;
-    rotVec.x = moveVec.z;
-    rotVec.z = -moveVec.x;
+    RVector3 rotVec = enemy->mVec;
+    rotVec.x = enemy->mVec.z;
+    rotVec.z = -enemy->mVec.x;
 
-    moveVec = rotVec;
-    moveVec.y = 0.0f;
-    moveVec *= 0.8f;
+    enemy->mVec = rotVec;
+    enemy->mVec.y = 0.0f;
+    enemy->mVec *= 0.8f;
 
     actScriptName = "waitAction";
 }
@@ -133,8 +133,6 @@ BehaviorActionBase::ACTION_STATE Sword_ChargeAct::Run()
 
     //移動ベクトルを加算
     if (frame < 100 && frame > 40) {
-        //float t = float(frame) / float(chargeFrame);
-        //enemy->pos = Rv3Ease::lerp(startPos, endPos, t);
         enemy->pos += chargeVec * 2;
         //ダメージと判定無効化
         if (RV3Colider::Colision2Sphere(enemy->bodyColision, enemy->player->bodyColider) && isAtkEnable) {
@@ -175,15 +173,18 @@ BehaviorActionBase::ACTION_STATE Sword_ApproachingAct::Run()
     actionState = BehaviorActionBase::ACTION_STATE::RUNNING;
 
     bool isMoved = false;
-    //RVector3 moveVec = astar->MoveWaypointDirectLine(0.0f, enemy->pos, isMoved);
-    RVector3 moveVec = enemy->player->pos - enemy->pos;
-    moveVec = moveVec.norm() * 1.5;
 
-    enemy->pos += moveVec;
-
-    if (isMoved) {
+    if (distance(enemy->player->pos,enemy->pos) < 30.0f) {
         actionState = BehaviorActionBase::ACTION_STATE::SUCCESS;
     }
+    else if(distance(enemy->player->pos, enemy->pos) < 60.0f){
+        enemy->mVec = enemy->player->pos - enemy->pos;
+    }
+    else{
+        //経路をもとに移動する
+        enemy->mVec = astar->MoveWaypointDirectLine(resultRoot, enemy->pos, 20.0f, index, isMoved);
+    }
+    enemy->mVec = enemy->mVec.norm() * 1.5;
 
     RVector3 lookVec = enemy->player->pos - enemy->pos;
     float angle = atan2f(lookVec.x, lookVec.z);
@@ -196,13 +197,13 @@ void Sword_ApproachingAct::Init()
 {
     actScriptName = "approachAct";
 
-    astar->NavMeshSearchAster(enemy->pos, enemy->player->pos, result);
+    astar->NavMeshSearchAster(enemy->pos, enemy->player->pos, resultRoot);
 }
 
 bool Sword_ApproachJudge::Judge()
 {
     //離れていたら候補に入る
-    return  distance(enemy->pos, enemy->player->pos) > 50.0f;
+    return  distance(enemy->pos, enemy->player->pos) > 60.0f;
 }
 
 SwordEnemyObject::~SwordEnemyObject()

@@ -148,7 +148,7 @@ void Player::Shot()
 			for (int i = 0; i < bullets.size(); i++) {
 				if (!bullets[i].isAlive) {
 					bullets[i].Fire(pos, -bVec, 20.0f, 5.0f, bulletModel);
-					nowBullet--;
+					nowBullet;
 					break;
 				}
 			}
@@ -252,6 +252,7 @@ void Player::Reset()
 {
 	//ƒpƒ‰ƒ[ƒ^‰Šú‰»
 	pos.zero();
+	pos.z = 400.0f;
 	pos.y = 5.0f;
 	rot.zero();
 	speedVec.zero();
@@ -288,9 +289,7 @@ void Player::Draw()
 	object3d->DrawObject();
 
 	for (int i = 0; i < bullets.size(); i++) {
-		if (bullets[i].isAlive) {
-			bullets[i].Draw();
-		}
+		bullets[i].Draw();
 	}
 
 
