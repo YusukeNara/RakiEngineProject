@@ -17,38 +17,38 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 	s_object.swordObject = std::make_unique<Object3d>();
 	s_object.swordObject->SetLoadedModelData(swordModel);
 	s_object.player = player;
-	m_swordWaitJudge	=	new Sword_WaitJudge(&s_object);
-	m_swordWaitAct		=	new Sword_WaitAct(&s_object);
-	m_swordAttackJudge =	new Sword_AttackJudge(&s_object, m_swordWaitAct);
-	m_swordAttackAct =		new Sword_AttackAct(&s_object);
-	m_approachJudge =		new Sword_ApproachJudge(&s_object);
-	m_approahAct =			new Sword_ApproachingAct(&s_object,astar);
-	m_chargeJudge =			new Sword_ChargeJudge(&s_object);
-	m_chargeAct =			new Sword_ChargeAct(&s_object);
+	m_swordWaitJudge	=	std::make_shared<Sword_WaitJudge>(&s_object);
+	m_swordWaitAct		=	std::make_shared<Sword_WaitAct>(&s_object);
+	m_swordAttackJudge =	std::make_shared<Sword_AttackJudge>(&s_object, m_swordWaitAct.get());
+	m_swordAttackAct =		std::make_shared<Sword_AttackAct>(&s_object);
+	m_approachJudge =		std::make_shared<Sword_ApproachJudge>(&s_object);
+	m_approahAct =			std::make_shared<Sword_ApproachingAct>(&s_object,astar);
+	m_chargeJudge =			std::make_shared<Sword_ChargeJudge>(&s_object);
+	m_chargeAct =			std::make_shared<Sword_ChargeAct>(&s_object);
 
-	rootNode	= new BehaviorBaseNode;
-	actNode		= new BehaviorBaseNode;
-	waitNode	= new BehaviorBaseNode;
-	approachNode = new BehaviorBaseNode;
-	chargeNode = new BehaviorBaseNode;
+	rootNode	= std::make_shared<BehaviorBaseNode>();
+	actNode		= std::make_shared<BehaviorBaseNode>();
+	waitNode	= std::make_shared<BehaviorBaseNode>();
+	approachNode = std::make_shared<BehaviorBaseNode>();
+	chargeNode = std::make_shared<BehaviorBaseNode>();
 
 	//実行ノード生成
-	waitNode->CreateActionNode("sword_wait", m_swordWaitAct, m_swordWaitJudge);
-	actNode->CreateActionNode("sword_act", m_swordAttackAct, m_swordAttackJudge);
-	approachNode->CreateActionNode("Sword_app", m_approahAct, m_approachJudge);
-	chargeNode->CreateActionNode("Sword_Charge", m_chargeAct, m_chargeJudge);
+	waitNode->CreateActionNode("sword_wait", m_swordWaitAct.get(), m_swordWaitJudge.get());
+	actNode->CreateActionNode("sword_act", m_swordAttackAct.get(), m_swordAttackJudge.get());
+	approachNode->CreateActionNode("Sword_app", m_approahAct.get(), m_approachJudge.get());
+	chargeNode->CreateActionNode("Sword_Charge", m_chargeAct.get(), m_chargeJudge.get());
 
 	//ルートノードの選択候補を追加
-	rootNode->AddjudgeNodeChild(waitNode);
-	rootNode->AddjudgeNodeChild(approachNode);
-	rootNode->AddjudgeNodeChild(chargeNode);
+	rootNode->AddjudgeNodeChild(waitNode.get());
+	rootNode->AddjudgeNodeChild(approachNode.get());
+	rootNode->AddjudgeNodeChild(chargeNode.get());
 
-	swordEnemyTree.Init(rootNode);
+	swordEnemyTree.Init(rootNode.get());
 	editor.Init(&swordEnemyTree);
-	editor.AddEditData_Node(actNode);
-	editor.AddEditData_Node(waitNode);
-	editor.AddEditData_Node(approachNode);
-	editor.AddEditData_Node(chargeNode);
+	editor.AddEditData_Node(actNode.get());
+	editor.AddEditData_Node(waitNode.get());
+	editor.AddEditData_Node(approachNode.get());
+	editor.AddEditData_Node(chargeNode.get());
 
 	deathpm = ParticleManager::Create();
 	dptex = TexManager::LoadTexture("Resources/effect1.png");
@@ -58,19 +58,19 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 
 SwordEnemy::~SwordEnemy()
 {
-	if (m_approachJudge != nullptr) { delete m_approachJudge; }
-	if(m_approahAct != nullptr){ delete m_approahAct; }
-	if (m_chargeAct != nullptr) { delete m_chargeAct; }
-	if (m_chargeJudge != nullptr) { delete m_chargeJudge; }
-	if (m_swordAttackAct) { delete m_swordAttackAct; }
-	if (m_swordAttackJudge ) { delete m_swordAttackJudge; }
-	if (m_swordWaitAct ) { delete m_swordWaitAct; }
-	if (m_swordWaitJudge ) { delete m_swordWaitJudge; }
-	if (rootNode ) { delete rootNode; }
-	if (actNode ) { delete actNode; }
-	if (waitNode ) { delete waitNode; }
-	if (chargeNode ) { delete chargeNode; }
-	if (approachNode ) { delete approachNode;	}
+	//if (m_approachJudge != nullptr) { delete m_approachJudge; }
+	//if(m_approahAct != nullptr){ delete m_approahAct; }
+	//if (m_chargeAct != nullptr) { delete m_chargeAct; }
+	//if (m_chargeJudge != nullptr) { delete m_chargeJudge; }
+	//if (m_swordAttackAct) { delete m_swordAttackAct; }
+	//if (m_swordAttackJudge ) { delete m_swordAttackJudge; }
+	//if (m_swordWaitAct ) { delete m_swordWaitAct; }
+	//if (m_swordWaitJudge ) { delete m_swordWaitJudge; }
+	//if (rootNode ) { delete rootNode; }
+	//if (actNode ) { delete actNode; }
+	//if (waitNode ) { delete waitNode; }
+	//if (chargeNode ) { delete chargeNode; }
+	//if (approachNode ) { delete approachNode;	}
 }
 
 void SwordEnemy::Init()

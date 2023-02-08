@@ -2,6 +2,7 @@
 #include <BehaviorTree.h>
 #include <BehaviorEditor.h>
 #include <RVector.h>
+#include <memory>
 
 #include "Player.h"
 #include "SwordEnemyNodes.h"
@@ -38,22 +39,22 @@ private:
 
 	//行動構成ノード
 	//先頭
-	BehaviorBaseNode* rootNode;
+	std::shared_ptr<BehaviorBaseNode> rootNode;
 	//行動分岐
-	BehaviorBaseNode* actNode;
-	BehaviorBaseNode* waitNode;
-	BehaviorBaseNode* approachNode;
-	BehaviorBaseNode* chargeNode;
+	std::shared_ptr<BehaviorBaseNode> actNode;
+	std::shared_ptr<BehaviorBaseNode> waitNode;
+	std::shared_ptr<BehaviorBaseNode> approachNode;
+	std::shared_ptr<BehaviorBaseNode> chargeNode;
 
 	//行動構成オブジェクト
-	Sword_WaitJudge* m_swordWaitJudge;
-	Sword_WaitAct* m_swordWaitAct;
-	Sword_AttackJudge* m_swordAttackJudge;
-	Sword_AttackAct* m_swordAttackAct;
-	Sword_ApproachJudge* m_approachJudge;
-	Sword_ApproachingAct* m_approahAct;
-	Sword_ChargeJudge* m_chargeJudge;
-	Sword_ChargeAct* m_chargeAct;
+	std::shared_ptr<Sword_WaitJudge> m_swordWaitJudge;
+	std::shared_ptr<Sword_WaitAct> m_swordWaitAct;
+	std::shared_ptr<Sword_AttackJudge> m_swordAttackJudge;
+	std::shared_ptr<Sword_AttackAct> m_swordAttackAct;
+	std::shared_ptr<Sword_ApproachJudge> m_approachJudge;
+	std::shared_ptr<Sword_ApproachingAct> m_approahAct;
+	std::shared_ptr<Sword_ChargeJudge> m_chargeJudge;
+	std::shared_ptr<Sword_ChargeAct> m_chargeAct;
 
 	//モデルデータ
 	static std::shared_ptr<fbxModel> swordModel;
