@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-void AI_BehaviorTree::Init(BehaviorBaseNode* firstNode)
+void AI_BehaviorTree::Init(std::shared_ptr<BehaviorBaseNode> firstNode)
 {
 	if (firstNode == nullptr) {
 		return;
@@ -19,22 +19,22 @@ void AI_BehaviorTree::Inference()
 	rootNode = firstNode;
 
 	//ルートノードに行動が割り当てられていて、それが実行中の場合はルートノードはそのまま
-	if (rootNode->actObject != nullptr) {
-		if (rootNode->actObject->actionState == BehaviorActionBase::ACTION_STATE::RUNNING) {
+	if (rootNode.lock()->actObject.lock()) {
+		if (rootNode.lock()->actObject.lock()->actionState == BehaviorActionBase::ACTION_STATE::RUNNING) {
 			return;
 		}
 	}
 
-	BehaviorBaseNode* rootNodeResult = rootNode;
+	std::weak_ptr<BehaviorBaseNode> rootNodeResult = rootNode;
 	//ノード末端まで移動
 	//子ノードがない = ノードの終端
-	while (!rootNodeResult->childs.empty())
+	while (rootNodeResult.lock()->childs.empty())
 	{
-		rootNodeResult = rootNode->Inference();
+		rootNodeResult = rootNode.lock()->Inference();
 	}
 
 	//行動オブジェクト初期化
-	if(rootNodeResult->actObject != nullptr){ rootNodeResult->actObject->Init(); }
+	if(rootNodeResult.lock()->actObject.lock()) { rootNodeResult.lock()->actObject.lock()->Init(); }
 	rootNode = rootNodeResult;
 }
 
@@ -43,11 +43,11 @@ void AI_BehaviorTree::Run()
 	//毎フレーム呼び出すことで勝手にやってくれるようにする
 
 	//ルートノードの実行オブジェクトが空のときはすぐにノードの推論をする
-	if (rootNode->actObject == nullptr) { Inference(); }
+	if (rootNode.lock()->actObject.lock()) { Inference(); }
 
 	//ルートノード実行
-	BehaviorActionBase::ACTION_STATE state = rootNode->actObject->Run();
-	rootNode->actObject->actionState = state;
+	BehaviorActionBase::ACTION_STATE state = rootNode.lock()->actObject.lock()->Run();
+	rootNode.lock()->actObject.lock()->actionState = state;
 
 	//行動終了時
 	if (state != BehaviorActionBase::ACTION_STATE::RUNNING) {

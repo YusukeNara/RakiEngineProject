@@ -16,36 +16,36 @@ void BehaviorEditor::Init(AI_BehaviorTree* treePointer)
 	nodes.push_back(treePointer->firstNode);
 }
 
-void BehaviorEditor::AddEditData_ActScript(BehaviorActionBase* actObject)
+void BehaviorEditor::AddEditData_ActScript(std::shared_ptr<BehaviorActionBase> actObject)
 {
 	//コンテナに追加
 	actScripts.push_back(actObject);
 }
 
-void BehaviorEditor::AddEditData_JudgeScript(BehaviorJudgeBase* judgeObject)
+void BehaviorEditor::AddEditData_JudgeScript(std::shared_ptr<BehaviorJudgeBase> judgeObject)
 {
 	//コンテナに追加
 	judgeScripts.push_back(judgeObject);
 }
 
-void BehaviorEditor::AddEditData_Node(BehaviorBaseNode* node)
+void BehaviorEditor::AddEditData_Node(std::shared_ptr<BehaviorBaseNode> node)
 {
 	//ノード追加
 	nodes.push_back(node);
 
 	//ノードのオブジェクトを格納
-	if (node->actObject != nullptr) {
-		AddEditData_ActScript(node->actObject);
+	if (node->actObject.lock()) {
+		AddEditData_ActScript(node->actObject.lock());
 	}
 
-	if (node->judgeObject != nullptr) {
-		AddEditData_JudgeScript(node->judgeObject);
+	if (node->judgeObject.lock()) {
+		AddEditData_JudgeScript(node->judgeObject.lock());
 	}
 }
 
-BehaviorBaseNode* BehaviorEditor::CreateNewNode(std::string nodeName)
+std::shared_ptr<BehaviorBaseNode> BehaviorEditor::CreateNewNode(std::string nodeName)
 {
-	BehaviorBaseNode* result = new BehaviorBaseNode;
+	std::shared_ptr<BehaviorBaseNode> result = std::make_shared<BehaviorBaseNode>();
 	result->nodeName = nodeName;
 
 	nodes.push_back(result);
@@ -60,24 +60,11 @@ void BehaviorEditor::ObjectDataDraw()
 
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
 	for (auto& nodelist : nodes) {
-		if (ImGui::Button(nodelist->nodeName.c_str())) { 
-			nodelist->isDisplay = true; 
+		if (ImGui::Button(nodelist.lock()->nodeName.c_str())) {
+			nodelist.lock()->isDisplay = true;
 		}
 	}
 	ImGui::EndChild();
-
-	//ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
-	//for (auto& judgelist : judgeScripts) {
-	//	if(ImGui::Button(judgelist->judgeScriptName.c_str())){}
-	//}
-	//ImGui::EndChild();
-
-	//ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
-	//for (auto& actlist : actScripts) {
-	//	ImGui::Button(actlist->actScriptName.c_str());
-	//}
-	//ImGui::EndChild();
-
 
 	ImguiMgr::Get()->EndDrawImgui();
 }
@@ -91,30 +78,25 @@ void BehaviorEditor::EditorDraw()
 
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
 
-	treePointer->firstNode->DrawNodeInfo_withEditor(nodes, actScripts, judgeScripts);
+	treePointer->firstNode.lock()->DrawNodeInfo_withEditor(nodes, actScripts, judgeScripts);
 
 	ImGui::EndChild();
 
-	ImGui::Text("Root Node : %s", treePointer->rootNode->nodeName.c_str());
+	ImGui::Text("Root Node : %s", treePointer->rootNode.lock()->nodeName.c_str());
 
 	//エディターウィンドウの描画終了
 	ImguiMgr::Get()->EndDrawImgui();
-
-	//データ一覧
-
-
-
 }
 
 void BehaviorEditor::NodeDataDraw()
 {
 	//表示フラグが立ってるノードを表示、編集
 	for (auto& list : nodes) {
-		if (list->isDisplay) { 
+		if (list.lock()->isDisplay) {
 			//ノード
-			list->DrawNodeInfo(nodes, actScripts, judgeScripts);
+			list.lock()->DrawNodeInfo(nodes, actScripts, judgeScripts);
 			//子ノード
-			list->DrawNodeInfo_Child(nodes, actScripts, judgeScripts);
+			list.lock()->DrawNodeInfo_Child(nodes, actScripts, judgeScripts);
 		}
 	}
 }

@@ -8,25 +8,38 @@
 
 void BehaviorBaseNode::CreateJudgeNode(std::string nodeName, SELECT_RULE rule, BehaviorJudgeBase* judgeObject)
 {
-    //ノードの名前
-    this->nodeName = nodeName;
-    //ルール
-    this->rule = rule;
-    //判定オブジェクト
-    this->judgeObject = judgeObject;
-    //ノードの種類
-    type = NODE_TYPE::TYPE_SELECTER;
+    ////ノードの名前
+    //this->nodeName = nodeName;
+    ////ルール
+    //this->rule = rule;
+    ////判定オブジェクト
+    //this->judgeObject.reset(judgeObject);
+    ////ノードの種類
+    //type = NODE_TYPE::TYPE_SELECTER;
 }
 
-void BehaviorBaseNode::AddjudgeNodeChild(BehaviorBaseNode* child)
+void BehaviorBaseNode::AddjudgeNodeChild(std::shared_ptr<BehaviorBaseNode> child)
 {
     //子ノードに自身を親として登録
-    child->parent = this;
+    //child->parent = ;
     //子ノード追加
-    childs.push_back(child);
+    childs.push_back(std::weak_ptr<BehaviorBaseNode>(child));
 }
 
-void BehaviorBaseNode::CreateActionNode(std::string nodeName, BehaviorActionBase* actObject,BehaviorJudgeBase *judgeObject)
+//void BehaviorBaseNode::CreateActionNode(std::string nodeName, BehaviorActionBase* actObject,BehaviorJudgeBase *judgeObject)
+//{
+//    if (actObject == nullptr) { return; }
+//
+//    this->nodeName = nodeName;
+//
+//    this->actObject.reset(actObject);
+//
+//    this->judgeObject.reset(judgeObject);
+//
+//    type = NODE_TYPE::TYPE_EXECUTE;
+//}
+
+void BehaviorBaseNode::CreateActionNode(std::string nodeName, std::shared_ptr<BehaviorActionBase> actObject, std::shared_ptr<BehaviorJudgeBase> judgeObject)
 {
     if (actObject == nullptr) { return; }
 
@@ -39,24 +52,24 @@ void BehaviorBaseNode::CreateActionNode(std::string nodeName, BehaviorActionBase
     type = NODE_TYPE::TYPE_EXECUTE;
 }
 
-BehaviorBaseNode* BehaviorBaseNode::Inference()
+std::weak_ptr<BehaviorBaseNode> BehaviorBaseNode::Inference()
 {
     //子ノードリスト
-    std::vector<BehaviorBaseNode*> list;
+    std::vector<std::weak_ptr<BehaviorBaseNode>> list;
     //配列サイズ確保
     list.reserve(childs.size());
     //返却用変数 
-    BehaviorBaseNode* result = nullptr;
+    std::weak_ptr<BehaviorBaseNode> result;
 
     //子ノードが選択可能かを確認
     for (auto &n : childs)
     {
         //判定スクリプトがnullの場合は無条件で格納
-        if (n->judgeObject == nullptr) {
+        if (n.lock()) {
             list.push_back(n);
         }
         //子ノードの判定クラスがtrueのとき
-        else if (n->judgeObject->Judge()){
+        else if (n.lock()->judgeObject.lock()->Judge()) {
             //候補リストに格納
             list.push_back(n);
         }
@@ -77,70 +90,74 @@ BehaviorBaseNode* BehaviorBaseNode::Inference()
     {
     case BehaviorBaseNode::RULE_RANDOM:
         //ランダムにノードを決定
-        result = Select_Random(&list);
+        result = Select_Random(list);
         return result;
         break;
 
     case BehaviorBaseNode::RULE_PRIORITY:
         //優先度でノード決定
-        result = Select_Priority(&list);
+        result = Select_Priority(list);
         return result;
         break;
 
     case BehaviorBaseNode::RULE_ONOFF:
         //ランダムにノードを決定
-        result = Select_Random(&list);
+        result = Select_Random(list);
         return result;
         break;
 
     case BehaviorBaseNode::RULE_SEAQUENCE:
         //ランダムにノードを決定
-        result = Select_Random(&list);
+        result = Select_Random(list);
         return result;
         break;
     default:
         //ランダムにノードを決定
-        result = Select_Random(&list);
+        result = Select_Random(list);
         return result;
         break;
     }
 
     //ランダムにノードを決定
-    result = Select_Random(&list);
+    result = Select_Random(list);
     return result;
 }
 
 BehaviorActionBase::ACTION_STATE BehaviorBaseNode::Run()
 {
     //行動実行
-    return actObject->Run();
+    return actObject.lock()->Run();
 }
 
-BehaviorBaseNode *BehaviorBaseNode::Select_Random(std::vector<BehaviorBaseNode*> *lists)
+std::weak_ptr<BehaviorBaseNode>BehaviorBaseNode::Select_Random(std::vector<std::weak_ptr<BehaviorBaseNode>> lists)
 {
-    int selectNumber = NY_random::intrand_sl(static_cast<int>(lists->size() - 1), 0);
+    int selectNumber = NY_random::intrand_sl(static_cast<int>(lists.size() - 1), 0);
 
-    return (*lists)[selectNumber];
+    std::shared_ptr<BehaviorBaseNode> ptr = std::make_shared<BehaviorBaseNode>(lists[0]);
+
+    return lists[selectNumber];
 }
 
-BehaviorBaseNode* BehaviorBaseNode::Select_Priority(std::vector<BehaviorBaseNode*>* lists)
+std::weak_ptr<BehaviorBaseNode> BehaviorBaseNode::Select_Priority(std::vector<std::weak_ptr<BehaviorBaseNode>> lists)
 {
-    BehaviorBaseNode* result = nullptr;
+    std::weak_ptr<BehaviorBaseNode> result;
 
     unsigned int priority = -100;
 
-    for (auto itr = lists->begin(); itr != lists->end(); itr++) {
-        if (priority < (*itr)->priority) {
-            result = (*itr);
-            priority = (*itr)->priority;
+    for (auto itr = lists.begin(); itr != lists.end(); itr++) {
+        if (priority < itr->lock()->priority) {
+            result = *itr;
+            priority = itr->lock()->priority;
         }
     }
 
     return result;
 }
 
-void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, 
-    std::vector<BehaviorJudgeBase*> judgeObjects, bool checkIsDisplay)
+void BehaviorBaseNode::DrawNodeInfo(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+    std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
+    std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects,
+    bool checkIsDisplay)
 {
     //デバッグ用、簡易的だが編集も可能に
 
@@ -150,10 +167,6 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
 
     //編集用変数
     int nowSelectRule = static_cast<int>(rule);
-    std::string parentName;
-    if (parent != nullptr) {
-        parentName = parent->nodeName;
-    }
 
 
     ImguiMgr::Get()->StartDrawImgui(nodeName.c_str(), 100, 300);
@@ -165,14 +178,14 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
     case BehaviorBaseNode::TYPE_EXECUTE:
         ImGui::Text("Node Type : EXECUTE\n");
 
-        ImGui::Text("Act script name : %s", actObject->actScriptName.c_str());
+        ImGui::Text("Act script name : %s", actObject.lock()->actScriptName.c_str());
 
-        ImGui::Text("Judge script Name : %s", judgeObject->judgeScriptName.c_str());
+        ImGui::Text("Judge script Name : %s", judgeObject.lock()->judgeScriptName.c_str());
 
         ImGui::Text("Node Status\n");
 
-        if (actObject != nullptr) {
-            switch (actObject->actionState)
+        if (actObject.lock()) {
+            switch (actObject.lock()->actionState)
             {
             case BehaviorActionBase::ACTION_STATE::STANDBY:
                 ImGui::Text("Process is standby.");
@@ -194,8 +207,6 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
                 break;
             }
         }
-
-        ImGui::Text(parentName.c_str());
 
 
         break;
@@ -216,30 +227,28 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
 
     ImGui::Checkbox("Edit Scripts Pointer", &isChangeScripts);
     if (isChangeScripts) {
-        BehaviorActionBase* acttemp = nullptr;
+        std::weak_ptr<BehaviorActionBase> acttemp;
         ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
         for (auto& acts : actObjects) {
-            if (ImGui::Button(acts->actScriptName.c_str())) {
+            if (ImGui::Button(acts.lock()->actScriptName.c_str())) {
                 acttemp = acts;
             }
         }
         ImGui::EndChild();
 
-        if (acttemp != nullptr) { this->actObject = acttemp; }
+        if (acttemp.lock() != nullptr) { this->actObject = acttemp; }
 
-        BehaviorJudgeBase* judgetemp = nullptr;
+        std::weak_ptr<BehaviorJudgeBase> judgetemp;
         ImGui::BeginChild(ImGui::GetID((void*)1), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
         for (auto& judges : judgeObjects) {
-            if (ImGui::Button(judges->judgeScriptName.c_str())) {
+            if (ImGui::Button(judges.lock()->judgeScriptName.c_str())) {
                 judgetemp = judges;
             }
         }
         ImGui::EndChild();
 
-        if (judgetemp != nullptr) { this->judgeObject = judgetemp; }
+        if (judgetemp.lock()) { this->judgeObject = judgetemp; }
     }
-
-    //DrawNodeInfo_Child(editNodes, actObjects, judgeObjects);
 
     ImguiMgr::Get()->EndDrawImgui();
 
@@ -247,25 +256,25 @@ void BehaviorBaseNode::DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, st
     rule = static_cast<SELECT_RULE>(nowSelectRule);
 }
 
-void BehaviorBaseNode::DrawNodeInfo_Child(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects)
+void BehaviorBaseNode::DrawNodeInfo_Child(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+    std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
+    std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects)
 {
     if (this->isDisplay) {
         for (auto& child : childs) {
             ImGui::BeginChild(ImGui::GetID((void*)2), ImVec2(150, 250), ImGuiWindowFlags_NoTitleBar);
-            child->DrawNodeInfo_withEditor(editNodes, actObjects, judgeObjects);
+            child.lock()->DrawNodeInfo_withEditor(editNodes, actObjects, judgeObjects);
             ImGui::EndChild();
         }
     }
 }
 
-void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects)
+void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+    std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
+    std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects)
 {
     //編集用変数
     int nowSelectRule = static_cast<int>(rule);
-    std::string parentName;
-    if (parent != nullptr) {
-        parentName = parent->nodeName;
-    }
 
     switch (type)
     {
@@ -274,8 +283,8 @@ void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> ed
 
         ImGui::Text("Node Status\n");
 
-        if (actObject != nullptr) {
-            switch (actObject->actionState)
+        if (actObject.lock()) {
+            switch (actObject.lock()->actionState)
             {
             case BehaviorActionBase::ACTION_STATE::STANDBY:
                 ImGui::Text("Process is standby.");
@@ -297,8 +306,6 @@ void BehaviorBaseNode::DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> ed
                 break;
             }
         }
-
-        ImGui::Text(parentName.c_str());
 
         break;
     case BehaviorBaseNode::TYPE_SELECTER:

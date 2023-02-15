@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 class BehaviorJudgeBase;
 
@@ -47,14 +48,15 @@ public:
 	/// 判定ノードに子ノード追加
 	/// </summary>
 	/// <param name="child"></param>
-	void AddjudgeNodeChild(BehaviorBaseNode* child);
+	void AddjudgeNodeChild(std::shared_ptr<BehaviorBaseNode> child);
 
 	/// <summary>
 	/// 実行ノード生成
 	/// </summary>
 	/// <param name="nodeName">ノードの名前</param>
 	/// <param name="actObject">実行する派生クラスオブジェクト</param>
-	void CreateActionNode(std::string nodeName, BehaviorActionBase* actObject, BehaviorJudgeBase* judgeObject);
+	//void CreateActionNode(std::string nodeName, BehaviorActionBase* actObject, BehaviorJudgeBase* judgeObject);
+	void CreateActionNode(std::string nodeName, std::shared_ptr<BehaviorActionBase> actObject, std::shared_ptr<BehaviorJudgeBase> judgeObject);
 
 	/// <summary>
 	/// ノード推論
@@ -63,7 +65,7 @@ public:
 	/// <para> これをノードの末端まで繰り返す関数</para>
 	/// </summary>
 	/// <returns>推論の結果から出たルートノード</returns>
-	BehaviorBaseNode *Inference();
+	std::weak_ptr<BehaviorBaseNode> Inference();
 
 	/// <summary>
 	/// ノード実行
@@ -74,18 +76,24 @@ public:
 	BehaviorActionBase::ACTION_STATE Run();
 
 	///以下はノード決定用関数
-	BehaviorBaseNode *Select_Random(std::vector<BehaviorBaseNode*> *lists);
+	std::weak_ptr<BehaviorBaseNode> Select_Random(std::vector<std::weak_ptr<BehaviorBaseNode>> lists);
 
-	BehaviorBaseNode* Select_Priority(std::vector<BehaviorBaseNode*>* lists);
+	std::weak_ptr<BehaviorBaseNode> Select_Priority(std::vector<std::weak_ptr<BehaviorBaseNode>> lists);
 
 
 	//デバッグ用
-	void DrawNodeInfo(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, 
-		std::vector<BehaviorJudgeBase*> judgeObjects, bool checkIsDisplay = true);
+	void DrawNodeInfo(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects, 
+		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects,
+		bool checkIsDisplay = true);
 
-	void DrawNodeInfo_Child(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects);
+	void DrawNodeInfo_Child(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
+		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects);
 
-	void DrawNodeInfo_withEditor(std::vector<BehaviorBaseNode*> editNodes, std::vector<BehaviorActionBase*> actObjects, std::vector<BehaviorJudgeBase*> judgeObjects);
+	void DrawNodeInfo_withEditor(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
+		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
+		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects);
 
 public:
 	//ノードの名前
@@ -95,13 +103,13 @@ public:
 	//ノード選択ルール
 	SELECT_RULE		rule;
 	//親ノード
-	BehaviorBaseNode*				parent		= nullptr;
+	//std::weak_ptr<BehaviorBaseNode>				parent;
 	//子ノード配列
-	std::vector<BehaviorBaseNode*>	childs;
+	std::vector<std::weak_ptr<BehaviorBaseNode>>	childs;
 	//判定クラス
-	BehaviorJudgeBase*				judgeObject = nullptr;
+	std::weak_ptr<BehaviorJudgeBase>				judgeObject;
 	//実行クラス
-	BehaviorActionBase*				actObject	= nullptr;
+	std::weak_ptr<BehaviorActionBase>				actObject;
 
 	//ノード優先度
 	unsigned int	priority;

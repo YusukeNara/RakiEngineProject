@@ -33,10 +33,10 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 	chargeNode = std::make_shared<BehaviorBaseNode>();
 
 	//実行ノード生成
-	waitNode->CreateActionNode("sword_wait", m_swordWaitAct.get(), m_swordWaitJudge.get());
-	actNode->CreateActionNode("sword_act", m_swordAttackAct.get(), m_swordAttackJudge.get());
-	approachNode->CreateActionNode("Sword_app", m_approahAct.get(), m_approachJudge.get());
-	chargeNode->CreateActionNode("Sword_Charge", m_chargeAct.get(), m_chargeJudge.get());
+	waitNode->CreateActionNode("sword_wait", m_swordWaitAct, m_swordWaitJudge);
+	actNode->CreateActionNode("sword_act", m_swordAttackAct, m_swordAttackJudge);
+	approachNode->CreateActionNode("Sword_app", m_approahAct, m_approachJudge);
+	chargeNode->CreateActionNode("Sword_Charge", m_chargeAct, m_chargeJudge);
 
 	//ルートノードの選択候補を追加
 	rootNode->AddjudgeNodeChild(waitNode.get());

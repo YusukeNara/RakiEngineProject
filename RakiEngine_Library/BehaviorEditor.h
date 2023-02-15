@@ -20,10 +20,10 @@ public:
 	void Init(AI_BehaviorTree *treePointer);
 
 	//編集するデータの追加、新規作成
-	void				AddEditData_ActScript(BehaviorActionBase* actObject);
-	void				AddEditData_JudgeScript(BehaviorJudgeBase* judgeObject);
-	void				AddEditData_Node(BehaviorBaseNode* node);
-	BehaviorBaseNode*	CreateNewNode(std::string nodeName);
+	void								AddEditData_ActScript(std::shared_ptr<BehaviorActionBase> actObject);
+	void								AddEditData_JudgeScript(std::shared_ptr<BehaviorJudgeBase> judgeObject);
+	void								AddEditData_Node(std::shared_ptr<BehaviorBaseNode> node);
+	std::shared_ptr<BehaviorBaseNode>	CreateNewNode(std::string nodeName);
 	
 	//
 
@@ -43,9 +43,9 @@ private:
 	AI_BehaviorTree* treePointer;
 
 	//各種編集データコンテナ
-	std::vector<BehaviorBaseNode*>		nodes;
-	std::vector<BehaviorActionBase*>	actScripts;
-	std::vector<BehaviorJudgeBase*>		judgeScripts;
+	std::vector<std::weak_ptr<BehaviorBaseNode>>		nodes;
+	std::vector<std::weak_ptr<BehaviorActionBase>>		actScripts;
+	std::vector<std::weak_ptr<BehaviorJudgeBase>>		judgeScripts;
 
 };
 
