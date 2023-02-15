@@ -298,7 +298,7 @@ RVector3 NavMeshAstar::MoveWaypointDirectLine(std::vector<RVector3>& root, RVect
 	RVector3 result(0.0f, 0.0f, 0.0f);
 
 	//範囲外
-	if (index < 0 || index > root.size()) { return result; }
+	if (index < 0 || index >= root.size()) { return result; }
 
 	//指し示しているインデックスをもとにベクトルを求める
 	result = root[index] - nowpos;
