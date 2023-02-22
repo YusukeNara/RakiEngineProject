@@ -41,6 +41,7 @@
     <ClCompile Include="BaseColider.cpp" />
     <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BehaviorEditor.cpp" />
+    <ClCompile Include="BehaviorNodeBase.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="CameraCalc.cpp" />
     <ClCompile Include="Colider.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="BaseLight.h" />
     <ClInclude Include="BehaviorData.h" />
     <ClInclude Include="BehaviorEditor.h" />
+    <ClInclude Include="BehaviorNodeBase.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />

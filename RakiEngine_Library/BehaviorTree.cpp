@@ -25,17 +25,17 @@ void AI_BehaviorTree::Inference()
 		}
 	}
 
-	std::weak_ptr<BehaviorBaseNode> rootNodeResult = rootNode;
+	std::shared_ptr<BehaviorBaseNode> rootNodeResult = rootNode;
 	//ノード末端まで移動
 	//子ノードがない = ノードの終端
-	while (rootNodeResult.lock()->childs.empty())
+	while (rootNodeResult->childs.empty())
 	{
 		rootNodeResult = rootNode->Inference();
 	}
 
 	//行動オブジェクト初期化
-	if(rootNodeResult.lock()->actObject) { rootNodeResult.lock()->actObject->Init(); }
-	rootNode = rootNodeResult.lock();
+	if(rootNodeResult->actObject) { rootNodeResult->actObject->Init(); }
+	rootNode = rootNodeResult;
 }
 
 void AI_BehaviorTree::Run()

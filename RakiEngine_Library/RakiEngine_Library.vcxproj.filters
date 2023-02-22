@@ -76,9 +76,6 @@
     <Filter Include="Graphic\3D\modelData\FBX">
       <UniqueIdentifier>{8ee7fdb3-0112-4869-833d-0991e5925eee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Behavior">
-      <UniqueIdentifier>{c177c3b1-5c29-4bac-983e-c6cd638e1841}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphic\3D\lights">
       <UniqueIdentifier>{e03dd0b6-ae7d-4cb9-acd4-7dc5e2b511b9}</UniqueIdentifier>
     </Filter>
@@ -91,8 +88,17 @@
     <Filter Include="object">
       <UniqueIdentifier>{c33c6641-3922-4708-b839-08b8d01bda6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Behavior\Navigation">
+    <Filter Include="AI">
+      <UniqueIdentifier>{c177c3b1-5c29-4bac-983e-c6cd638e1841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Navigation">
       <UniqueIdentifier>{a9b11ca7-e184-4d58-a91f-06161dd44417}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Behavior">
+      <UniqueIdentifier>{0da4aad2-cdeb-43f9-b2ae-30ad1f0c3c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\NewBehavior">
+      <UniqueIdentifier>{f8d7278c-efa8-4ffb-9971-e905470adf8b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -189,15 +195,6 @@
     <ClCompile Include="Quaternion.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="AI_BehaviorBaseNode.cpp">
-      <Filter>Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="BehaviorTree.cpp">
-      <Filter>Behavior</Filter>
-    </ClCompile>
-    <ClCompile Include="BehaviorEditor.cpp">
-      <Filter>Behavior</Filter>
-    </ClCompile>
     <ClCompile Include="BaseLight.cpp">
       <Filter>Graphic\3D\lights</Filter>
     </ClCompile>
@@ -232,16 +229,28 @@
       <Filter>object</Filter>
     </ClCompile>
     <ClCompile Include="NavMeshAstar.cpp">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="NavMash.cpp">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="NavMeshData.cpp">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="DebugDrawer.cpp">
       <Filter>Graphic\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="AI_BehaviorBaseNode.cpp">
+      <Filter>AI\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorEditor.cpp">
+      <Filter>AI\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>AI\Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorNodeBase.cpp">
+      <Filter>AI\NewBehavior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,24 +356,6 @@
     <ClInclude Include="Quaternion.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorTree.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="AI_BehaviorBaseNode.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="Behavior_ActionBase.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="Behavior_JudgeBase.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="BehaviorData.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
-    <ClInclude Include="BehaviorEditor.h">
-      <Filter>Behavior</Filter>
-    </ClInclude>
     <ClInclude Include="BaseLight.h">
       <Filter>Graphic\3D\lights</Filter>
     </ClInclude>
@@ -402,19 +393,40 @@
       <Filter>Graphic\3D\modelData</Filter>
     </ClInclude>
     <ClInclude Include="NavMash.h">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="NavMeshAstar.h">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="NavMeshTestData.h">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="NavMeshData.h">
-      <Filter>Behavior\Navigation</Filter>
+      <Filter>AI\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="DebugDrawer.h">
       <Filter>Graphic\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="AI_BehaviorBaseNode.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior_ActionBase.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="Behavior_JudgeBase.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorData.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorEditor.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
+      <Filter>AI\Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorNodeBase.h">
+      <Filter>AI\NewBehavior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

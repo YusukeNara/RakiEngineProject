@@ -133,20 +133,3 @@ enum class NODE_STATUS
 	STOP,
 };
 
-//改造版
-//ノードの種類を派生クラスで定義したもの
-//これは基底クラスとなる
-class BehaviorNodeBase
-{
-public:
-	BehaviorNodeBase(){}
-	virtual ~BehaviorNodeBase(){}
-
-	virtual void Init() = 0;
-
-	virtual bool Judge() = 0;
-
-	virtual NODE_STATUS Run() = 0;
-
-};
-
