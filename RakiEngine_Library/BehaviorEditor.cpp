@@ -34,12 +34,12 @@ void BehaviorEditor::AddEditData_Node(std::shared_ptr<BehaviorBaseNode> node)
 	nodes.push_back(node);
 
 	//ノードのオブジェクトを格納
-	if (node->actObject.lock()) {
-		AddEditData_ActScript(node->actObject.lock());
+	if (node->actObject) {
+		AddEditData_ActScript(node->actObject);
 	}
 
-	if (node->judgeObject.lock()) {
-		AddEditData_JudgeScript(node->judgeObject.lock());
+	if (node->judgeObject) {
+		AddEditData_JudgeScript(node->judgeObject);
 	}
 }
 
@@ -78,11 +78,11 @@ void BehaviorEditor::EditorDraw()
 
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(200, 250), ImGuiWindowFlags_NoTitleBar);
 
-	treePointer->firstNode.lock()->DrawNodeInfo_withEditor(nodes, actScripts, judgeScripts);
+	treePointer->firstNode->DrawNodeInfo_withEditor(nodes, actScripts, judgeScripts);
 
 	ImGui::EndChild();
 
-	ImGui::Text("Root Node : %s", treePointer->rootNode.lock()->nodeName.c_str());
+	ImGui::Text("Root Node : %s", treePointer->rootNode->nodeName.c_str());
 
 	//エディターウィンドウの描画終了
 	ImguiMgr::Get()->EndDrawImgui();

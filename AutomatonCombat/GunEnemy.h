@@ -24,14 +24,14 @@ public:
 	//ビヘイビアツリー
 	AI_BehaviorTree gunEnemyTree;
 	//先頭
-	BehaviorBaseNode* rootNode;
-	BehaviorBaseNode* shotNode;
-	BehaviorBaseNode* waitNode;
+	std::shared_ptr<BehaviorBaseNode> rootNode;
+	std::shared_ptr<BehaviorBaseNode> shotNode;
+	std::shared_ptr<BehaviorBaseNode> waitNode;
 
-	Gun_WaitJudge* gun_wjudgeNode;
-	Gun_WaitAct* gun_wactNode;
-	Gun_ShotJudge* gunsjudgeNode;
-	Gun_ShotAct* gun_sactNode;
+	std::shared_ptr<Gun_WaitJudge>	gun_wjudgeNode;
+	std::shared_ptr<Gun_WaitAct>	gun_wactNode;
+	std::shared_ptr<Gun_ShotJudge>	gunsjudgeNode;
+	std::shared_ptr<Gun_ShotAct>	gun_sactNode;
 
 	Player* player;
 

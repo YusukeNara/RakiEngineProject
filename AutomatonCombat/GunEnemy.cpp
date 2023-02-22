@@ -7,14 +7,14 @@ void GunEnemy::Init()
 	std::vector<NavMesh> result;
 	//astar.NavMeshSearchAstar(&nData.navMeshData[0], &nData.navMeshData[6], result);
 
-	rootNode = new BehaviorBaseNode;
-	shotNode = new BehaviorBaseNode;
-	waitNode = new BehaviorBaseNode;
+	rootNode = std::make_shared<BehaviorBaseNode>();
+	shotNode = std::make_shared<BehaviorBaseNode>();
+	waitNode = std::make_shared<BehaviorBaseNode>();
 
-	gun_wjudgeNode = new Gun_WaitJudge(this, player,&this->pos);
-	gun_wactNode = new Gun_WaitAct(this, player, &this->pos, &astar);
-	gun_sactNode = new Gun_ShotAct(this, player, &this->pos);
-	gunsjudgeNode = new Gun_ShotJudge(this, player, &this->pos);
+	gun_wjudgeNode	= std::make_shared<Gun_WaitJudge>(this, player,&this->pos);
+	gun_wactNode	= std::make_shared<Gun_WaitAct>(this, player, &this->pos, &astar);
+	gun_sactNode	= std::make_shared<Gun_ShotAct>(this, player, &this->pos);
+	gunsjudgeNode	= std::make_shared<Gun_ShotJudge>(this, player, &this->pos);
 
 	shotNode->CreateActionNode("ShotNode", gun_sactNode, gunsjudgeNode);
 	waitNode->CreateActionNode("WaitNode", gun_wactNode, gun_wjudgeNode);

@@ -44,8 +44,8 @@ private:
 
 	//各種編集データコンテナ
 	std::vector<std::weak_ptr<BehaviorBaseNode>>		nodes;
-	std::vector<std::weak_ptr<BehaviorActionBase>>		actScripts;
-	std::vector<std::weak_ptr<BehaviorJudgeBase>>		judgeScripts;
+	std::vector<std::shared_ptr<BehaviorActionBase>>		actScripts;
+	std::vector<std::shared_ptr<BehaviorJudgeBase>>		judgeScripts;
 
 };
 

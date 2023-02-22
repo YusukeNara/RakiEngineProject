@@ -6,7 +6,7 @@ class AI_BehaviorTree
 {
 public:
 	//ルートノードポインタ
-	std::weak_ptr<BehaviorBaseNode> rootNode;
+	std::shared_ptr<BehaviorBaseNode> rootNode;
 
 public:
 	//初期化（最初に実行するノードを選択）
@@ -19,7 +19,7 @@ public:
 	void Run();
 	
 	//先頭ノード
-	std::weak_ptr<BehaviorBaseNode> firstNode;
+	std::shared_ptr<BehaviorBaseNode> firstNode;
 
 	//ツリー名
 	std::string treeName;

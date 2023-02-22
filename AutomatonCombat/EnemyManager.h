@@ -63,10 +63,10 @@ private:
 	//デバッグ用複製元
 	SwordEnemy* swordEnemyMother;
 
-	GunEnemy* gunEnemy;
+	std::unique_ptr<GunEnemy> gunEnemy;
 
 	//敵情報格納コンテナ
-	std::vector<SwordEnemy*> swordEnemys;
+	std::vector<std::unique_ptr<SwordEnemy>> swordEnemys;
 
 
 	//デバッグフラグ

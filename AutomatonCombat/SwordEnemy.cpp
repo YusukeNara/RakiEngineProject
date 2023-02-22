@@ -39,16 +39,16 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 	chargeNode->CreateActionNode("Sword_Charge", m_chargeAct, m_chargeJudge);
 
 	//ルートノードの選択候補を追加
-	rootNode->AddjudgeNodeChild(waitNode.get());
-	rootNode->AddjudgeNodeChild(approachNode.get());
-	rootNode->AddjudgeNodeChild(chargeNode.get());
+	rootNode->AddjudgeNodeChild(waitNode);
+	rootNode->AddjudgeNodeChild(approachNode);
+	rootNode->AddjudgeNodeChild(chargeNode);
 
-	swordEnemyTree.Init(rootNode.get());
+	swordEnemyTree.Init(rootNode);
 	editor.Init(&swordEnemyTree);
-	editor.AddEditData_Node(actNode.get());
-	editor.AddEditData_Node(waitNode.get());
-	editor.AddEditData_Node(approachNode.get());
-	editor.AddEditData_Node(chargeNode.get());
+	editor.AddEditData_Node(actNode);
+	editor.AddEditData_Node(waitNode);
+	editor.AddEditData_Node(approachNode);
+	editor.AddEditData_Node(chargeNode);
 
 	deathpm = ParticleManager::Create();
 	dptex = TexManager::LoadTexture("Resources/effect1.png");

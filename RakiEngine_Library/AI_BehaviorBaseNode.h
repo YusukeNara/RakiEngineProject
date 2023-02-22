@@ -83,17 +83,17 @@ public:
 
 	//デバッグ用
 	void DrawNodeInfo(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
-		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects, 
-		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects,
+		std::vector<std::shared_ptr<BehaviorActionBase>> actObjects, 
+		std::vector<std::shared_ptr<BehaviorJudgeBase>> judgeObjects,
 		bool checkIsDisplay = true);
 
 	void DrawNodeInfo_Child(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
-		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
-		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects);
+		std::vector<std::shared_ptr<BehaviorActionBase>> actObjects,
+		std::vector<std::shared_ptr<BehaviorJudgeBase>> judgeObjects);
 
 	void DrawNodeInfo_withEditor(std::vector<std::weak_ptr<BehaviorBaseNode>> editNodes,
-		std::vector<std::weak_ptr<BehaviorActionBase>> actObjects,
-		std::vector<std::weak_ptr<BehaviorJudgeBase>> judgeObjects);
+		std::vector<std::shared_ptr<BehaviorActionBase>> actObjects,
+		std::vector<std::shared_ptr<BehaviorJudgeBase>> judgeObjects);
 
 public:
 	//ノードの名前
@@ -107,9 +107,9 @@ public:
 	//子ノード配列
 	std::vector<std::weak_ptr<BehaviorBaseNode>>	childs;
 	//判定クラス
-	std::weak_ptr<BehaviorJudgeBase>				judgeObject;
+	std::shared_ptr<BehaviorJudgeBase>				judgeObject;
 	//実行クラス
-	std::weak_ptr<BehaviorActionBase>				actObject;
+	std::shared_ptr<BehaviorActionBase>				actObject;
 
 	//ノード優先度
 	unsigned int	priority;

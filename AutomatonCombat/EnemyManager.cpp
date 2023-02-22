@@ -12,14 +12,14 @@ EnemyManager::~EnemyManager()
 	delete swordEnemyMother;
 }
 
-void EnemyManager::Init(Player *player,NavMeshAstar *astar)
+void EnemyManager::Init(Player* player, NavMeshAstar* astar)
 {
 	//複製元のエネミーオブジェクトを生成
 	this->player = player;
 	swordEnemyMother = new SwordEnemy(player, astar);
 	swordEnemyMother->s_object.swordObject->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
-	gunEnemy = new GunEnemy();
+	gunEnemy = std::make_unique<GunEnemy>();
 	gunEnemy->SetPlayer(player);
 	gunEnemy->Init();
 
@@ -46,7 +46,7 @@ void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 		RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 			0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-		swordEnemys.push_back(swordEnemyMother->clone(player, astar));
+		swordEnemys.emplace_back(swordEnemyMother->clone(player, astar));
 		swordEnemys[i]->s_object.pos = spawnPos;
 	}
 
@@ -81,8 +81,8 @@ void EnemyManager::Update()
 	}
 
 	//すべての敵を更新
-	for (auto& se : swordEnemys) {
-		se->Update();
+	for (int i = 0; i < swordEnemys.size();i++) {
+		swordEnemys[i]->Update();
 	}
 	gunEnemy->Update();
 
@@ -214,7 +214,7 @@ void EnemyManager::EnemySpawn()
 			RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 				0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-			swordEnemys.push_back(swordEnemyMother->clone(player, astar));
+			swordEnemys.emplace_back(swordEnemyMother->clone(player, astar));
 			swordEnemys[i]->s_object.pos = spawnPos;
 		}
 
