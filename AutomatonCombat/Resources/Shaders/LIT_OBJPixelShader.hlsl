@@ -30,34 +30,21 @@ float4 main(VSOutput input) : SV_TARGET
     //法線情報を復元
     normal = (normal * 2.0f) - 1.0f;
     
-    //ライト計算
-    float3 lightDir = dirLight; //右下奥向きライト
-    float diffuse = saturate(dot(normal, -lightDir)); //ディフューズ計算x
-    float3 lightColor = float3(0.5, 0.5, 0.5);
+    float3 color = float3(1.0f, 1.0f, 1.0f);
     
-    //結果保存
+    // 拡散反射光を計算
     float3 lig = 0.0f;
-    float t = max(0.0f, dot(normal, lightDir) * -1.0f);
-    
-    //ディフューズを合成した値
-    lig = lightColor * diffuse;
-    
-    //ハーフベクトルを求める
-    float3 toEye = normalize(eyePos - worldPos);
-    //反射計算
-    float3 r = reflect(lightDir, normal);
-    t = max(0.0f, dot(toEye, r));
-    t = pow(t, 4.0f);
-    //スペキュラを合成
-    lig += lightColor * t;
-    
-    float4 tmp = albedo;
-    albedo = depth;
-    albedo = tmp;
+    float t = max(0.0f, dot(normal, dirLight) * -1.0f);
+    lig = color * t;
 
-    //ADS合成
+    // step-11 スペキュラ反射を計算
+    float3 toEye = normalize(eyePos - worldPos);
+    float3 r = reflect(dirLight, normal);
+    t = max(0.0f, dot(toEye, r));
+    t = pow(t, 5.0f);
+    lig += color * t;
+    
     float4 resultColor = albedo;
-    resultColor.xyz *= lig;
-    //resultColor.xyz *= depth.xyz;
+    albedo.xyz *= lig;
     return resultColor;
 }

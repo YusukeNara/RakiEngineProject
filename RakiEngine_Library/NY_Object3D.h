@@ -23,6 +23,7 @@ using namespace Microsoft::WRL;
 struct ConstBufferDataB0
 {
 	XMMATRIX mat;
+	XMMATRIX wMat;
 	XMFLOAT4 color;
 	XMMATRIX lightCamMat;
 };

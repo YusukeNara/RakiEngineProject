@@ -12,6 +12,8 @@ void DiferredRenderingMgr::Init(ID3D12Device* dev, ID3D12GraphicsCommandList* cm
         RVector3(0.f, 0.f, 0.f),
         RVector3(0.f, 1.f, 0.f));
 
+    //DirectionalLight::SetLightDir(1.0f, -1.0f, 1.0f);
+
 	ShaderCompile();
 
 	CreateGraphicsPipeline();
@@ -313,5 +315,13 @@ void DiferredRenderingMgr::UpdateConstBuff()
     if (SUCCEEDED(result)) {
         ConstMapB0->eyePos = camera->GetEye();
         m_constBuffEyePos->Unmap(0, nullptr);
+    }
+
+    //定数バッファデータ転送
+    cbuffer_b1* ConstMapB1 = nullptr;
+    result = m_constBuffDirLight->Map(0, nullptr, (void**)&ConstMapB1);
+    if (SUCCEEDED(result)) {
+        ConstMapB1->lightDir = DirectionalLight::GetLightDir();
+        m_constBuffDirLight->Unmap(0, nullptr);
     }
 }

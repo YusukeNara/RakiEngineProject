@@ -28,7 +28,7 @@ PixelOutput main(GSOutput input)
     result.pixel_color = float4(texcolor.rgb, 1.0f );
     result.normal.rgb = float3(input.normal.xyz / 2.0f) + 0.5f;
     result.normal.a = 1.0f;
-    result.worldPos = input.svpos;
+    result.worldPos = input.worldPos;
     
     //’ÊíƒJƒƒ‰‹óŠÔz’l
     float4 cz = float4(input.svpos.z, input.svpos.z, input.svpos.z, 1.0f);
