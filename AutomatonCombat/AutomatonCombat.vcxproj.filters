@@ -143,6 +143,9 @@
     <ClCompile Include="EnemyDefeatEffect.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="NewSwordEnemyNodes.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_Camera.h" />
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="WaveDirections.h" />
     <ClInclude Include="EnemyDefeatEffect.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="NewSwordEnemyNodes.h">
       <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>

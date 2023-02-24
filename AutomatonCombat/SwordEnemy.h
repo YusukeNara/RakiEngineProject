@@ -8,6 +8,7 @@
 #include "SwordEnemyNodes.h"
 #include <ParticleManager.h>
 #include "EnemyDefeatEffect.h"
+#include "NewSwordEnemyNodes.h"
 
 class DeathParticle :public ParticlePrototype
 {
@@ -56,6 +57,12 @@ private:
 	std::shared_ptr<Sword_ChargeJudge> m_chargeJudge;
 	std::shared_ptr<Sword_ChargeAct> m_chargeAct;
 
+public:
+	//新設計ビヘイビア
+
+	RVector3 pos, vec;
+	RV3Colider::Sphere bodyColision;
+
 	//モデルデータ
 	static std::shared_ptr<fbxModel> swordModel;
 	static bool isLoaded;
@@ -66,8 +73,11 @@ private:
 	DeathParticle *dp;
 	int dptex;
 
+	//描画オブジェクト
+	std::unique_ptr<Object3d> swordObject;
+
 public:
-	SwordEnemy(Player* player,NavMeshAstar *astar);
+	SwordEnemy(Player* player, NavMeshAstar* astar);
 	~SwordEnemy();
 
 	void Init();

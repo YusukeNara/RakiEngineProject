@@ -252,6 +252,9 @@
     <ClCompile Include="BehaviorNodeBase.cpp">
       <Filter>AI\NewBehavior</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTreeMother.cpp">
+      <Filter>AI\NewBehavior</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -426,6 +429,9 @@
       <Filter>AI\Behavior</Filter>
     </ClInclude>
     <ClInclude Include="BehaviorNodeBase.h">
+      <Filter>AI\NewBehavior</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeMother.h">
       <Filter>AI\NewBehavior</Filter>
     </ClInclude>
   </ItemGroup>

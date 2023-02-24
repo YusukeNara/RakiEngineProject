@@ -14,8 +14,8 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 		isLoaded = true;
 	}
 
-	s_object.swordObject = std::make_unique<Object3d>();
-	s_object.swordObject->SetLoadedModelData(swordModel);
+	swordObject = std::make_unique<Object3d>();
+	swordObject->SetLoadedModelData(swordModel);
 	s_object.player = player;
 	m_swordWaitJudge	=	std::make_shared<Sword_WaitJudge>(&s_object);
 	m_swordWaitAct		=	std::make_shared<Sword_WaitAct>(&s_object);
@@ -54,60 +54,33 @@ SwordEnemy::SwordEnemy(Player* player,NavMeshAstar *astar)
 	dptex = TexManager::LoadTexture("Resources/effect1.png");
 	dp = new DeathParticle;
 	deathpm->Prototype_Set(dp);
+
+
 }
 
 SwordEnemy::~SwordEnemy()
 {
-	//if (m_approachJudge != nullptr) { delete m_approachJudge; }
-	//if(m_approahAct != nullptr){ delete m_approahAct; }
-	//if (m_chargeAct != nullptr) { delete m_chargeAct; }
-	//if (m_chargeJudge != nullptr) { delete m_chargeJudge; }
-	//if (m_swordAttackAct) { delete m_swordAttackAct; }
-	//if (m_swordAttackJudge ) { delete m_swordAttackJudge; }
-	//if (m_swordWaitAct ) { delete m_swordWaitAct; }
-	//if (m_swordWaitJudge ) { delete m_swordWaitJudge; }
-	//if (rootNode ) { delete rootNode; }
-	//if (actNode ) { delete actNode; }
-	//if (waitNode ) { delete waitNode; }
-	//if (chargeNode ) { delete chargeNode; }
-	//if (approachNode ) { delete approachNode;	}
+
 }
 
 void SwordEnemy::Init()
 {
 	//初期パラメーター設定
-	s_object.pos.zero();
-	s_object.pos.z = 100.0f;
-	s_object.bodyColision.center = s_object.pos;
-	s_object.bodyColision.rad = 10.0f;
-
-	s_object.swordObject->SetAffineParamScale(RVector3(10.0f, 10.0f, 10.0f));
+	bodyColision.center = pos;
+	bodyColision.rad = 10.0f;
 }
 
 void SwordEnemy::Update()
 {
 	//ツリーの実行
-	swordEnemyTree.Run();
-
-	s_object.pos += s_object.mVec;
-
-	s_object.bodyColision.center = s_object.pos;
-	if (s_object.bodyColision.center.y < 10) { 
-		s_object.bodyColision.center.y = 10;
-		s_object.pos.y = 10; 
-	}
-	else if (s_object.bodyColision.center.y > 10) {
-		s_object.bodyColision.center.y = 10;
-		s_object.pos.y = 10;
-	}
 
 }
 
 void SwordEnemy::Draw()
 {
 	//パラメータセット
-	s_object.swordObject->SetAffineParamTranslate(s_object.pos);
-	s_object.swordObject->DrawObject();
+	swordObject->SetAffineParamTranslate(pos);
+	swordObject->DrawObject();
 }
 
 void SwordEnemy::DebugDraw()

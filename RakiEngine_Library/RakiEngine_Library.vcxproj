@@ -43,6 +43,7 @@
     <ClCompile Include="BehaviorEditor.cpp" />
     <ClCompile Include="BehaviorNodeBase.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="BehaviorTreeMother.cpp" />
     <ClCompile Include="CameraCalc.cpp" />
     <ClCompile Include="Colider.cpp" />
     <ClCompile Include="ColisionManager.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="BehaviorEditor.h" />
     <ClInclude Include="BehaviorNodeBase.h" />
     <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="BehaviorTreeMother.h" />
     <ClInclude Include="Behavior_ActionBase.h" />
     <ClInclude Include="Behavior_JudgeBase.h" />
     <ClInclude Include="CameraCalc.h" />

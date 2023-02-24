@@ -114,6 +114,7 @@
     <ClCompile Include="GunEnemyNodes.cpp" />
     <ClCompile Include="HandgunObject.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
+    <ClCompile Include="NewSwordEnemyNodes.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="GunEnemyNodes.h" />
     <ClInclude Include="HandgunObject.h" />
     <ClInclude Include="ISceneChanger.h" />
+    <ClInclude Include="NewSwordEnemyNodes.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Raki_Camera.h" />
     <ClInclude Include="SceneManager.h" />
