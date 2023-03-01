@@ -1080,7 +1080,7 @@ void NY_Object3DManager::SetCommonBeginDrawShadow()
     //プリミティブ形状設定
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //レンダーターゲット変更
-    RenderTargetManager::GetInstance()->SetRenderTargetForRTexSpecifiedIndex(&m_gBuffer, 3);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_shadomMap, 1);
 }
 
 void NY_Object3DManager::SetCommonBeginDrawShadow_FBX()
@@ -1093,12 +1093,12 @@ void NY_Object3DManager::SetCommonBeginDrawShadow_FBX()
     //プリミティブ形状設定
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //レンダーターゲット変更
-    RenderTargetManager::GetInstance()->SetRenderTargetForRTexSpecifiedIndex(&m_gBuffer, 3);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_shadomMap, 1);
 }
 
 void NY_Object3DManager::ReturnShadowToDifferd()
 {
-    RenderTargetManager::GetInstance()->CloseMultiRenderTargetsForRTexSpecifiedIndex(&m_gBuffer, 3);
+    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_shadomMap, 1);
 
     RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 3);
 }

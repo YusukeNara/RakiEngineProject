@@ -1,13 +1,13 @@
 #include "RTex.h"
 #include "Raki_DX12B.h"
 
-void RenderTextureData::Init(int texwidth, int texheight,float *clearColor,int addBufferNums, int addDepthNum, RenderTextureOption option[])
+void RenderTextureData::Init(int texwidth, int texheight,float *clearColor,int addBufferNums, RenderTextureOption option[])
 {
 	//各種リソース生成
 	CreateTextureBuffer(texwidth, texheight, clearColor, addBufferNums, option);
 	CreateSRVDescriptorHeap(addBufferNums, option);
 	CreateRTVDescriptorHeap(addBufferNums);
-	CreateDepthBuffer(texwidth, texheight, addDepthNum);
+	CreateDepthBuffer(texwidth, texheight);
 	CreateDSVDescriptorHeap(addBufferNums);
 }
 
@@ -110,7 +110,7 @@ void RenderTextureData::CreateRTVDescriptorHeap(int bufferCount)
 	rtvHeap->SetName(L"RTex_RTV_HEAP");
 }
 
-void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height, int addDepthNum)
+void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
 {
 	//画像サイズに合わせてバッファを生成する
 	CD3DX12_RESOURCE_DESC depthresdesc =
@@ -126,7 +126,6 @@ void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height,
 	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	auto clearvalue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
 	//深度バッファ生成
-	for()
 
 	HRESULT rtex_depthbuff_create_result = RAKI_DX12B_DEV->CreateCommittedResource(
 		&heapprop,
@@ -178,10 +177,10 @@ RTex::~RTex()
 
 }
 
-void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount,int depthCount, RenderTextureOption* option)
+void RTex::CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount, RenderTextureOption* option)
 {
 	//レンダーテクスチャデータ初期化
-	rtdata->Init(texture_width, texture_height, clearColor, bufferCount, depthCount, option);
+	rtdata->Init(texture_width, texture_height, clearColor, bufferCount, option);
 
 	//ビューポート、シザー矩形初期化
 	InitViewAndRect(texture_width, texture_height);
