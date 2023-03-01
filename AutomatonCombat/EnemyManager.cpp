@@ -2,6 +2,8 @@
 #include <NY_random.h>
 #include "WaveDirections.h"
 
+
+
 EnemyManager::EnemyManager()
 {
 
@@ -53,6 +55,11 @@ void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 	m_defeatP = new DefeatParticle;
 	m_defeatPM = ParticleManager::Create();
 	m_defeatPM->Prototype_Set(m_defeatP);
+
+	m_spawnP = new EnemySpawnEffect;
+	m_spawnPM.reset(ParticleManager::Create());
+	m_spawnPM->Prototype_Set(m_spawnP);
+
 
 	defeatPtex = TexManager::LoadTexture("Resources/effect1.png");
 
@@ -111,6 +118,8 @@ void EnemyManager::Update()
 	}
 
 	m_defeatPM->Prototype_Update();
+
+	m_spawnPM->Prototype_Update();
 	
 }
 
@@ -153,6 +162,7 @@ void EnemyManager::UIDraw()
 void EnemyManager::ParticleDraw()
 {
 	m_defeatPM->Prototype_Draw(defeatPtex);
+	m_spawnPM->Prototype_Draw(defeatPtex);
 }
 
 void EnemyManager::DebugExecution()
@@ -222,6 +232,9 @@ void EnemyManager::EnemySpawn()
 		if (killedGroup == waveKillGroupAssignment - 1 && waveCount == 2) {
 			gunEnemy->isAlive = true;
 		}
+
+		//エフェクト生成
+		m_spawnPM->Prototype_Add(50, groupSpawnPos);
 
 	}
 

@@ -30,7 +30,7 @@ public:
 	/// <param name="texheight">レンダーテクスチャ縦幅</param>
 	/// <param name="clearColor">クリアカラー</param>
 	/// <param name="addBufferNums">Rtex一枚に生成するバッファの数</param>
-	void Init(int texwidth, int texheight, float* clearColor, int addBufferNums, RenderTextureOption option[]);
+	void Init(int texwidth, int texheight, float* clearColor, int addBufferNums, int addDepthNum, RenderTextureOption option[]);
 
 private:
 	//テクスチャバッファ（vector）
@@ -42,7 +42,7 @@ private:
 	//デプス用デスクリプタヒープ
 	ComPtr<ID3D12DescriptorHeap>			dsvHeap   = nullptr;
 	//深度バッファ
-	ComPtr<ID3D12Resource>					depthBuff = nullptr;
+	std::vector<ComPtr<ID3D12Resource>>		depthBuff;
 
 	//テクスチャバッファ生成
 	void CreateTextureBuffer(int texture_width, int texture_height, float* clearColor, int addBufferNums, RenderTextureOption option[]);
@@ -54,7 +54,7 @@ private:
 	void CreateRTVDescriptorHeap(int bufferCount);
 
 	//深度バッファ生成（画像サイズ）
-	void CreateDepthBuffer(int texture_width, int texture_height);
+	void CreateDepthBuffer(int texture_width, int texture_height, int addDepthNum);
 
 	//DSVデスクリプタヒープ作成
 	void CreateDSVDescriptorHeap(int bufferCount);
@@ -82,8 +82,16 @@ public:
 	//デストラクタ
 	~RTex();
 
-	//レンダーテクスチャ生成
-	void CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount, RenderTextureOption *option = nullptr);
+	/// <summary>
+	/// レンダーテクスチャ生成
+	/// </summary>
+	/// <param name="texture_width">テクスチャ幅</param>
+	/// <param name="texture_height">テクスチャ高さ</param>
+	/// <param name="clearColor">クリアカラー</param>
+	/// <param name="bufferCount">テクスチャ生成数</param>
+	/// <param name="depthCount">深度テクスチャ生成数</param>
+	/// <param name="option">レンダーテクスチャ1枚あたりの設定</param>
+	void CreateRTex(int texture_width, int texture_height, float* clearColor, int bufferCount, int depthCount, RenderTextureOption* option = nullptr);
 
 	//レンダーテクスチャのデータ取得
 	const RenderTextureData* GetRTData() { return rtdata.get(); }

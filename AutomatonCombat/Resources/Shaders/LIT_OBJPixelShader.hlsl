@@ -29,15 +29,16 @@ float4 main(VSOutput input) : SV_TARGET
     
     //法線情報を復元
     normal = (normal * 2.0f) - 1.0f;
+
+    float3 color = float3(1.0f, 1.0f, 1.0);
     
-    float3 color = float3(1.0f, 1.0f, 1.0f);
     
-    // 拡散反射光を計算
+    //拡散反射を計算
     float3 lig = 0.0f;
     float t = max(0.0f, dot(normal, dirLight) * -1.0f);
     lig = color * t;
-
-    // step-11 スペキュラ反射を計算
+    
+    //スペキュラ
     float3 toEye = normalize(eyePos - worldPos);
     float3 r = reflect(dirLight, normal);
     t = max(0.0f, dot(toEye, r));
@@ -45,6 +46,7 @@ float4 main(VSOutput input) : SV_TARGET
     lig += color * t;
     
     float4 resultColor = albedo;
-    albedo.xyz *= lig;
+    resultColor.xyz *= lig;
+
     return resultColor;
 }

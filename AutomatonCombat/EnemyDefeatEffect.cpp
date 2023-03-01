@@ -9,8 +9,8 @@ void DefeatParticle::Update()
 {
 
 	if (pos.y >= 0.0f) {
-		pos -= vel;
-		vel -= acc;
+		pos += vel;
+		vel += acc;
 	}
 
 	nowFrame++;
@@ -26,10 +26,10 @@ ParticlePrototype* DefeatParticle::clone(RVector3 pos)
 
 	p->pos = pos;
 	p->vel.x = NY_random::floatrand_sl(5.f, -5.f);
-	p->vel.y = NY_random::floatrand_sl(5.f, 0.f);
+	p->vel.y = NY_random::floatrand_sl(5.0f, -10.f);
 	p->vel.z = NY_random::floatrand_sl(5.f, -5.f);
 
-	p->acc.y = -0.2f;
+	p->acc.y = -0.5f;
 
 	p->nowFrame = 0;
 

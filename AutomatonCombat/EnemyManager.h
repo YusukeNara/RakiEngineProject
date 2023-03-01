@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "EnemyDefeatEffect.h"
+#include "EnemySpawnEffect.h"
 
 //敵の生成、更新、描画を担うクラス
 
@@ -102,8 +103,13 @@ private:
 	RVector3	groupSpawnPos;
 	const float groupSpawnRad = 64.0f;
 
+	//共通エフェクト
 	ParticleManager* m_defeatPM;
 	DefeatParticle* m_defeatP;
+	std::unique_ptr<ParticleManager> m_spawnPM;
+	EnemySpawnEffect* m_spawnP;
+
+
 
 	int defeatPtex;
 

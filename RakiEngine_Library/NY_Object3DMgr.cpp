@@ -987,7 +987,7 @@ void NY_Object3DManager::ClearObjects()
 
 void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 4, true);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 3, true);
     //パイプラインステートをセット
     Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(m_diferredRenderingPipeline.pipelinestate.Get());
     //ルートシグネチャをセット
@@ -1002,7 +1002,7 @@ void NY_Object3DManager::SetCommonBeginDrawObject3D()
 void NY_Object3DManager::CloseDrawObject3D()
 {
     //レンダーターゲット切り替え
-    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_gBuffer, 4, true);
+    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_gBuffer, 3, true);
 }
 
 void NY_Object3DManager::SetCommonBeginDrawObject3DFeatRTex(int rtHandle)
@@ -1080,7 +1080,7 @@ void NY_Object3DManager::SetCommonBeginDrawShadow()
     //プリミティブ形状設定
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //レンダーターゲット変更
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_shadomMap, 1);
+    RenderTargetManager::GetInstance()->SetRenderTargetForRTexSpecifiedIndex(&m_gBuffer, 3);
 }
 
 void NY_Object3DManager::SetCommonBeginDrawShadow_FBX()
@@ -1093,14 +1093,14 @@ void NY_Object3DManager::SetCommonBeginDrawShadow_FBX()
     //プリミティブ形状設定
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //レンダーターゲット変更
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_shadomMap, 1);
+    RenderTargetManager::GetInstance()->SetRenderTargetForRTexSpecifiedIndex(&m_gBuffer, 3);
 }
 
 void NY_Object3DManager::ReturnShadowToDifferd()
 {
-    //RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_shadomMap, 1);
+    RenderTargetManager::GetInstance()->CloseMultiRenderTargetsForRTexSpecifiedIndex(&m_gBuffer, 3);
 
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 4);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 3);
 }
 
 void NY_Object3DManager::ShadowMapClear()
