@@ -25,7 +25,7 @@ public:
 	EnemyManager();
 	~EnemyManager();
 
-	void Init(Player *player,NavMeshAstar *astar);
+	void Init(std::shared_ptr<Player> player,std::shared_ptr<NavMeshAstar> astar);
 	void Reset();
 
 	void Update();
@@ -57,8 +57,8 @@ public:
 	bool gameCleared = false;
 
 private:
-
-	Player* player;
+	//参照
+	std::weak_ptr<Player> player;
 
 	//デバッグ用複製元
 	SwordEnemy* swordEnemyMother;
@@ -107,6 +107,6 @@ private:
 
 	int defeatPtex;
 
-	NavMeshAstar* astar;
+	std::weak_ptr<NavMeshAstar> astar;
 };
 

@@ -12,16 +12,16 @@ EnemyManager::~EnemyManager()
 	delete swordEnemyMother;
 }
 
-void EnemyManager::Init(Player* player, NavMeshAstar* astar)
+void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar)
 {
 	//複製元のエネミーオブジェクトを生成
 	this->player = player;
 	swordEnemyMother = new SwordEnemy(player, astar);
 	swordEnemyMother->s_object.swordObject->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
-	gunEnemy = std::make_unique<GunEnemy>();
-	gunEnemy->SetPlayer(player);
-	gunEnemy->Init();
+	//gunEnemy = std::make_unique<GunEnemy>();
+	//gunEnemy->SetPlayer(player);
+	//gunEnemy->Init();
 
 	killCount = 0;
 	waveCount = 1;
@@ -84,7 +84,7 @@ void EnemyManager::Update()
 	for (int i = 0; i < swordEnemys.size();i++) {
 		swordEnemys[i]->Update();
 	}
-	gunEnemy->Update();
+	//gunEnemy->Update();
 
 	Colision();
 	////敵の数が足りないとき補充
@@ -125,7 +125,7 @@ void EnemyManager::Draw()
 		swordEnemys[i]->Draw();
 	}
 
-	gunEnemy->Draw();
+	//gunEnemy->Draw();
 
 	if (isDebugMode) { swordEnemyMother->Draw(); }
 
@@ -161,7 +161,7 @@ void EnemyManager::DebugExecution()
 	swordEnemyMother->Update();
 
 	//プレイヤーの体力を固定
-	player->hitpoint = 10;
+	//player->hitpoint = 10;
 }
 
 void EnemyManager::DebugDraw()
@@ -214,13 +214,13 @@ void EnemyManager::EnemySpawn()
 			RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 				0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-			swordEnemys.emplace_back(swordEnemyMother->clone(player, astar));
+			swordEnemys.emplace_back(swordEnemyMother->clone(player.lock(),astar.lock()));
 			swordEnemys[i]->s_object.pos = spawnPos;
 		}
 
 		//最後のグループのとき、エリート召喚
 		if (killedGroup == waveKillGroupAssignment - 1 && waveCount == 2) {
-			gunEnemy->isAlive = true;
+			//gunEnemy->isAlive = true;
 		}
 
 	}
@@ -233,14 +233,14 @@ void EnemyManager::Colision()
 
 	for (int i = 0; i < 25;i++) {
 		//死んでる弾は判定しない
-		if (!player->bullets[i].isAlive) { continue; }
+		if (!player.lock()->bullets[i].isAlive) { continue; }
 
 		if (swordEnemys.size() == 0) { return; }
 
 		for (auto se = swordEnemys.begin(); se != swordEnemys.end();) {
-			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision,player->bullets[i].sphere)) {
+			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision,player.lock()->bullets[i].sphere)) {
 				//弾を消滅させ、エネミーにダメージ処理(消去)
-				player->bullets[i].isAlive = false;
+				player.lock()->bullets[i].isAlive = false;
 				m_defeatPM->Prototype_Add(16, (*se)->s_object.pos);
 				se = swordEnemys.erase(se);
 				

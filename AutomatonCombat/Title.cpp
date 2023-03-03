@@ -18,15 +18,17 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
     clearSprite.Create(TexManager::LoadTexture("Resources/ClearSprite.png"));
 
     ////ƒvƒŒƒCƒ„[
+    pl      = std::make_shared<Player>();
+    astar   = std::make_shared<NavMeshAstar>();
 
     nData.LoadNavMesh("Resources/NavMeshTestData.txt");
-    astar.SetNavMeshData(nData.navMeshData);
+    astar->SetNavMeshData(nData.navMeshData);
 
     diffMgr.Init(RAKI_DX12B_DEV, RAKI_DX12B_CMD);
 
     gobject.Init();
 
-    pl.Init();
+    pl->Init();
 
     gobject.SetPlayer(&pl);
 

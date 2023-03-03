@@ -14,7 +14,13 @@ public:
 	SwordApproachNode() {};
 	~SwordApproachNode() {};
 
-	void SetPointer(std::shared_ptr<SwordEnemy> enemy, std::shared_ptr<Player> player,std::shared_ptr<NavMeshAstar> astar) {
+	/// ポインタメモ
+	/// このファイルのクラスはswordEnemyが持っている
+	/// playerとastarはswordEnemyの外部のクラス
+	/// つまりenemyは内側のスコープとなるので生ポインタで参照でも良い？
+	/// playerとastarは外側スコープなのでスマートポインタにしなければならない
+
+	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player,std::shared_ptr<NavMeshAstar> astar) {
 		this->enemy = enemy;
 		this->player = player;
 		this->astar = astar;
@@ -26,9 +32,10 @@ public:
 
 private:
 	//参照するオブジェクト
-	std::weak_ptr<SwordEnemy> enemy;
+	SwordEnemy *enemy;
 	std::weak_ptr<Player> player;
 	std::weak_ptr<NavMeshAstar> astar;
+	std::vector<RVector3> result;
 };
 
 class SwordAttackNode : public bTreesys::BehaviorActionNode
@@ -38,7 +45,7 @@ public:
 	SwordAttackNode() {};
 	~SwordAttackNode() {};
 
-	void SetPointer(std::shared_ptr<SwordEnemy> enemy, std::shared_ptr<Player> player) {
+	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -49,7 +56,7 @@ public:
 
 private:
 	//参照するオブジェクト
-	std::weak_ptr<SwordEnemy> enemy;
+	SwordEnemy *enemy;
 	std::weak_ptr<Player> player;
 
 	RVector3 startPos, endPos;
@@ -67,7 +74,7 @@ public:
 	SwordChargeNode() {};
 	~SwordChargeNode() {};
 
-	void SetPointer(std::shared_ptr<SwordEnemy> enemy, std::shared_ptr<Player> player) {
+	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -78,7 +85,7 @@ public:
 
 private:
 	//参照するオブジェクト
-	std::weak_ptr<SwordEnemy> enemy;
+	SwordEnemy *enemy;
 	std::weak_ptr<Player> player;
 
 	RVector3 startPos, endPos, chargeVec;
@@ -95,7 +102,7 @@ public:
 	SwordAttackJudgeNode() {};
 	~SwordAttackJudgeNode() {};
 
-	void SetPointer(std::shared_ptr<SwordEnemy> enemy, std::shared_ptr<Player> player) {
+	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -106,6 +113,6 @@ public:
 
 private:
 	//参照するオブジェクト
-	std::weak_ptr<SwordEnemy> enemy;
+	SwordEnemy *enemy;
 	std::weak_ptr<Player> player;
 };

@@ -3,6 +3,8 @@
 #include <BehaviorEditor.h>
 #include <RVector.h>
 #include <memory>
+#include <BehaviorNodeBase.h>
+#include <BehaviorTreeMother.h>
 
 #include "Player.h"
 #include "SwordEnemyNodes.h"
@@ -59,6 +61,15 @@ private:
 
 public:
 	//新設計ビヘイビア
+	std::shared_ptr<SwordApproachNode>		tree_swordApproachNode;
+	std::shared_ptr<SwordAttackNode>		tree_swordAttackNode;
+	std::shared_ptr<SwordChargeNode>		tree_swordChargeNode;
+	std::shared_ptr<SwordAttackJudgeNode>	tree_swordAtkJudgeNode;
+	std::shared_ptr<bTreesys::BehaviorSelectorNode> tree_selector;
+	std::shared_ptr<bTreesys::BehaviorSequenceNode> tree_sequence;
+	std::shared_ptr<bTreesys::BehaviorRepeatNode>	tree_repeat;
+
+	BehaviorTreeMother treeMother;
 
 	RVector3 pos, vec;
 	RV3Colider::Sphere bodyColision;
@@ -76,8 +87,10 @@ public:
 	//描画オブジェクト
 	std::unique_ptr<Object3d> swordObject;
 
+	std::weak_ptr<Player> playerPtr;
+
 public:
-	SwordEnemy(Player* player, NavMeshAstar* astar);
+	SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar);
 	~SwordEnemy();
 
 	void Init();
@@ -96,7 +109,7 @@ public:
 	BehaviorEditor editor;
 
 	//複製
-	SwordEnemy* clone(Player* player, NavMeshAstar* a);
+	SwordEnemy* clone(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> a);
 
 };
 

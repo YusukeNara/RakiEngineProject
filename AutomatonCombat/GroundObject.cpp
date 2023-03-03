@@ -38,7 +38,7 @@ void GroundObject::Load()
 {
 	std::shared_ptr<Model3D> plane = std::make_shared<Model3D>();
 
-	plane->CreatePlaneModelXZ(1000.0f, 1000.0f, 10, 10, TexManager::LoadTexture("Resources/asp3.dds"), nullptr);
+	plane->CreatePlaneModelXZ(1000.0f, 1000.0f, 2, 2, TexManager::LoadTexture("Resources/asp3.dds"), nullptr);
 
 	object3d = std::make_shared<Object3d>();
 

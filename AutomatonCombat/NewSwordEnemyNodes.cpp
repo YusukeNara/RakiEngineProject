@@ -5,20 +5,21 @@ using namespace bTreesys;
 
 void SwordApproachNode::Init()
 {
-	
+    astar.lock()->NavMeshSearchAster(enemy.lock()->pos, player.lock()->pos, result);
 }
 
 bTreesys::NODE_STATUS SwordApproachNode::Run()
 {
+    bTreesys::NODE_STATUS status = STATE_RUN;
+
 	//プレイヤーの近くまで接近したら成功
-
-
+    if (distance(player.lock()->pos, enemy.lock()->pos) < 50.0f) {
+        status = STATE_SUCCESS;
+    }
 
 	//何かしらの理由で接近できない場合は失敗
 
-
-
-	return bTreesys::NODE_STATUS();
+	return status;
 }
 
 void SwordAttackNode::Init()

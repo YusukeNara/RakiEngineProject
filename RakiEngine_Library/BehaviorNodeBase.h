@@ -66,6 +66,10 @@ namespace bTreesys
 		virtual void Init() override;
 
 		virtual NODE_STATUS Run() override;
+
+		void AddChild(std::shared_ptr<BehaviorNodeBase> node) {
+			childs.push_back(node);
+		}
 	private:
 		int activeArrayNum = 0;
 		std::vector<std::shared_ptr<BehaviorNodeBase>> childs;
@@ -88,6 +92,10 @@ namespace bTreesys
 
 		virtual NODE_STATUS Run() override;
 
+		void AddChild(std::shared_ptr<bTreesys::BehaviorNodeBase> node) {
+			childs.push_back(node);
+		}
+
 	private:
 		int activeArrayNum = 0;
 		std::vector<std::shared_ptr<BehaviorNodeBase>> childs;
@@ -107,6 +115,10 @@ namespace bTreesys
 		virtual void Init();
 
 		virtual NODE_STATUS Run();
+
+		void SetChild(std::shared_ptr<BehaviorNodeBase> node) {
+			child = node;
+		}
 
 	private:
 		std::shared_ptr<BehaviorNodeBase>	child;

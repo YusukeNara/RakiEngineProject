@@ -54,7 +54,7 @@ public:
 
     DiferredRenderingMgr diffMgr;
 
-    Player pl;
+    std::shared_ptr<Player> pl;
 
     ////“GŠÇ—•”
     EnemyManager emanager;
@@ -78,7 +78,7 @@ public:
     std::array<SkyBoxObject, 5> sky;
 
     NavMeshData nData;
-    NavMeshAstar astar;
+    std::shared_ptr<NavMeshAstar> astar;
     
     StageObjects stage;
 };
