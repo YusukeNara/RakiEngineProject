@@ -185,6 +185,7 @@ void Object3d::UpdateObject3D()
 	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
 		ConstMapB0->mat = matWorld * camera->GetMatrixView() * camera->GetMatrixProjection();
+		ConstMapB0->wMat = matWorld;
 		ConstMapB0->color = this->color;
 		ConstMapB0->lightCamMat = matWorld * DirectionalLight::GetLightCamera() * camera->GetMatrixProjection();
 		constBuffB0->Unmap(0, nullptr);
@@ -270,6 +271,7 @@ void Object3d::UpdateBillBoard3D()
 	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
 		ConstMapB0->mat = matWorld * camera->GetMatrixView() * camera->GetMatrixProjection();
+		ConstMapB0->wMat = matWorld;
 		ConstMapB0->color = this->color;
 		constBuffB0->Unmap(0, nullptr);
 	}

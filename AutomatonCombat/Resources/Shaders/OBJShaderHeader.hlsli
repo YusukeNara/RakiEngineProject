@@ -1,6 +1,7 @@
 cbuffer cbuff0 : register(b0)
 {
 	matrix mat;  //3D•ÏŠ·s—ñ
+    matrix wMat;
     float4 color;//F
     matrix lightMat;
 }

@@ -210,6 +210,48 @@ void RenderTargetManager::SetMultiRenderTargets(const RTex* renderTargets,int si
 	isDrawing = USING_RENDERTEXTURE;
 }
 
+void RenderTargetManager::SetRenderTargetForRTexSpecifiedIndex(const RTex* renderTargets, int targetIndex, bool clearFlag)
+{
+	//RTV用デスクリプタハンドルはRTexの目標インデックス1つだけ
+	auto rtvh = renderTargets->rtdata->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < targetIndex; i++) {
+		rtvh.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	}
+
+	//デプスハンドルは一つだけ
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvh = renderTargets->rtdata->dsvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+
+	//リソースバリア変更
+	auto rt = renderTargets->rtdata->rtexBuff[targetIndex];
+	auto barrierState = CD3DX12_RESOURCE_BARRIER::Transition(
+		rt.Get(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
+	cmdlist->ResourceBarrier(1, &barrierState);
+
+	//レンダーターゲット設定
+	cmdlist->OMSetRenderTargets(1, &rtvh, true, &dsvh);
+
+	//レンダーターゲットクリア
+	if (clearFlag) {
+		cmdlist->ClearRenderTargetView(rtvh, renderTargets->clearColors.data(), 0, nullptr);
+		cmdlist->ClearDepthStencilView(dsvh, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	}
+
+	//ビューとシザーの設定
+	std::vector<CD3DX12_VIEWPORT> viewports;
+	std::vector<CD3DX12_RECT> rects;
+
+	viewports.push_back(renderTargets->viewport);
+	rects.push_back(renderTargets->rect);
+
+	cmdlist->RSSetViewports(1, viewports.data());
+	cmdlist->RSSetScissorRects(1, rects.data());
+
+	isDrawing = USING_RENDERTEXTURE;
+}
+
 void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int size,bool isChangeBB)
 {
 	//レンダーターゲットをクローズ、バックバッファに切り替え
@@ -227,6 +269,23 @@ void RenderTargetManager::CloseMultiRenderTargets(const RTex* renderTargets, int
 		SetDrawBackBuffer();
 	}
 
+}
+
+void RenderTargetManager::CloseMultiRenderTargetsForRTexSpecifiedIndex(const RTex* renderTargets, int targetIndex, bool isChangeBB)
+{
+	auto rt = renderTargets->rtdata->rtexBuff[targetIndex];
+	//テクスチャのリソースステートをレンダーターゲットに変更
+	auto barrierState = CD3DX12_RESOURCE_BARRIER::Transition(
+		rt.Get(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+	);
+	cmdlist->ResourceBarrier(1, &barrierState);
+	
+
+	if (isChangeBB) {
+		SetDrawBackBuffer();
+	}
 }
 
 void RenderTargetManager::SetRenderTargetDrawArea(int handle, int x1, int y1, int x2, int y2)

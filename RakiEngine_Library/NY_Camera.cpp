@@ -12,11 +12,7 @@ NY_Camera::NY_Camera(XMFLOAT3 eye_, XMFLOAT3 target_, XMFLOAT3 up_)
 	_matView = XMMatrixLookAtLH(XMLoadFloat3(&_eye), XMLoadFloat3(&_target), XMLoadFloat3(&_up));
 
 	//プロジェクション行列生成
-	_matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
-		0.1f, 1000.0f
-	);
+	SetProjecion();
 
 	//ローカル座標生成
 	_camRocal = XMMatrixIdentity();
@@ -47,7 +43,7 @@ void NY_Camera::SetProjecion()
 	_matProjection = XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(60.0f),
 		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
-		0.1f, 2000.0f
+		0.1f, 10000.0f
 	);
 	_matProjection2D = XMMatrixOrthographicOffCenterLH(
 		0.0f, float(Raki_WinAPI::window_width), float(Raki_WinAPI::window_height), 0.0f, 0.0f, 1.0f);
@@ -330,12 +326,6 @@ void NY_Camera::UpdateViewMat() {
 
 	_matView = XMMatrixLookAtLH(XMLoadFloat3(&_eye), XMLoadFloat3(&_target), XMLoadFloat3(&_up));
 
-	//プロジェクション行列生成
-	_matProjection = XMMatrixPerspectiveFovLH(
-		XMConvertToRadians(60.0f),
-		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
-		0.1f, 1000.0f
-	);
 	//ビュープロジェクション行列
 	_matViewProj = _matView * _matProjection;
 

@@ -108,6 +108,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyDefeatEffect.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemySpawnEffect.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GroundObject.cpp" />
     <ClCompile Include="GunEnemy.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyDefeatEffect.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemySpawnEffect.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GroundObject.h" />
     <ClInclude Include="GunEnemy.h" />

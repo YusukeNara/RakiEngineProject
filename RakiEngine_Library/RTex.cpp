@@ -74,16 +74,6 @@ void RenderTextureData::CreateSRVDescriptorHeap(int bufferCount, RenderTextureOp
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	//デスクリプタヒープにSRV作成（バッファ数ループ）
-	//auto handle = srvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
-	//for (auto& rt : rtexBuff) {
-	//	RAKI_DX12B_DEV->CreateShaderResourceView(rt.Get(),
-	//		&srvDesc,
-	//		handle
-	//	);
-	//	handle.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//}
-
 	for (int i = 0; i < bufferCount; i++) {
 
 		srvDesc.Format = option[i].format;
@@ -109,16 +99,6 @@ void RenderTextureData::CreateRTVDescriptorHeap(int bufferCount)
 	HRESULT result = RAKI_DX12B_DEV->CreateDescriptorHeap(
 		&rtvdhd, IID_PPV_ARGS(&rtvHeap)
 	);
-
-	//デスクリプタヒープにRTV生成（バッファ数ぶん）
-	//auto handle = rtvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
-	//for (auto& rt : rtexBuff) {
-	//	RAKI_DX12B_DEV->CreateRenderTargetView(rt.Get(),
-	//		nullptr,
-	//		CD3DX12_CPU_DESCRIPTOR_HANDLE(rtvHeap->GetCPUDescriptorHandleForHeapStart(),)
-	//	);
-	//	handle.ptr += RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	//}
 
 	for (int i = 0; i < bufferCount; i++) {
 		RAKI_DX12B_DEV->CreateRenderTargetView(rtexBuff[i].Get(),
@@ -146,6 +126,7 @@ void RenderTextureData::CreateDepthBuffer(int texture_width, int texture_height)
 	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 	auto clearvalue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0);
 	//深度バッファ生成
+
 	HRESULT rtex_depthbuff_create_result = RAKI_DX12B_DEV->CreateCommittedResource(
 		&heapprop,
 		D3D12_HEAP_FLAG_NONE,

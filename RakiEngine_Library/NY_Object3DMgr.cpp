@@ -394,7 +394,7 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     RenderTextureOption option[4] = {
         {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
         {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
-        {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
+        {DXGI_FORMAT_R32G32B32A32_FLOAT,*clearcolors},
         {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
     };
     m_gBuffer.CreateRTex(Raki_WinAPI::window_width, Raki_WinAPI::window_height,
@@ -402,7 +402,7 @@ Pipeline3D NY_Object3DManager::CreateDiferredRenderingPipelineState()
     gpipeline.NumRenderTargets = 4;//描画するパラメータが増えるとここも増える
     gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
     gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
-    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
     gpipeline.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
     gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
 
@@ -557,7 +557,7 @@ Pipeline3D NY_Object3DManager::CreateFbxPipeline()
     gpipeline.NumRenderTargets = 4;//描画するパラメータが増えるとここも増える
     gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
     gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
-    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;
     gpipeline.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
     gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
 
@@ -987,7 +987,7 @@ void NY_Object3DManager::ClearObjects()
 
 void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 4, true);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 3, true);
     //パイプラインステートをセット
     Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(m_diferredRenderingPipeline.pipelinestate.Get());
     //ルートシグネチャをセット
@@ -1002,7 +1002,7 @@ void NY_Object3DManager::SetCommonBeginDrawObject3D()
 void NY_Object3DManager::CloseDrawObject3D()
 {
     //レンダーターゲット切り替え
-    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_gBuffer, 4, true);
+    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_gBuffer, 3, true);
 }
 
 void NY_Object3DManager::SetCommonBeginDrawObject3DFeatRTex(int rtHandle)
@@ -1098,9 +1098,9 @@ void NY_Object3DManager::SetCommonBeginDrawShadow_FBX()
 
 void NY_Object3DManager::ReturnShadowToDifferd()
 {
-    //RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_shadomMap, 1);
+    RenderTargetManager::GetInstance()->CloseMultiRenderTargets(&m_shadomMap, 1);
 
-    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 4);
+    RenderTargetManager::GetInstance()->SetMultiRenderTargets(&m_gBuffer, 3);
 }
 
 void NY_Object3DManager::ShadowMapClear()

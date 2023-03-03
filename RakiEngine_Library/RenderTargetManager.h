@@ -81,12 +81,18 @@ public:
 	/// <param name="renderTargets">レンダーテクスチャの配列</param>
 	void SetMultiRenderTargets(const RTex* renderTargets,int size, bool clearFlag = false);
 
+	void SetRenderTargetForRTexSpecifiedIndex(const RTex* renderTargets, int targetIndex, bool clearFlag = false);
+
+	
+
 	/// <summary>
 	/// ディファードレンダリングで設定したレンダーターゲットをクローズ
 	/// </summary>
 	/// <param name="renderTargets">レンダーターゲット配列</param>
 	/// <param name="size">レンダーターゲットの枚数</param>
 	void CloseMultiRenderTargets(const RTex *renderTargets, int size, bool isChangeBB = false);
+
+	void CloseMultiRenderTargetsForRTexSpecifiedIndex(const RTex* renderTargets, int targetIndex, bool isChangeBB = false);
 
 
 	/// <summary>

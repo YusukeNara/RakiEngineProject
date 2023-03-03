@@ -141,7 +141,10 @@
     </ClCompile>
     <ClCompile Include="WaveDirections.cpp" />
     <ClCompile Include="EnemyDefeatEffect.cpp">
-      <Filter>Enemy</Filter>
+      <Filter>Enemy\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawnEffect.cpp">
+      <Filter>Enemy\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,7 +208,10 @@
     </ClInclude>
     <ClInclude Include="WaveDirections.h" />
     <ClInclude Include="EnemyDefeatEffect.h">
-      <Filter>Enemy</Filter>
+      <Filter>Enemy\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnEffect.h">
+      <Filter>Enemy\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +259,9 @@
     </Filter>
     <Filter Include="PlayerObject">
       <UniqueIdentifier>{623514dc-9a07-4b9f-ad1a-46796edebc42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy\Effect">
+      <UniqueIdentifier>{031e7aad-18f7-4f0b-915b-eea9701be30b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
