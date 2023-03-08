@@ -30,9 +30,9 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     pl->Init();
 
-    gobject.SetPlayer(&pl);
+    gobject.SetPlayer(pl.get());
 
-    emanager.Init(&pl, &astar);
+    emanager.Init(pl, astar);
 
     build[0].Load();
 
@@ -56,7 +56,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     }
 
-    pl.Update();
+    pl->Update();
 
     emanager.Update();
 
@@ -93,7 +93,7 @@ void Title::Update() {
         t_frame = 0;
         if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
 
-            pl.Reset();
+            pl->Reset();
             emanager.Reset();
             NowSceneState = game; 
             WaveDirections::Get()->PlayNextWaveDir();
@@ -107,9 +107,9 @@ void Title::Update() {
 
         gobject.Update();
 
-        pl.Update();
+        pl->Update();
         emanager.Update();
-        if (pl.hitpoint <= 0) {
+        if (pl->hitpoint <= 0) {
             NowSceneState = over;
         }
         if (emanager.gameCleared) {
@@ -120,7 +120,7 @@ void Title::Update() {
     case over:
 
         if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { 
-            pl.Reset();
+            pl->Reset();
             emanager.Reset();
             NowSceneState = game; 
             t_frame = 0;
@@ -157,7 +157,7 @@ void Title::Draw() {
     }
 
     emanager.Draw();
-    pl.Draw();
+    pl->Draw();
 
 
     //ゲーム内制作モデルデータ
@@ -172,7 +172,7 @@ void Title::Draw() {
 
     diffMgr.Rendering(&NY_Object3DManager::Get()->m_gBuffer, &NY_Object3DManager::Get()->m_shadomMap);
 
-    pl.ParticleDraw();
+    pl->ParticleDraw();
 
     emanager.ParticleDraw();
 
@@ -194,7 +194,7 @@ void Title::Draw() {
             titleSprite.DrawExtendSprite(t_pos.x - 300.f, t_pos.y - 100.f, t_pos.x + 300.f, t_pos.y + 100.f);
             titleSprite.Draw();
         }
-        pl.UiDraw();
+        pl->UiDraw();
         ImguiMgr::Get()->StartDrawImgui("State", 100, 100);
 
         ImGui::Text("Wave : %d  Kill : %d  Next : %d",
@@ -221,6 +221,6 @@ void Title::Draw() {
 
     emanager.DebugDraw();
 
-    pl.DebugDraw();
+    pl->DebugDraw();
 
 }

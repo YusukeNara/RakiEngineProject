@@ -30,7 +30,7 @@ void AI_BehaviorTree::Inference()
 	//子ノードがない = ノードの終端
 	while (rootNodeResult->childs.empty())
 	{
-		rootNodeResult = rootNode->Inference();
+		rootNodeResult = rootNode->Inference().lock();
 	}
 
 	//行動オブジェクト初期化

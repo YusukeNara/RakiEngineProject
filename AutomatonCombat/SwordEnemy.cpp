@@ -111,7 +111,7 @@ void SwordEnemy::DebugDraw()
 	editor.ObjectDataDraw();
 }
 
-SwordEnemy* SwordEnemy::clone(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> a)
+SwordEnemy* SwordEnemy::clone(const std::shared_ptr<Player> &player, const std::shared_ptr<NavMeshAstar> &a)
 {
 	SwordEnemy* clone = new SwordEnemy(player, a);
 	clone->Init();

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Player.h"
-#include "SwordEnemy.h"
 
 #include <GameObject.h>
 #include <BehaviorNodeBase.h>
@@ -20,7 +19,7 @@ public:
 	/// つまりenemyは内側のスコープとなるので生ポインタで参照でも良い？
 	/// playerとastarは外側スコープなのでスマートポインタにしなければならない
 
-	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player,std::shared_ptr<NavMeshAstar> astar) {
+	void SetPointer(GameObject *enemy, const std::shared_ptr<Player> &player,const std::shared_ptr<NavMeshAstar> &astar) {
 		this->enemy = enemy;
 		this->player = player;
 		this->astar = astar;
@@ -32,7 +31,7 @@ public:
 
 private:
 	//参照するオブジェクト
-	SwordEnemy *enemy;
+	GameObject *enemy;
 	std::weak_ptr<Player> player;
 	std::weak_ptr<NavMeshAstar> astar;
 	std::vector<RVector3> result;
@@ -45,7 +44,7 @@ public:
 	SwordAttackNode() {};
 	~SwordAttackNode() {};
 
-	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
+	void SetPointer(GameObject *enemy,const std::shared_ptr<Player> &player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -56,7 +55,7 @@ public:
 
 private:
 	//参照するオブジェクト
-	SwordEnemy *enemy;
+	GameObject *enemy;
 	std::weak_ptr<Player> player;
 
 	RVector3 startPos, endPos;
@@ -74,7 +73,7 @@ public:
 	SwordChargeNode() {};
 	~SwordChargeNode() {};
 
-	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
+	void SetPointer(GameObject *enemy, const std::shared_ptr<Player> &player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -85,7 +84,7 @@ public:
 
 private:
 	//参照するオブジェクト
-	SwordEnemy *enemy;
+	GameObject *enemy;
 	std::weak_ptr<Player> player;
 
 	RVector3 startPos, endPos, chargeVec;
@@ -102,7 +101,7 @@ public:
 	SwordAttackJudgeNode() {};
 	~SwordAttackJudgeNode() {};
 
-	void SetPointer(SwordEnemy *enemy, std::shared_ptr<Player> player) {
+	void SetPointer(GameObject *enemy, const std::shared_ptr<Player> &player) {
 		this->enemy = enemy;
 		this->player = player;
 	}
@@ -113,6 +112,6 @@ public:
 
 private:
 	//参照するオブジェクト
-	SwordEnemy *enemy;
+	GameObject *enemy;
 	std::weak_ptr<Player> player;
 };

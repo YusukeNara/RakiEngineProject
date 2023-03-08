@@ -78,4 +78,6 @@ NODE_STATUS bTreesys::BehaviorRepeatNode::Run()
 	if (result != STATE_RUN) {
 		Init();
 	}
+
+	return result;
 }

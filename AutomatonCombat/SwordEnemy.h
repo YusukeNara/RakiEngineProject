@@ -34,7 +34,7 @@ private:
 
 
 //操作する
-class SwordEnemy
+class SwordEnemy : public GameObject
 {
 private:
 	//ビヘイビアツリー
@@ -93,11 +93,11 @@ public:
 	SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar);
 	~SwordEnemy();
 
-	void Init();
+	virtual void Init() override;
 
-	void Update();
+	virtual void Update() override;
 
-	void Draw();
+	virtual void Draw() override;
 
 	void ParticleDraw();
 
@@ -109,7 +109,7 @@ public:
 	BehaviorEditor editor;
 
 	//複製
-	SwordEnemy* clone(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> a);
+	SwordEnemy* clone(const std::shared_ptr<Player> &player, const std::shared_ptr<NavMeshAstar> &a);
 
 };
 
