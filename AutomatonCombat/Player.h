@@ -30,8 +30,6 @@ public:
 	int nowBullet = 25;
 
 	//各種パラメータ
-	RVector3 pos;	//座標
-	RVector3 rot;		//回転
 	RVector3 angleVec;		//回転速度
 	RVector3 speedVec;		//速度ベクトル
 	RVector3 speedScale;	//速度スケーリング

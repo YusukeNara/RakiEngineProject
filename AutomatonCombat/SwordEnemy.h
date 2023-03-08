@@ -71,7 +71,6 @@ public:
 
 	BehaviorTreeMother treeMother;
 
-	RVector3 pos, vec;
 	RV3Colider::Sphere bodyColision;
 
 	//モデルデータ
@@ -91,7 +90,7 @@ public:
 
 public:
 	SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar);
-	~SwordEnemy();
+	virtual ~SwordEnemy();
 
 	virtual void Init() override;
 
@@ -104,7 +103,7 @@ public:
 	void DebugDraw();
 	
 	//オブジェクト
-	SwordEnemyObject s_object;
+	//SwordEnemyObject s_object;
 
 	BehaviorEditor editor;
 

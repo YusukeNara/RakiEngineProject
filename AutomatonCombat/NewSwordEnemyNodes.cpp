@@ -11,11 +11,22 @@ void SwordApproachNode::Init()
 bTreesys::NODE_STATUS SwordApproachNode::Run()
 {
     bTreesys::NODE_STATUS status = STATE_RUN;
+    bool isMoved = false;
+    int index = 0;
 
 	//プレイヤーの近くまで接近したら成功
     if (distance(player.lock()->pos, enemy->pos) < 50.0f) {
         status = STATE_SUCCESS;
     }
+
+    RVector3 vec(0.f, 0.f, 0.f);
+    vec = astar.lock()->MoveWaypointDirectLine(result, enemy->pos, 20.0f, index, isMoved);
+
+    enemy->pos += vec * 2;
+
+    RVector3 lookVec = player.lock()->pos - enemy->pos;
+    float angle = atan2f(lookVec.x, lookVec.z);
+    enemy->object3d->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
 	//何かしらの理由で接近できない場合は失敗
 

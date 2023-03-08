@@ -17,7 +17,7 @@ void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshA
 	//複製元のエネミーオブジェクトを生成
 	this->player = player;
 	swordEnemyMother = new SwordEnemy(player, astar);
-	swordEnemyMother->s_object.swordObject->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
+	swordEnemyMother->object3d->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
 	//gunEnemy = std::make_unique<GunEnemy>();
 	//gunEnemy->SetPlayer(player);
@@ -47,7 +47,7 @@ void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshA
 			0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
 		swordEnemys.emplace_back(swordEnemyMother->clone(player, astar));
-		swordEnemys[i]->s_object.pos = spawnPos;
+		swordEnemys[i]->pos = spawnPos;
 	}
 
 	m_defeatP = new DefeatParticle;
@@ -215,7 +215,7 @@ void EnemyManager::EnemySpawn()
 				0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
 			swordEnemys.emplace_back(swordEnemyMother->clone(player.lock(),astar.lock()));
-			swordEnemys[i]->s_object.pos = spawnPos;
+			swordEnemys[i]->pos = spawnPos;
 		}
 
 		//最後のグループのとき、エリート召喚
@@ -238,10 +238,10 @@ void EnemyManager::Colision()
 		if (swordEnemys.size() == 0) { return; }
 
 		for (auto se = swordEnemys.begin(); se != swordEnemys.end();) {
-			if (RV3Colider::Colision2Sphere((*se)->s_object.bodyColision,player.lock()->bullets[i].sphere)) {
+			if (RV3Colider::Colision2Sphere((*se)->bodyColision,player.lock()->bullets[i].sphere)) {
 				//弾を消滅させ、エネミーにダメージ処理(消去)
 				player.lock()->bullets[i].isAlive = false;
-				m_defeatPM->Prototype_Add(16, (*se)->s_object.pos);
+				m_defeatPM->Prototype_Add(16, (*se)->pos);
 				se = swordEnemys.erase(se);
 				
 				killCount++;
@@ -256,24 +256,4 @@ void EnemyManager::Colision()
 	}
 
 	//敵同士の重なりを回避
-	for (int i = 0; i < swordEnemys.size(); i++) {
-		for (int j = 0; j < swordEnemys.size(); j++) {
-			if (i == j) {
-				continue;
-			}
-
-			RV3Colider::Sphere jsphere(swordEnemys[j]->s_object.pos + swordEnemys[j]->s_object.mVec,
-				swordEnemys[j]->s_object.bodyColision.rad);
-
-			if (RV3Colider::Colision2Sphere(
-				swordEnemys[i]->s_object.bodyColision,
-				jsphere))
-			{
-				swordEnemys[j]->s_object.mVec = RVector3(0, 0, 0);
-			}
-		}
-	}
-
-
-
 }

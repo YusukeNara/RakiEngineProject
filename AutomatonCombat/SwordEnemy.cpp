@@ -13,10 +13,9 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 		swordModel.reset(FbxLoader::GetInstance()->LoadFBXFile("FiringRifle"));
 		isLoaded = true;
 	}
-
-	swordObject = std::make_unique<Object3d>();
-	swordObject->SetLoadedModelData(swordModel);
-	s_object.player = player.get();
+	object3d = std::make_unique<Object3d>();
+	object3d->SetLoadedModelData(swordModel);
+	//s_object.player = player.get();
 	//m_swordWaitJudge	=	std::make_shared<Sword_WaitJudge>(&s_object);
 	//m_swordWaitAct		=	std::make_shared<Sword_WaitAct>(&s_object);
 	//m_swordAttackJudge =	std::make_shared<Sword_AttackJudge>(&s_object, m_swordWaitAct.get());
@@ -49,6 +48,8 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 	//editor.AddEditData_Node(waitNode);
 	//editor.AddEditData_Node(approachNode);
 	//editor.AddEditData_Node(chargeNode);
+
+	object3d->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
 	//新設計ビヘイビア
 	tree_swordApproachNode	= std::make_shared<SwordApproachNode>();
@@ -95,13 +96,17 @@ void SwordEnemy::Update()
 {
 	//ツリーの実行
 	treeMother.Run();
+
 }
 
 void SwordEnemy::Draw()
 {
 	//パラメータセット
-	swordObject->SetAffineParamTranslate(pos);
-	swordObject->DrawObject();
+	object3d->SetAffineParamTranslate(pos);
+
+	object3d->UpdateObject3D();
+
+	object3d->DrawObject();
 }
 
 void SwordEnemy::DebugDraw()

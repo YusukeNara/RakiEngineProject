@@ -42,6 +42,7 @@ public:
 
 	//•ÏŠ·î•ñ
 	RVector3 pos;
+	RVector3 rot;
 
 private:
 
