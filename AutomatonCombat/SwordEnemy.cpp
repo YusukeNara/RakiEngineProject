@@ -15,39 +15,6 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 	}
 	object3d = std::make_unique<Object3d>();
 	object3d->SetLoadedModelData(swordModel);
-	//s_object.player = player.get();
-	//m_swordWaitJudge	=	std::make_shared<Sword_WaitJudge>(&s_object);
-	//m_swordWaitAct		=	std::make_shared<Sword_WaitAct>(&s_object);
-	//m_swordAttackJudge =	std::make_shared<Sword_AttackJudge>(&s_object, m_swordWaitAct.get());
-	//m_swordAttackAct =		std::make_shared<Sword_AttackAct>(&s_object);
-	//m_approachJudge =		std::make_shared<Sword_ApproachJudge>(&s_object);
-	//m_approahAct =			std::make_shared<Sword_ApproachingAct>(&s_object,astar);
-	//m_chargeJudge =			std::make_shared<Sword_ChargeJudge>(&s_object);
-	//m_chargeAct =			std::make_shared<Sword_ChargeAct>(&s_object);
-
-	//rootNode	= std::make_shared<BehaviorBaseNode>();
-	//actNode		= std::make_shared<BehaviorBaseNode>();
-	//waitNode	= std::make_shared<BehaviorBaseNode>();
-	//approachNode = std::make_shared<BehaviorBaseNode>();
-	//chargeNode = std::make_shared<BehaviorBaseNode>();
-
-	////実行ノード生成
-	//waitNode->CreateActionNode("sword_wait", m_swordWaitAct, m_swordWaitJudge);
-	//actNode->CreateActionNode("sword_act", m_swordAttackAct, m_swordAttackJudge);
-	//approachNode->CreateActionNode("Sword_app", m_approahAct, m_approachJudge);
-	//chargeNode->CreateActionNode("Sword_Charge", m_chargeAct, m_chargeJudge);
-
-	////ルートノードの選択候補を追加
-	//rootNode->AddjudgeNodeChild(waitNode);
-	//rootNode->AddjudgeNodeChild(approachNode);
-	//rootNode->AddjudgeNodeChild(chargeNode);
-
-	//swordEnemyTree.Init(rootNode);
-	//editor.Init(&swordEnemyTree);
-	//editor.AddEditData_Node(actNode);
-	//editor.AddEditData_Node(waitNode);
-	//editor.AddEditData_Node(approachNode);
-	//editor.AddEditData_Node(chargeNode);
 
 	object3d->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
@@ -97,14 +64,13 @@ void SwordEnemy::Update()
 	//ツリーの実行
 	treeMother.Run();
 
+	object3d->SetAffineParamTranslate(pos);
+
 }
 
 void SwordEnemy::Draw()
 {
 	//パラメータセット
-	object3d->SetAffineParamTranslate(pos);
-
-	object3d->UpdateObject3D();
 
 	object3d->DrawObject();
 }

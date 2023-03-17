@@ -29,7 +29,6 @@ bTreesys::NODE_STATUS SwordApproachNode::Run()
     enemy->object3d->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
 
 	//‰½‚©‚µ‚ç‚Ì——R‚ÅÚ‹ß‚Å‚«‚È‚¢ê‡‚Í¸”s
-
 	return status;
 }
 

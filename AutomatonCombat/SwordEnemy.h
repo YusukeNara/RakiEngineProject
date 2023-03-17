@@ -84,7 +84,6 @@ public:
 	int dptex;
 
 	//描画オブジェクト
-	std::unique_ptr<Object3d> swordObject;
 
 	std::weak_ptr<Player> playerPtr;
 

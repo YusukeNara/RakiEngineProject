@@ -56,6 +56,18 @@ public:
 
 	RVector3 l_rot;
 
+	//ƒJƒƒ‰•âŠ®—p
+	struct CameraMoveParam
+	{
+		float camMovePower;
+		const int camMovePowerMaxFrame = 15;
+		int camMovePowerFrame;
+
+		CameraMoveParam() = default;
+		~CameraMoveParam() = default;
+	};
+	CameraMoveParam camMoveParam;
+
 
 	Player();
 	~Player();

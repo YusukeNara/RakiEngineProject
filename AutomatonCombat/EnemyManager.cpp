@@ -166,14 +166,18 @@ void EnemyManager::DebugExecution()
 
 void EnemyManager::DebugDraw()
 {
+	;
+	//if (!isDebugMode) { return; }
 
-	if (!isDebugMode) { return; }
+	//swordEnemyMother->DebugDraw();
 
-	swordEnemyMother->DebugDraw();
+	if (swordEnemys.empty()) {
+		return;
+	}
 
 	ImguiMgr::Get()->StartDrawImgui("Enemys Status", 100, 200);
 
-	ImGui::Text("mustKillGroup : %d  killedGroup : %d waveCount : %d", waveKillGroupAssignment, killedGroup, waveCount);
+	ImGui::Text("se1 pos:%f %f %f", swordEnemys[0].get()->pos.x, swordEnemys[0].get()->pos.y, swordEnemys[0].get()->pos.z);
 
 	ImguiMgr::Get()->EndDrawImgui();
 }

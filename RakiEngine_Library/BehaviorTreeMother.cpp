@@ -14,6 +14,4 @@ void BehaviorTreeMother::Run()
 	if (node != bTreesys::STATE_RUN) {
 		rootNode.lock()->Init();
 	}
-
-
 }
