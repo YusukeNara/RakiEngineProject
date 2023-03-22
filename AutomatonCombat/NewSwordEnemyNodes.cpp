@@ -26,7 +26,7 @@ bTreesys::NODE_STATUS SwordApproachNode::Run()
 
     RVector3 lookVec = player.lock()->pos - enemy->pos;
     float angle = atan2f(lookVec.x, lookVec.z);
-    enemy->object3d->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
+    enemy->rot = RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f);
 
 	//‰½‚©‚µ‚ç‚Ì——R‚ÅÚ‹ß‚Å‚«‚È‚¢ê‡‚ÍŽ¸”s
 	return status;
@@ -73,7 +73,7 @@ bTreesys::NODE_STATUS SwordAttackNode::Run()
 
     RVector3 lookVec = player.lock()->pos - enemy->pos;
     float angle = atan2f(lookVec.x, lookVec.z);
-    enemy->object3d->SetAffineParamRotate(RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f));
+    enemy->rot = RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f);
 
     return actionState;
 }

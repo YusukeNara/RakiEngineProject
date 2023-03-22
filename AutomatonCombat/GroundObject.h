@@ -1,8 +1,30 @@
 #pragma once
 #include <GameObject.h>
+#include <ParticleManager.h>
 
 #include "Player.h"
 #include "HandgunObject.h"
+
+class ReloadedEffect : public ParticlePrototype
+{
+public:
+    ReloadedEffect() {
+        Init();
+    };
+
+    virtual void Init() override;
+
+    virtual void Update() override;
+
+    virtual ParticlePrototype* clone(RVector3 pos) override;
+
+
+private:
+
+    RVector3 vec;
+
+
+};
 
 //ínå`
 class GroundObject :
@@ -18,6 +40,8 @@ public:
     void Update() override;
 
     void Draw() override;
+
+    void EffectDraw();
 
     void Finalize() override;
 
@@ -35,5 +59,11 @@ private:
 
     HandgunObject hg;
 
+    ReloadedEffect* reloadP;
+    std::unique_ptr<ParticleManager> reloadParticle;
+    int reloadedTex;
+
 };
+
+
 

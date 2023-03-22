@@ -8,15 +8,16 @@ bool SwordEnemy::isLoaded = false;
 
 SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar)
 {
+
 	if (!isLoaded) {
 		swordModel = std::make_shared<fbxModel>();
 		swordModel.reset(FbxLoader::GetInstance()->LoadFBXFile("FiringRifle"));
 		isLoaded = true;
 	}
-	object3d = std::make_unique<Object3d>();
-	object3d->SetLoadedModelData(swordModel);
+	obj = std::make_shared<Object3d>();
+	obj->SetLoadedModelData(swordModel);
 
-	object3d->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
+	scale = RVector3(5.f, 5.f, 5.f);
 
 	//新設計ビヘイビア
 	tree_swordApproachNode	= std::make_shared<SwordApproachNode>();
@@ -37,7 +38,7 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 	tree_sequence->AddChild(tree_swordAtkJudgeNode);
 	tree_sequence->AddChild(tree_swordChargeNode);
 
-	treeMother.TreeInit(tree_selector);
+	treeMother.TreeInit(tree_swordChargeNode);
 
 	deathpm = ParticleManager::Create();
 	dptex = TexManager::LoadTexture("Resources/effect1.png");
@@ -64,15 +65,14 @@ void SwordEnemy::Update()
 	//ツリーの実行
 	treeMother.Run();
 
-	object3d->SetAffineParamTranslate(pos);
-
 }
 
 void SwordEnemy::Draw()
 {
 	//パラメータセット
+	obj->SetAffineParam(scale, rot, pos);
 
-	object3d->DrawObject();
+	obj->DrawObject();
 }
 
 void SwordEnemy::DebugDraw()

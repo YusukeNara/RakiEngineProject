@@ -176,6 +176,8 @@ void Title::Draw() {
 
     emanager.ParticleDraw();
 
+    gobject.EffectDraw();
+
     SpriteManager::Get()->SetCommonBeginDraw();
 
     float rate = (float)t_frame / 60;

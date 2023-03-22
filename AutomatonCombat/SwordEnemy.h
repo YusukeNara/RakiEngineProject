@@ -87,6 +87,8 @@ public:
 
 	std::weak_ptr<Player> playerPtr;
 
+	std::shared_ptr<Object3d> obj;
+
 public:
 	SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAstar> astar);
 	virtual ~SwordEnemy();

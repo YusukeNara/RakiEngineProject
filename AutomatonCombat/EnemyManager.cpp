@@ -17,7 +17,7 @@ void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshA
 	//複製元のエネミーオブジェクトを生成
 	this->player = player;
 	swordEnemyMother = new SwordEnemy(player, astar);
-	swordEnemyMother->object3d->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
+	swordEnemyMother->obj->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
 	//gunEnemy = std::make_unique<GunEnemy>();
 	//gunEnemy->SetPlayer(player);
@@ -46,7 +46,7 @@ void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshA
 		RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 			0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-		swordEnemys.emplace_back(swordEnemyMother->clone(player, astar));
+		swordEnemys.push_back(std::make_unique<SwordEnemy>(player, astar));
 		swordEnemys[i]->pos = spawnPos;
 	}
 
@@ -218,7 +218,7 @@ void EnemyManager::EnemySpawn()
 			RVector3 spawnPos = groupSpawnPos - RVector3(NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad),
 				0, NY_random::floatrand_sl(groupSpawnRad, -groupSpawnRad));
 
-			swordEnemys.emplace_back(swordEnemyMother->clone(player.lock(),astar.lock()));
+			swordEnemys.push_back(std::make_unique<SwordEnemy>(player.lock(), astar.lock()));
 			swordEnemys[i]->pos = spawnPos;
 		}
 
