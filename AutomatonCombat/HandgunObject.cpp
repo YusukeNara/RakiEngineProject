@@ -1,5 +1,7 @@
 #include "HandgunObject.h"
 
+#include <NY_random.h>
+
 HandgunObject::HandgunObject()
 {
 }
@@ -18,7 +20,9 @@ void HandgunObject::Init()
 	//collider = std::make_shared<SphereCollider>();
 
 	sphere.center.zero();
-	sphere.rad = 16.0f;
+	sphere.rad = 30.0f;
+
+	Repositioning(RVector3(NY_random::floatrand_sl(200.f, -200.f), 10, NY_random::floatrand_sl(200.f, -200.f)));
 }
 
 void HandgunObject::Update()

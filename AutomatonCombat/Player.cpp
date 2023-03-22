@@ -148,7 +148,7 @@ void Player::Shot()
 			for (int i = 0; i < bullets.size(); i++) {
 				if (!bullets[i].isAlive) {
 					bullets[i].Fire(pos, -bVec, 20.0f, 5.0f, bulletModel);
-					nowBullet;
+					nowBullet--;
 					break;
 				}
 			}
@@ -235,7 +235,7 @@ void Player::Init()
 	pos.y = 4.0f;
 	rot.zero();
 	speedVec.zero();
-	bodyColider.rad = 5.0f;
+	bodyColider.rad = 15.0f;
 
 	speedScale = RVector3(1, 1, 1);
 
@@ -256,7 +256,7 @@ void Player::Reset()
 	pos.y = 5.0f;
 	rot.zero();
 	speedVec.zero();
-	bodyColider.rad = 5.0f;
+	bodyColider.rad = 15.0f;
 
 	speedScale = RVector3(1, 1, 1);
 

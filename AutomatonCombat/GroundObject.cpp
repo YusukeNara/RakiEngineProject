@@ -14,7 +14,7 @@ void GroundObject::Update()
 
 	if (RV3Colider::Colision2Sphere(player->bodyColider, hg.sphere)) {
 		player->Reload();
-		hg.Repositioning(RVector3(NY_random::floatrand_sl(200.f, -200.f), 5, NY_random::floatrand_sl(200.f, -200.f)));
+		hg.Repositioning(RVector3(NY_random::floatrand_sl(200.f, -200.f), 10, NY_random::floatrand_sl(200.f, -200.f)));
 	}
 
 
