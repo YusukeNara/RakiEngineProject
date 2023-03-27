@@ -49,6 +49,11 @@ typedef struct Pipeline3D
 /// クラスの関係性を変更
 /// mgr -> object3d -> model3d
 /// このクラスは3d関係の上側に位置し、object3dと、簡易描画クラスを管理する
+/// 
+/// 2023/3/24
+/// 持たせるパイプライン、シェーダーが多くなってきて管理が難しい
+/// パイプラインクラスを作ったほうがいいかも
+/// 
 
 
 /// <summary>
@@ -67,6 +72,8 @@ private:
 	Pipeline3D quickDrawPipelineSet;
 	//マルチパステクスチャ用
 	Pipeline3D mpTexPipelineSet;
+	//通常モデルのインスタンシング描画用パイプライン
+	Pipeline3D m_objectInstancePP;
 
 	//----------パイプラインステート構造体--------------//
 
@@ -82,6 +89,7 @@ private:
 	ComPtr<ID3DBlob> obj_GS;
 	ComPtr<ID3DBlob> obj_PS;
 	ComPtr<ID3DBlob> fbx_VS;
+	ComPtr<ID3DBlob> obj_insVS;
 	ComPtr<ID3DBlob> shadow_VS;
 	ComPtr<ID3DBlob> shadow_PS;
 	ComPtr<ID3DBlob> shadowFBX_VS;
@@ -180,6 +188,8 @@ public:
 
 	void SetCommonBeginDrawFBX();
 
+	void SetCommonBeginDrawInstancingObject();
+
 	void SetCommonBeginDrawObject3DFeatRTex(RTex* rt);
 
 	void SetCommonBeginDrawObject3D2MultiPassRenderResource();
@@ -226,6 +236,8 @@ private:
 	Pipeline3D CreateShadowMapPipeline();
 
 	Pipeline3D CreateShadowMapFbxPipeline();
+
+	Pipeline3D CreateOBJInstancePipeline();
 
 };
 

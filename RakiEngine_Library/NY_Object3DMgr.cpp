@@ -28,6 +28,8 @@ bool NY_Object3DManager::CreateObject3DManager()
 
     m_shadowMapPipeline = CreateShadowMapPipeline();
 
+    m_objectInstancePP = CreateOBJInstancePipeline();
+
     //FBX関連
     FbxLoader::GetInstance()->Initialize();
 
@@ -912,6 +914,171 @@ Pipeline3D NY_Object3DManager::CreateShadowMapFbxPipeline()
     return pipelineset;
 }
 
+Pipeline3D NY_Object3DManager::CreateOBJInstancePipeline()
+{
+    HRESULT result;
+
+    //-----頂点レイアウト-----//
+    D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+        {//xyz座標
+            "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+        },
+        {//法線
+            "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+        },
+        {//uv座標
+            "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+        },
+        //インスタンシングデータ
+        {//行列
+            "INSTANCE_WORLD_MAT",0 ,DXGI_FORMAT_R32G32B32A32_FLOAT,1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
+        {//行列
+            "INSTANCE_WORLD_MAT",1U,DXGI_FORMAT_R32G32B32A32_FLOAT,1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
+        {//行列
+            "INSTANCE_WORLD_MAT",2U,DXGI_FORMAT_R32G32B32A32_FLOAT,1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
+        {//行列
+            "INSTANCE_WORLD_MAT",3U,DXGI_FORMAT_R32G32B32A32_FLOAT,1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
+    };
+
+    ComPtr<ID3DBlob> errorBlob = nullptr; //エラーオブジェクト
+    //頂点シェーダーの読み込みとコンパイル
+    result = D3DCompileFromFile(
+        L"Resources/Shaders/OBJ_InstanceVertexShader.hlsl", //シェーダーファイル名
+        nullptr,//シェーダーマクロオブジェクト（今回は使わない）
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
+        "main", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,//デバッグ用設定
+        0,
+        &obj_insVS, &errorBlob
+    );
+    //シェーダーのエラー内容を表示
+    if (FAILED(result))
+    {
+        //errorBlobからエラー内容をstring型にコピー
+        std::string errstr;
+        errstr.resize(errorBlob->GetBufferSize());
+
+        std::copy_n((char*)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errstr.begin());
+        errstr += "\n";
+        //エラー内容を出力ウインドウに表示
+        OutputDebugStringA(errstr.c_str());
+        exit(1);
+    }
+
+    //-----グラフィックスパイプライン設定-----//
+#pragma region GraphicsPipeline
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline{};
+    //頂点シェーダー、ジオメトリシェーダー、ピクセルシェーダーをパイプラインに設定
+    gpipeline.VS = CD3DX12_SHADER_BYTECODE(obj_insVS.Get());
+    gpipeline.GS = CD3DX12_SHADER_BYTECODE(obj_GS.Get());
+    gpipeline.PS = CD3DX12_SHADER_BYTECODE(obj_PS.Get());
+
+    //サンプルマスクとラスタライザステートの設定
+    gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;//標準設定
+    gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+    //ブレンドステートの設定
+    D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = gpipeline.BlendState.RenderTarget[0];//blenddescを書き換えるとRenderTarget[0]が書き換わる
+    blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;//標準設定
+
+    //ブレンドステートの共通設定
+    blenddesc.BlendEnable = true;//ブレンド有効
+    blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;//加算合成
+    blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;//ソースの値を100%使用
+    blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;//デストの値を0%使用
+
+    //合成設定(各項目を書き換えることで設定可能)
+    blenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算
+    blenddesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;//ソースの値を100%使用
+    blenddesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;//デストの値を100%使用
+    //他レンダーターゲット1にも同じ設定
+    gpipeline.BlendState.RenderTarget[1] = blenddesc;
+    gpipeline.BlendState.RenderTarget[2] = blenddesc;
+    gpipeline.BlendState.RenderTarget[3] = blenddesc;
+
+    //デプスステンシルステート設定
+    gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    gpipeline.DSVFormat = DXGI_FORMAT_D32_FLOAT; //深度値フォーマット
+
+    //頂点レイアウトの設定
+    gpipeline.InputLayout.pInputElementDescs = inputLayout;
+    gpipeline.InputLayout.NumElements = _countof(inputLayout);
+
+    //図形の形状を三角形に設定
+    gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    //レンダーターゲット設定
+
+    //レンダーターゲットにするGBufferを作成
+    float clearcolors[4] = { 0.0f,0.0f,0.0f,0.0f };
+    //レンダーターゲット設定
+    RenderTextureOption option[4] = {
+        {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
+        {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
+        {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
+        {DXGI_FORMAT_R8G8B8A8_UNORM,*clearcolors},
+    };
+    gpipeline.NumRenderTargets = 4;//描画するパラメータが増えるとここも増える
+    gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
+    gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0~255指定のRGBA
+    gpipeline.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    gpipeline.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    gpipeline.SampleDesc.Count = 1;//1pxにつき1回サンプリング
+
+    CD3DX12_DESCRIPTOR_RANGE descRangeSRV{};
+    descRangeSRV.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+
+    //ルートパラメーターの設定
+    //定数用
+    CD3DX12_ROOT_PARAMETER rootparams[4] = {};
+    rootparams[0].InitAsConstantBufferView(0);//定数バッファ用
+    rootparams[1].InitAsConstantBufferView(1);
+    //テクスチャ用
+    rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);//標準
+    rootparams[3].InitAsConstantBufferView(3);
+
+    //テクスチャサンプラー設定
+    D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+
+    samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+    samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+    samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+    samplerDesc.MinLOD = 0.0f;
+    samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+    samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+    Pipeline3D pipelineset;
+
+    //ルートシグネチャの生成
+    D3D12_ROOT_SIGNATURE_DESC rootsignatureDesc{};
+    rootsignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootsignatureDesc.pParameters = rootparams;//ルートパラメーターの先頭アドレス
+    rootsignatureDesc.NumParameters = _countof(rootparams);//ルートパラメータ数
+    rootsignatureDesc.pStaticSamplers = &samplerDesc;
+    rootsignatureDesc.NumStaticSamplers = 1;
+    ComPtr<ID3DBlob> rootSigBlob = nullptr;
+    result = D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+    result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&pipelineset.rootsignature));
+
+    //パイプラインにルートシグネチャをセット
+    gpipeline.pRootSignature = pipelineset.rootsignature.Get();
+
+    //パイプラインステート
+    result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipelineset.pipelinestate));
+#pragma endregion GraphicsPipeline
+
+    return pipelineset;
+}
+
 
 Object3d *NY_Object3DManager::CreateObject3d(Model3D *modelData)
 {
@@ -1037,6 +1204,19 @@ void NY_Object3DManager::SetCommonBeginDrawFBX()
     Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(m_fbxPipeline.pipelinestate.Get());
     //ルートシグネチャをセット
     Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(m_fbxPipeline.rootsignature.Get());
+    //プリミティブ形状設定
+    Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //デスクリプタヒープ設定
+    ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
+    Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+}
+
+void NY_Object3DManager::SetCommonBeginDrawInstancingObject()
+{
+    //パイプラインステートをセット
+    Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(m_objectInstancePP.pipelinestate.Get());
+    //ルートシグネチャをセット
+    Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(m_objectInstancePP.rootsignature.Get());
     //プリミティブ形状設定
     Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //デスクリプタヒープ設定

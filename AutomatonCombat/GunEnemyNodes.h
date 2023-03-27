@@ -7,6 +7,8 @@
 #include <string>
 #include <GameObject.h>
 #include <NavMeshAstar.h>
+#include <BehaviorNodeBase.h>
+
 
 class Gun_WaitJudge : public BehaviorJudgeBase
 {
@@ -97,4 +99,59 @@ public:
 
 	RVector3 *pos;
 };
+
+////射撃ノード
+//class GunEnemyShotNode : public bTreesys::BehaviorActionNode
+//{
+//public:
+//	GunEnemyShotNode() {};
+//	~GunEnemyShotNode() {};
+//
+//	void SetPointer(GameObject* enemy, const std::shared_ptr<Player>& player,ParticleManager *bp) {
+//		this->enemy = enemy;
+//		this->player = player;
+//		this->bulletParticle = bp;
+//	}
+//
+//	void Init() override;
+//
+//	bTreesys::NODE_STATUS Run() override;
+//
+//private:
+//	//参照するオブジェクト
+//	GameObject* enemy;
+//	std::weak_ptr<Player> player;
+//	ParticleManager* bulletParticle;
+//	ParticleManager* blastParticle;
+//
+//	RVector3 startPos, endPos;
+//	RV3Colider::Sphere atkSphere;
+//	int frame = 0;
+//	int easeFrame = 0;
+//	bool isAtkEnable = false;
+//	const int damage = 10;
+//};
+//
+////移動ノード
+//class GunEnemyMoveNode : public bTreesys::BehaviorActionNode
+//{
+//public:
+//	GunEnemyMoveNode() {};
+//	~GunEnemyMoveNode() {};
+//
+//	void SetPointer(GameObject* enemy, const std::shared_ptr<Player>& player, ParticleManager* bp) {
+//		this->enemy = enemy;
+//		this->player = player;
+//	}
+//
+//	void Init() override;
+//
+//	bTreesys::NODE_STATUS Run() override;
+//
+//private:
+//
+//	//参照するオブジェクト
+//	GameObject* enemy;
+//	std::weak_ptr<Player> player;
+//};
 

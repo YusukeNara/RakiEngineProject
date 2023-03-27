@@ -78,6 +78,9 @@
     <FxCompile Include="Resources\Shaders\DebugDrawVS.hlsl">
       <Filter>Resources</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJ_InstanceVertexShader.hlsl">
+      <Filter>Resources</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_Camera.cpp" />

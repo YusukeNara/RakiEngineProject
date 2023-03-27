@@ -26,6 +26,11 @@ void BuildingObject::Draw()
 	object3d->DrawObject();
 }
 
+void BuildingObject::LastDraw()
+{
+	object3d->DrawInstanceModelObject(true);
+}
+
 void BuildingObject::DebugDraw()
 {
 

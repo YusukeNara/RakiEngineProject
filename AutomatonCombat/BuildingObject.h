@@ -15,6 +15,8 @@ public:
 
     void Draw() override;
 
+    void LastDraw();
+
     void DebugDraw();
 
     void Finalize() override;

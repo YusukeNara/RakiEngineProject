@@ -17,7 +17,7 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 	obj = std::make_shared<Object3d>();
 	obj->SetLoadedModelData(swordModel);
 
-	scale = RVector3(5.f, 5.f, 5.f);
+	scale = RVector3(15.f, 15.f, 15.f);
 
 	//新設計ビヘイビア
 	tree_swordApproachNode	= std::make_shared<SwordApproachNode>();
@@ -38,7 +38,7 @@ SwordEnemy::SwordEnemy(std::shared_ptr<Player> player, std::shared_ptr<NavMeshAs
 	tree_sequence->AddChild(tree_swordAtkJudgeNode);
 	tree_sequence->AddChild(tree_swordChargeNode);
 
-	treeMother.TreeInit(tree_swordChargeNode);
+	treeMother.TreeInit(tree_selector);
 
 	deathpm = ParticleManager::Create();
 	dptex = TexManager::LoadTexture("Resources/effect1.png");
@@ -57,7 +57,7 @@ void SwordEnemy::Init()
 {
 	//初期パラメーター設定
 	bodyColision.center = pos;
-	bodyColision.rad = 10.0f;
+	bodyColision.rad = 20.0f;
 }
 
 void SwordEnemy::Update()
@@ -65,6 +65,7 @@ void SwordEnemy::Update()
 	//ツリーの実行
 	treeMother.Run();
 
+	bodyColision.center = pos;
 }
 
 void SwordEnemy::Draw()
@@ -106,7 +107,7 @@ void DeathParticle::Init()
 
 	endFrame = 60;
 
-	scale = 5.0f;
+	scale = 15.0f;
 
 	color = { 1.0f,1.0f,1.0f,1.0f };
 

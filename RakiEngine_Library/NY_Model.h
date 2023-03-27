@@ -23,6 +23,11 @@ struct Vertex
 	XMFLOAT2 uv;    //uv
 };
 
+struct InstanceVertexMatrix
+{
+	XMMATRIX matrix;
+};
+
 //マテリアルデータ構造体
 struct Material
 {
@@ -58,6 +63,12 @@ public:
 	ComPtr<ID3D12Resource> indexBuff;
 	//インデックスバッファビュー
 	D3D12_INDEX_BUFFER_VIEW ibview{};
+	//インスタンシング頂点バッファ
+	ComPtr<ID3D12Resource> vertexInstanceBuff;
+	D3D12_VERTEX_BUFFER_VIEW vbInstanceView;
+	//インスタンシング情報格納
+	std::vector<InstanceVertexMatrix> instance;
+	int instanceArraysize = 0;
 	//マテリアル
 	Material material;
 	//uvアニメーションデータ
@@ -92,6 +103,16 @@ public:
 	//モデルデータ更新（実質アニメーション専用）
 	void Update();
 
+	//インスタンシングデータをプッシュ
+	void InstancingDataPush(InstanceVertexMatrix *instance);
+
+	void InstanceDraw();
+
+	void NormalDraw();
+
 private:
+	void UpdateInstanceBuffer();
+
+	void ResizeInstanceVertex(int newsize);
 };
 

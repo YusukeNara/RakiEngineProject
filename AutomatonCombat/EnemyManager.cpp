@@ -19,9 +19,9 @@ void EnemyManager::Init(std::shared_ptr<Player> player, std::shared_ptr<NavMeshA
 	swordEnemyMother = new SwordEnemy(player, astar);
 	swordEnemyMother->obj->SetAffineParamScale(RVector3(5.f, 5.f, 5.f));
 
-	//gunEnemy = std::make_unique<GunEnemy>();
-	//gunEnemy->SetPlayer(player);
-	//gunEnemy->Init();
+	gunEnemy = std::make_unique<GunEnemy>();
+	gunEnemy->SetPlayer(player.get());
+	gunEnemy->Init();
 
 	killCount = 0;
 	waveCount = 1;
@@ -84,7 +84,7 @@ void EnemyManager::Update()
 	for (int i = 0; i < swordEnemys.size();i++) {
 		swordEnemys[i]->Update();
 	}
-	//gunEnemy->Update();
+	gunEnemy->Update();
 
 	Colision();
 	////敵の数が足りないとき補充
@@ -125,7 +125,7 @@ void EnemyManager::Draw()
 		swordEnemys[i]->Draw();
 	}
 
-	//gunEnemy->Draw();
+	gunEnemy->Draw();
 
 	if (isDebugMode) { swordEnemyMother->Draw(); }
 
@@ -224,7 +224,7 @@ void EnemyManager::EnemySpawn()
 
 		//最後のグループのとき、エリート召喚
 		if (killedGroup == waveKillGroupAssignment - 1 && waveCount == 2) {
-			//gunEnemy->isAlive = true;
+			gunEnemy->isAlive = true;
 		}
 
 	}

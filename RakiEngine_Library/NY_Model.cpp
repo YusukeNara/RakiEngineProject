@@ -1,5 +1,6 @@
 #include "NY_Model.h"
 #include "Raki_DX12B.h"
+#include "NY_Camera.h"
 
 #include <iostream>
 
@@ -167,6 +168,23 @@ void Model3D::LoadObjModel(const char *modelName)
 	ibview.Format = DXGI_FORMAT_R16_UINT;
 	indexBuff.Get()->SetName(L"Model3D_IndexBuff");
 
+	//インスタンシングバッファ生成
+	sizeVB = static_cast<UINT>(sizeof(InstanceVertexMatrix));
+	RESDESC = CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
+	result = RAKI_DX12B_DEV->CreateCommittedResource(
+		&HEAP_PROP,
+		D3D12_HEAP_FLAG_NONE,
+		&RESDESC,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertexInstanceBuff)
+	);
+	//頂点バッファビュー設定
+	vbInstanceView.BufferLocation = vertexInstanceBuff->GetGPUVirtualAddress();
+	vbInstanceView.SizeInBytes = sizeVB;
+	vbInstanceView.StrideInBytes = sizeof(vertexInstanceBuff);
+	vertexInstanceBuff.Get()->SetName(L"Model3D_VertexInstanceBuff");
+
 	//頂点バッファデータ転送
 	Vertex *vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
@@ -178,9 +196,6 @@ void Model3D::LoadObjModel(const char *modelName)
 	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
 	copy(indices.begin(), indices.end(), indexMap);
 	indexBuff->Unmap(0, nullptr);
-
-	//オブジェクトデータ作成
-	//object->InitObject3D(RAKI_DX12B_DEV);
 	
 }
 
@@ -691,4 +706,73 @@ void Model3D::Update()
 	copy(vertices.begin(), vertices.end(), vertMap);
 	vertBuff->Unmap(0, nullptr);
 
+}
+
+void Model3D::InstancingDataPush(InstanceVertexMatrix *instance)
+{
+	if (instance == nullptr) { return; }
+
+	InstanceVertexMatrix mat{};
+
+	mat.matrix = instance->matrix * camera->GetMatrixView() * camera->GetMatrixProjection();
+
+	this->instance.push_back(mat);
+
+}
+
+void Model3D::InstanceDraw()
+{
+	if (instanceArraysize != instance.size()) {
+		//バッファサイズ変更
+		ResizeInstanceVertex(int(instance.size()));
+	}
+
+	//インスタンシングバッファ転送
+	UpdateInstanceBuffer();
+
+	//頂点バッファ設定
+	D3D12_VERTEX_BUFFER_VIEW vbviews[] = {
+		vbView,vbInstanceView
+	};
+	RAKI_DX12B_CMD->IASetVertexBuffers(0, _countof(vbviews), vbviews);
+	//インデックスバッファ設定
+	RAKI_DX12B_CMD->IASetIndexBuffer(&ibview);
+	//描画
+	RAKI_DX12B_CMD->DrawIndexedInstanced(UINT(indices.size()), UINT(instance.size()), 0, 0, 0);
+
+	//インスタンシング情報をリセット
+	instance.clear();
+}
+
+void Model3D::NormalDraw()
+{
+}
+
+void Model3D::UpdateInstanceBuffer()
+{
+	InstanceVertexMatrix* vertMap = nullptr;
+	auto result = vertexInstanceBuff->Map(0, nullptr, (void**)&vertMap);
+	copy(instance.begin(), instance.end(), vertMap);
+	vertexInstanceBuff->Unmap(0, nullptr);
+}
+
+void Model3D::ResizeInstanceVertex(int newsize)
+{
+	UINT		sizeVB		= static_cast<UINT>(sizeof(InstanceVertexMatrix) * newsize);
+	const auto	HEAP_PROP	= CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto		RESDESC		= CD3DX12_RESOURCE_DESC::Buffer(sizeVB);
+
+	auto result = RAKI_DX12B_DEV->CreateCommittedResource(
+		&HEAP_PROP,
+		D3D12_HEAP_FLAG_NONE,
+		&RESDESC,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertexInstanceBuff)
+	);
+
+	vbInstanceView.SizeInBytes		= sizeVB;
+	vbInstanceView.StrideInBytes	= sizeof(vertexInstanceBuff);
+
+	instanceArraysize = newsize;
 }

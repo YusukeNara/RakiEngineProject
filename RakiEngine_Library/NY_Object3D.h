@@ -111,6 +111,8 @@ public:
 	//オブジェクト描画
 	void DrawObject();
 
+	void DrawInstanceModelObject(bool isLastDraw = false);
+
 	//レンダーテクスチャを使用した描画
 	void DrawRTexObject(int rtHandle);
 	void DrawRTexObject(RTex* rt);

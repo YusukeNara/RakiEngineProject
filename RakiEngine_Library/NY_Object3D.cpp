@@ -383,6 +383,33 @@ void Object3d::DrawObject()
 
 }
 
+void Object3d::DrawInstanceModelObject(bool isLastDraw)
+{
+	UpdateObject3D();
+
+	InstanceVertexMatrix insVertex;
+	insVertex.matrix = matWorld;
+
+	model->InstancingDataPush(&insVertex);
+
+	if (isLastDraw) {
+		NY_Object3DManager::Get()->SetRestartObject3D();
+
+		NY_Object3DManager::Get()->SetCommonBeginDrawInstancingObject();
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+		//定数バッファ設定
+		RAKI_DX12B_CMD->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+
+		//シェーダーリソースビューをセット
+		RAKI_DX12B_CMD->SetGraphicsRootDescriptorTable(2,
+			CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
+				model->material.texNumber, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+
+		model->InstanceDraw();
+	}
+}
+
 void Object3d::DrawRTexObject(int rtHandle)
 {
 	//範囲外参照を検知

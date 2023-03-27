@@ -41,6 +41,8 @@ public:
 
     void Draw() override;
 
+    void lastDraw();
+
     void EffectDraw();
 
     void Finalize() override;

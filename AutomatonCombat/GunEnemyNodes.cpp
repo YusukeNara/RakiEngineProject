@@ -77,3 +77,30 @@ void Gun_ShotAct::Init()
 {
     frame = 0;
 }
+
+//void GunEnemyShotNode::Init()
+//{
+//    atkSphere.center = enemy->pos;
+//    atkSphere.rad = 10.0f;
+//    frame = 0;
+//}
+//
+//bTreesys::NODE_STATUS GunEnemyShotNode::Run()
+//{
+//    RVector3 lookVec;
+//    lookVec = player.lock()->pos - enemy->pos;
+//
+//    float angle = atan2f(lookVec.x, lookVec.z);
+//    enemy->rot = RVector3(0, (180.0f / 3.14f) * (angle + 3.14f), 0.0f);
+//
+//    frame++;
+//}
+//
+//void GunEnemyMoveNode::Init()
+//{
+//}
+//
+//bTreesys::NODE_STATUS GunEnemyMoveNode::Run()
+//{
+//    return bTreesys::NODE_STATUS();
+//}
