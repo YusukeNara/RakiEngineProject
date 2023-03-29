@@ -6,6 +6,8 @@ void GroundObject::Init()
 	Load();
 	object3d->SetAffineParam(RVector3(1, 1, 1), RVector3(0, 0, 0), RVector3(0, 0, 0));
 	hg.Init();
+
+	hg.Repositioning(RVector3(NY_random::floatrand_sl(200.f, -200.f), 5, NY_random::floatrand_sl(200.f, -200.f)));
 }
 
 void GroundObject::Update()
@@ -38,7 +40,7 @@ void GroundObject::Load()
 {
 	std::shared_ptr<Model3D> plane = std::make_shared<Model3D>();
 
-	plane->CreatePlaneModelXZ(1000.0f, 1000.0f, 20, 20, TexManager::LoadTexture("Resources/grif.png"), nullptr);
+	plane->CreatePlaneModelXZ(1000.0f, 1000.0f, 20, 20, TexManager::LoadTexture("Resources/asp3.png"), nullptr);
 
 	object3d = std::make_shared<Object3d>();
 

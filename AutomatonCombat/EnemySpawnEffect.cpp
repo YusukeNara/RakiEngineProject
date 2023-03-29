@@ -26,11 +26,18 @@ ParticlePrototype* EnemySpawnEffect::clone(RVector3 pos)
 	EnemySpawnEffect* p = new EnemySpawnEffect;
 
 	p->pos = pos;
-	p->vel.x = NY_random::floatrand_sl(3.f, -1.f);
-	p->vel.y = NY_random::floatrand_sl(10.0f, 0.f);
-	p->vel.z = NY_random::floatrand_sl(3.f, -1.f);
 
-	p->acc.y = -0.2f;
+	RVector3 rand(NY_random::floatrand_sl(100.0f, -100.f),
+		NY_random::floatrand_sl(100.0f, -100.f),
+		NY_random::floatrand_sl(100.0f, -100.f));
+
+	p->pos += rand;
+
+	p->vel.x = 0;
+	p->vel.y = NY_random::floatrand_sl(1.0f, 0.f);
+	p->vel.z = 0;
+
+	p->acc.y = 0.2f;
 
 	p->nowFrame = 0;
 

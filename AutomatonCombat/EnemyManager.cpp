@@ -63,6 +63,7 @@ void EnemyManager::Init(Player *player,NavMeshAstar *astar)
 
 	defeatPtex = TexManager::LoadTexture("Resources/effect1.png");
 
+	gunEnemy->defeatPM = m_defeatPM;
 }
 
 void EnemyManager::Reset()
@@ -154,6 +155,10 @@ void EnemyManager::UIDraw()
 		NumSprite.uvOffsetHandle = waveCount;
 	}
 
+	if (gunEnemy->isAlive) {
+		gunEnemy->UIDraw();
+	}
+
 	NumSprite.DrawSprite(wfcenter.x - 128 + WF_X_OFFSET, wfcenter.y - 128);
 	NumSprite.DrawSprite(1280.f - 64.f,0);
 	NumSprite.Draw();
@@ -163,6 +168,8 @@ void EnemyManager::ParticleDraw()
 {
 	m_defeatPM->Prototype_Draw(defeatPtex);
 	m_spawnPM->Prototype_Draw(defeatPtex);
+
+	gunEnemy->ParticleDraw();
 }
 
 void EnemyManager::DebugExecution()
@@ -205,7 +212,7 @@ void EnemyManager::EnemySpawn()
 			killedGroup = 0;
 			waveCount++;
 			
-			if (waveCount == 3) {
+			if (waveCount >= 3 && !gunEnemy->isAlive) {
 				gameCleared = true;
 			}
 			else {
@@ -238,7 +245,8 @@ void EnemyManager::EnemySpawn()
 
 	}
 
-
+	//エフェクト生成
+	m_spawnPM->Prototype_Add(10, groupSpawnPos);
 }
 
 void EnemyManager::Colision()
@@ -265,6 +273,10 @@ void EnemyManager::Colision()
 				//次の敵を判定
 				se++;
 			}
+		}
+
+		if (RV3Colider::Colision2Sphere(gunEnemy->bodyCollider, player->bullets[i].sphere)) {
+			gunEnemy->Damage(2);
 		}
 	}
 

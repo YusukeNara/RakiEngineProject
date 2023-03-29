@@ -27,5 +27,5 @@ void DirectionalLight::SetLightPos(RVector3 lightPos, RVector3 lightVec, RVector
 	//座標とベクトルからライト方向を計算
 	dir = { RVector3(lightVec - lightPos).norm() };
 
-	dir.y = -dir.y;
+	//dir.y = -dir.y;
 }

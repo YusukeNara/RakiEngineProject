@@ -19,7 +19,13 @@ public:
 
 	void SetPlayer(Player* player);
 
+	void UIDraw();
+
+	void ParticleDraw();
+
 	void ShotBullet();
+
+	void Damage(int dmg);
 
 	//ビヘイビアツリー
 	AI_BehaviorTree gunEnemyTree;
@@ -33,6 +39,8 @@ public:
 	Gun_ShotJudge* gunsjudgeNode;
 	Gun_ShotAct* gun_sactNode;
 
+	ParticleManager* defeatPM;
+
 	Player* player;
 
 	RVector3 pos;
@@ -43,8 +51,16 @@ public:
 
 	std::shared_ptr<Object3d> hpBarModel;
 
+	RV3Colider::Sphere bodyCollider;
+
 	NavMeshData nData;
 	NavMeshAstar astar;
+
+	Sprite BarSprite;
+	const float HP_BAR_MAXSIZE = 100.f;
+
+	Sprite bossText;
+
 
 	bool isAlive = false;
 
