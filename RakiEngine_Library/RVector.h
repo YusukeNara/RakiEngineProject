@@ -272,6 +272,23 @@ namespace RV3Colider {
 		RVector3 dir;
 	};
 
+	//class Segment : public Ray
+	//{
+	//public:
+	//	Segment() = default;
+	//	Segment(RVector3 start, RVector3 dir) {
+	//		this->start = start;
+	//		this->dir = dir;
+	//	}
+	//	Segment(RVector3 p1, RVector3 p2) {
+	//		this->start = p1;
+	//		this->end = p2;
+	//		this->dir = (p1 - p2).norm();
+	//	}
+
+	//	RVector3 end;
+	//};
+
 	RVector3 CalcScreen2World(const XMFLOAT2& scrPos, float fz);
 
 	inline Ray CalcScreen2WorldRay(XMFLOAT2& scrPos, float window_w, float window_h, XMMATRIX& prj, XMMATRIX& view) {

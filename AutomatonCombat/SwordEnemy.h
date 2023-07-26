@@ -38,22 +38,22 @@ private:
 
 	//行動構成ノード
 	//先頭
-	BehaviorBaseNode* rootNode;
+	std::unique_ptr<BehaviorBaseNode> rootNode;
 	//行動分岐
-	BehaviorBaseNode* actNode;
-	BehaviorBaseNode* waitNode;
-	BehaviorBaseNode* approachNode;
-	BehaviorBaseNode* chargeNode;
+	std::unique_ptr<BehaviorBaseNode> actNode;
+	std::unique_ptr<BehaviorBaseNode> waitNode;
+	std::unique_ptr<BehaviorBaseNode> approachNode;
+	std::unique_ptr<BehaviorBaseNode> chargeNode;
 
 	//行動構成オブジェクト
-	Sword_WaitJudge* m_swordWaitJudge;
-	Sword_WaitAct* m_swordWaitAct;
-	Sword_AttackJudge* m_swordAttackJudge;
-	Sword_AttackAct* m_swordAttackAct;
-	Sword_ApproachJudge* m_approachJudge;
-	Sword_ApproachingAct* m_approahAct;
-	Sword_ChargeJudge* m_chargeJudge;
-	Sword_ChargeAct* m_chargeAct;
+	std::unique_ptr<Sword_WaitJudge> m_swordWaitJudge;
+	std::unique_ptr<Sword_WaitAct> m_swordWaitAct;
+	std::unique_ptr<Sword_AttackJudge> m_swordAttackJudge;
+	std::unique_ptr<Sword_AttackAct> m_swordAttackAct;
+	std::unique_ptr<Sword_ApproachJudge> m_approachJudge;
+	std::unique_ptr<Sword_ApproachingAct> m_approahAct;
+	std::unique_ptr<Sword_ChargeJudge> m_chargeJudge;
+	std::unique_ptr<Sword_ChargeAct> m_chargeAct;
 
 	//モデルデータ
 	static std::shared_ptr<fbxModel> swordModel;
@@ -80,7 +80,7 @@ public:
 	void DebugDraw();
 	
 	//オブジェクト
-	SwordEnemyObject s_object;
+	std::unique_ptr<SwordEnemyObject> s_object;
 
 	BehaviorEditor editor;
 

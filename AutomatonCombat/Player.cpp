@@ -148,7 +148,7 @@ void Player::Shot()
 			for (int i = 0; i < bullets.size(); i++) {
 				if (!bullets[i].isAlive) {
 					bullets[i].Fire(pos, -bVec, 20.0f, 5.0f, bulletModel);
-					nowBullet;
+					nowBullet--;
 					break;
 				}
 			}
